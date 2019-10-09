@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Hello, Go! | N.Y.</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Golang,">
+  
+
+  <meta name="description" content="Hello, Go!最近开始放飞自我，想学点新技术，恰好接触到 Golang 语法风格和 C 的语法风格相似，就想尝试一下。于是，就有了这篇比较水的入门文章。自然，列位看官，若是觉得此文太水，求轻喷～拜谢 🙈😁。 闲言少叙，开始正文。 下载与安装在 macOS（OS X） 上安装 Go 很简单，直接到 https://golang.org/dl/ 下载对应的 pkg 安装包即可。 如果是只有">
+<meta name="keywords" content="Golang">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hello, Go!">
+<meta property="og:url" content="http://niyaoyao.me/2017/05/06/fly-away-day1.1/index.html">
+<meta property="og:site_name" content="N.Y.">
+<meta property="og:description" content="Hello, Go!最近开始放飞自我，想学点新技术，恰好接触到 Golang 语法风格和 C 的语法风格相似，就想尝试一下。于是，就有了这篇比较水的入门文章。自然，列位看官，若是觉得此文太水，求轻喷～拜谢 🙈😁。 闲言少叙，开始正文。 下载与安装在 macOS（OS X） 上安装 Go 很简单，直接到 https://golang.org/dl/ 下载对应的 pkg 安装包即可。 如果是只有">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://niyaoyao.github.io/images/golang-02.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/qrcod_ny_1.jpg">
+<meta property="og:updated_time" content="2019-10-09T03:17:26.699Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hello, Go!">
+<meta name="twitter:description" content="Hello, Go!最近开始放飞自我，想学点新技术，恰好接触到 Golang 语法风格和 C 的语法风格相似，就想尝试一下。于是，就有了这篇比较水的入门文章。自然，列位看官，若是觉得此文太水，求轻喷～拜谢 🙈😁。 闲言少叙，开始正文。 下载与安装在 macOS（OS X） 上安装 Go 很简单，直接到 https://golang.org/dl/ 下载对应的 pkg 安装包即可。 如果是只有">
+<meta name="twitter:image" content="https://niyaoyao.github.io/images/golang-02.png">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.jpg">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38189205-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">导航</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">导航</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hello-Go"><span class="toc-text">Hello, Go!</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#下载与安装"><span class="toc-text">下载与安装</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#下载"><span class="toc-text">下载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#验证"><span class="toc-text">验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#设置-Go-的环境变量"><span class="toc-text">设置 Go 的环境变量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#设置环境变量"><span class="toc-text">设置环境变量</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Hello-World"><span class="toc-text">Hello, World</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#配置项目目录"><span class="toc-text">配置项目目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建-hello-go"><span class="toc-text">创建 hello.go</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#搭建-Go-的-Web-服务"><span class="toc-text">搭建 Go 的 Web 服务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#监听-TCP-端口"><span class="toc-text">监听 TCP 端口</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#修改"><span class="toc-text">修改</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Supervisor-管理进程"><span class="toc-text">Supervisor 管理进程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#安装-1"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置-supervisord-conf"><span class="toc-text">配置 supervisord.conf</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Supervisor-的客户端和服务端"><span class="toc-text">Supervisor 的客户端和服务端</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#管理-Go-进程"><span class="toc-text">管理 Go 进程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#输出-HTML"><span class="toc-text">输出 HTML</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#编辑-HTML-文档"><span class="toc-text">编辑 HTML 文档</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#修改-hello-go"><span class="toc-text">修改 hello.go</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-fly-away-day1.1" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Hello, Go!</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.05.06</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Niyao</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Golang/">Golang</a>
+  </span>
+
+
+
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p><img src="https://niyaoyao.github.io/images/golang-02.png" alt></p>
+<h1 id="Hello-Go"><a href="#Hello-Go" class="headerlink" title="Hello, Go!"></a>Hello, Go!</h1><p>最近开始放飞自我，想学点新技术，恰好接触到 Golang 语法风格和 C 的语法风格相似，就想尝试一下。于是，就有了这篇比较水的入门文章。自然，列位看官，若是觉得此文太水，求轻喷～拜谢 🙈😁。</p>
+<p>闲言少叙，开始正文。</p>
+<h1 id="下载与安装"><a href="#下载与安装" class="headerlink" title="下载与安装"></a>下载与安装</h1><p>在 macOS（OS X） 上安装 Go 很简单，直接到 <a href="https://golang.org/dl/" target="_blank" rel="noopener">https://golang.org/dl/</a> 下载对应的 pkg 安装包即可。</p>
+<p>如果是只有 terminal 的服务端，那就借助命令行来安装。</p>
+<p><strong>本文主要以 CentOS 7.2 作为操作环境，macOS 可能有些许不同。</strong></p>
+<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>到具有写权限的目录下下载最新版本的安装包，并对安装包进行校验。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /tmp</span><br><span class="line">curl -LO https://storage.googleapis.com/golang/go1.8.1.linux-amd64.tar.gz</span><br><span class="line">shasum <span class="_">-a</span> 256 go1.8*.tar.gz</span><br></pre></td></tr></table></figure>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo tar -C /usr/<span class="built_in">local</span> -xvzf go1.8.1.linux-amd64.tar.gz</span><br></pre></td></tr></table></figure>
+<h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p>查看 Go 的版本号，即可验证 Golang 是否安装成功。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">go version</span><br><span class="line">go version go1.8.1 linux/amd64</span><br></pre></td></tr></table></figure>
+<h2 id="设置-Go-的环境变量"><a href="#设置-Go-的环境变量" class="headerlink" title="设置 Go 的环境变量"></a>设置 Go 的环境变量</h2><h3 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h3><p>设置 Go 语言环境变量，便于执行 Go 的命令。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo vi /etc/profile.d/path.sh</span><br></pre></td></tr></table></figure>
+<p>追加输入以下内容。<strong>如果，你的 Go 所安装的路径不是 /usr/local 那就替换为你实际的安装路径。</strong></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/usr/<span class="built_in">local</span>/go/bin</span><br></pre></td></tr></table></figure>
+<p>vi(vim) 打开 <strong>~/.bash_profile</strong></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">vi ~/.bash_profile</span><br></pre></td></tr></table></figure>
+<p>编辑如下内容。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export GOBIN=&quot;$HOME/projects/bin&quot;</span><br><span class="line">export GOPATH=&quot;$HOME/projects/src&quot;</span><br></pre></td></tr></table></figure></p>
+<p>利用 <strong>source</strong> 命令将最新的配置，应用到当前的 BASH 会话中。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">source</span> /etc/profile &amp;&amp; <span class="built_in">source</span> ~/.bash_profile</span><br></pre></td></tr></table></figure>
+<h1 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello, World"></a>Hello, World</h1><p>是的，没错～万年不变的 <strong>Hello World</strong>。</p>
+<h2 id="配置项目目录"><a href="#配置项目目录" class="headerlink" title="配置项目目录"></a>配置项目目录</h2><p>创建 Go 项目目录，一般 Go 目录包含 bin、pkg、src。其中，bin 用来存编译后的二进制文件，pkg 用来存包文件，src 用来存程序源码。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd ~</span><br><span class="line">mkdir -p ~/projects/&#123;bin,pkg,src&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="创建-hello-go"><a href="#创建-hello-go" class="headerlink" title="创建 hello.go"></a>创建 hello.go</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vi ~/projects/src/hello.go</span><br></pre></td></tr></table></figure>
+<p>打开 hello.go 文件后，输入以下内容。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"Hello, World!\n"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编辑完文件后，在终端输入如下命令。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">go install $GOPATH/hello.go</span><br><span class="line">$GOBIN/hello</span><br></pre></td></tr></table></figure>
+<p>查看 Go 的手册可以得知 <strong>go install</strong> 是用来编译以及安装依赖包的。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Usage:</span><br><span class="line">	go command [arguments]</span><br><span class="line">	install     compile and install packages and dependencies</span><br></pre></td></tr></table></figure>
+<p>之后，在终端就会输出 <strong>Hello, World!</strong> 了。</p>
+<h2 id="搭建-Go-的-Web-服务"><a href="#搭建-Go-的-Web-服务" class="headerlink" title="搭建 Go 的 Web 服务"></a>搭建 Go 的 Web 服务</h2><p>写完 <strong>Hello, World!</strong> 之后接下来该做什么呢？既然，我们能让 <strong>Hello, World!</strong> 在终端输出，是否能够让它在浏览器里输出呢？当然必须可以的～那么，接下来就开始搭建 Go 的服务端。</p>
+<h3 id="监听-TCP-端口"><a href="#监听-TCP-端口" class="headerlink" title="监听 TCP 端口"></a>监听 TCP 端口</h3><p>与 PHP 不同， Go 不需要 Nginx、Apache 这样的服务器。Go就是不需要这些，因为他直接就监听 TCP 端口了，做了 Nginx 做的事情。</p>
+<h4 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h4><p>所以，接下来就写代码，把 hello.go 稍加修改。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">    <span class="string">"log"</span></span><br><span class="line">    <span class="string">"net/http"</span></span><br><span class="line">    <span class="string">"html/template"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">helloNY</span> <span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">    fmt.Fprintf(w, <span class="string">"Hello Go, NY"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    http.HandleFunc(<span class="string">"/"</span>, helloNY)</span><br><span class="line"></span><br><span class="line">    err := http.ListenAndServe(<span class="string">":9090"</span>, <span class="literal">nil</span>)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatal(<span class="string">"ListenAndServe: "</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">以上这段代码，新引入了 log net/http html/template 这几个依赖包。</span><br><span class="line"></span><br><span class="line">http.HandleFunc(&quot;/&quot;, helloNY) 这句代码用来设置访问的路由，后面我们可以利用它来自定义 router。</span><br><span class="line"></span><br><span class="line">err := http.ListenAndServe(&quot;:9090&quot;, nil) 这句代码用来设置监听的端口。</span><br><span class="line"></span><br><span class="line">fmt.Fprintf(w, &quot;Hello Go, NY&quot;) 这句代码用来向客户端（浏览器）输出 Hello Go, NY</span><br></pre></td></tr></table></figure>
+<p>重新编译 hello.go 终端输出结果，那我们的文件修改就完成了。但是，问题又来了。如何运行 Go 的进程，并且不中断终端的其他操作呢？</p>
+<p>这里就需要安装一个新的进程守护软件「supervisor」。</p>
+<h3 id="Supervisor-管理进程"><a href="#Supervisor-管理进程" class="headerlink" title="Supervisor 管理进程"></a>Supervisor 管理进程</h3><p><strong>Supervisor is a client/server system that allows its users to control a number of processes on UNIX-like operating systems.</strong></p>
+<p>Supervisor 是一款类 UNIX 操作系统上，用来管理多个进程的客户端／服务端的系统。<br>项目的开源仓库在 <a href="https://github.com/Supervisor/supervisor" target="_blank" rel="noopener">https://github.com/Supervisor/supervisor</a> ，使用配置也比较简单，接下来就开始学习 Supervisor 来管理我们 hello.go 的进程。</p>
+<h4 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h4><p>在 CentOS 上利用 <strong>yum</strong> 安装 python 的工具，用 <strong>easy_install</strong> 安装 <strong>supervisor</strong>。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo yum install python-setuptools</span><br><span class="line">sudo easy_install supervisor</span><br></pre></td></tr></table></figure>
+<h4 id="配置-supervisord-conf"><a href="#配置-supervisord-conf" class="headerlink" title="配置 supervisord.conf"></a>配置 supervisord.conf</h4><p>输入以下命令，生成配置文件。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo echo_supervisord_conf &gt; /etc/supervisord.conf</span><br></pre></td></tr></table></figure>
+<p>修改配置文件，配置 Go 应用。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[program:golang-http-server]</span><br><span class="line">command=/root/projects/bin/hello</span><br><span class="line">autostart=true</span><br><span class="line">autorestart=true</span><br><span class="line">startsecs=10</span><br><span class="line">stdout_logfile=/var/log/simple_http_server.log</span><br><span class="line">stdout_logfile_maxbytes=1MB</span><br><span class="line">stdout_logfile_backups=10</span><br><span class="line">stdout_capture_maxbytes=1MB</span><br><span class="line">stderr_logfile=/var/log/simple_http_server.log</span><br><span class="line">stderr_logfile_maxbytes=1MB</span><br><span class="line">stderr_logfile_backups=10</span><br><span class="line">stderr_capture_maxbytes=1MB</span><br></pre></td></tr></table></figure>
+<h4 id="Supervisor-的客户端和服务端"><a href="#Supervisor-的客户端和服务端" class="headerlink" title="Supervisor 的客户端和服务端"></a>Supervisor 的客户端和服务端</h4><p>开始使用 Supervisor 之前要先分清 Supervisor 的客户端和服务端。</p>
+<p>笔者就是一开始没有分清这两个工具，一开始就不懂怎么在修改完 *.go 程序源码之后重启进程让服务更新。毕竟，Go 不像 PHP 一样可以重启 Nginx、Apache 服务器，而是通过 Supervisor 来管理进程，所以必须要搞清楚谁是 Client ，谁是 Server。</p>
+<ul>
+<li>客户端</li>
+</ul>
+<p>supervisorctl 是 Supervisor 的客户端，一般我们用 <strong>supervisorctl</strong> 来管理配置好的应用进程。<br>终端输入 <strong>supervisorctl –help</strong> 来查看 <strong>supervisorctl</strong> 用法。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">supervisorctl --help</span><br><span class="line">supervisorctl -- control applications run by supervisord from the cmd line.</span><br><span class="line">....</span><br></pre></td></tr></table></figure>
+<p>因此，可以确定 <strong>supervisorctl</strong> 是管理应用的客户端。</p>
+<ul>
+<li>服务端</li>
+</ul>
+<p>同样，来看服务端。<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">supervisord --help</span><br><span class="line">supervisord -- run a <span class="built_in">set</span> of applications as daemons.</span><br><span class="line">....</span><br></pre></td></tr></table></figure></p>
+<p>由此，更加确定 <strong>supervisord</strong> 是将应用作为后台程序运行的服务端。</p>
+<h4 id="管理-Go-进程"><a href="#管理-Go-进程" class="headerlink" title="管理 Go 进程"></a>管理 Go 进程</h4><p>开启、重启、停止 Go 进程都在 <strong>supervisorctl</strong> 中进行。在终端直接输入 <strong>supervisorctl</strong> 则可进入 Supervisor 的客户端。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">supervisorctl</span><br><span class="line">golang-http-server               RUNNING   pid 3321, uptime 5 days, 5:55:24</span><br></pre></td></tr></table></figure>
+<p>可以看到，我们刚才配置的 <strong>golang-http-server</strong> 正在运行。</p>
+<p>继续输入 <strong>help</strong> 可以看到默认的所有命令。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">supervisor&gt; help</span><br><span class="line"></span><br><span class="line">default commands (type help &lt;topic&gt;):</span><br><span class="line">=====================================</span><br><span class="line">add    clear  fg        open  quit    remove  restart   start   stop  update </span><br><span class="line">avail  exit   maintail  pid   reload  reread  shutdown  status  tail  version</span><br><span class="line"></span><br><span class="line">supervisor&gt;</span><br></pre></td></tr></table></figure>
+<p>比如，当我们重新修改 hello.go 文件的话，就直接可以使用 <strong>supervisorctl</strong> 来重启 <strong>golang-http-server</strong> 这个应用的进程。</p>
+<p>除此之外，当我们对 supervisord.conf 文件进行修改。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vim /etc/supervisord.conf</span><br></pre></td></tr></table></figure></p>
+<p>要从新配置相关文件，则须如下命令。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/usr/bin/supervisord -c /etc/supervisord.conf</span><br></pre></td></tr></table></figure></p>
+<p>两条命令的顺序不要错，不然会报 Python 和 Unix 错误。</p>
+<p>那么，到此为止，我们访问服务器的 IP／域名:9090 端口就可以看到 <strong>Hello Go, NY</strong> 这个输出了。然而，问题又来了，我们可以像客户端（浏览器）输出一段 raw string ，那我们是否可以直接解析 HTML 文档，并向浏览器输出呢？ 当然仍是可以的，接下来就继续看如何加载 HTML。</p>
+<h4 id="输出-HTML"><a href="#输出-HTML" class="headerlink" title="输出 HTML"></a>输出 HTML</h4><h5 id="编辑-HTML-文档"><a href="#编辑-HTML-文档" class="headerlink" title="编辑 HTML 文档"></a>编辑 HTML 文档</h5><p>输入以下 HTML 并保存为 ny-home.html 文档。<br><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>NY<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">  html, body &#123;</span></span><br><span class="line"><span class="undefined">      color: #373D49;</span></span><br><span class="line"><span class="undefined">      font-size: 1rem;</span></span><br><span class="line"><span class="undefined">      line-height: 2rem;</span></span><br><span class="line"><span class="undefined">      font-family: Georgia,Cambria,serif;</span></span><br><span class="line"><span class="undefined">      margin: 0;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined">    h1, h2, h3, h4, h5, h6 &#123;</span></span><br><span class="line"><span class="undefined">      font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined">    #preview a &#123;</span></span><br><span class="line"><span class="undefined">      color: #A0AABF;</span></span><br><span class="line"><span class="undefined">      text-decoration: none;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined">    img#qrcode &#123;</span></span><br><span class="line"><span class="undefined">      position: absolute;</span></span><br><span class="line"><span class="undefined">      top: 0;</span></span><br><span class="line"><span class="undefined">      right: 0;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined">    img#banner &#123;</span></span><br><span class="line"><span class="undefined">      width: 100%;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined">    .wrapper &#123;</span></span><br><span class="line"><span class="undefined">      margin: 10px;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">id</span>=<span class="string">"preview"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">id</span>=<span class="string">"banner"</span> <span class="attr">src</span>=<span class="string">"http://chuantu.biz/t5/80/1494091793x1729546437.jpg"</span> <span class="attr">alt</span>=<span class="string">""</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"wrapper"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>Welcome to NY space.<span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">  Here are some keywords about me.<span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">  Sensitive | Thoughtful | Idealism | ❤️ @SuneBear | Cear’s mommy~ 🐱<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>Wanna know more about me? You can go below<span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"https://niyaoyao.github.io/"</span>&gt;</span>https://niyaoyao.github.io/<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h5 id="修改-hello-go"><a href="#修改-hello-go" class="headerlink" title="修改 hello.go"></a>修改 hello.go</h5><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">    <span class="string">"log"</span></span><br><span class="line">    <span class="string">"net/http"</span></span><br><span class="line">    <span class="string">"html/template"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">sayHello</span> <span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">    fmt.Fprintf(w, <span class="string">"Hello Go, NY"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">nyHome</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span>  &#123;</span><br><span class="line">  <span class="keyword">if</span> r.Method == <span class="string">"GET"</span> &#123;</span><br><span class="line">      t, _ := template.ParseFiles(<span class="string">"ny-home.html"</span>)</span><br><span class="line">      log.Println(t.Execute(w, <span class="literal">nil</span>))</span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">    http.HandleFunc(<span class="string">"/"</span>, nyHome)</span><br><span class="line">    http.HandleFunc(<span class="string">"/hello"</span>, sayHello)</span><br><span class="line"></span><br><span class="line">    err := http.ListenAndServe(<span class="string">":9090"</span>, <span class="literal">nil</span>)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatal(<span class="string">"ListenAndServe: "</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修改并保存 hello.go 文件后，重新编译出二进制文件。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">go install $GOPATH/hello.go</span><br></pre></td></tr></table></figure></p>
+<p>编译成功后，用 <strong>supervisorctl</strong> 重启应用进程。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">supervisorctl </span><br><span class="line">golang-http-server               RUNNING   pid 3321, uptime 5 days, 7:10:30</span><br><span class="line">supervisor&gt; restart golang-http-server </span><br><span class="line">golang-http-server: stopped</span><br><span class="line">golang-http-server: started</span><br><span class="line">supervisor&gt;</span><br></pre></td></tr></table></figure></p>
+<p>最后访问 <a href="http://www.niyao.space:9090/" target="_blank" rel="noopener">http://www.niyao.space:9090/</a> 就可以看到最终的成果啦。<br>到此，如何搭建一个 Golang 的 Web 服务就算比较完满的入门了。当然，我的习惯是现做应用小 demo 然后再慢慢熟悉语言的具体语法细节，所以，还是 Go 小白一枚，如果文中有错误，欢迎指出十分感谢，可以关注我的公众号向我反馈，十分感谢 😁 ～<br><img src="https://niyaoyao.github.io/images/qrcod_ny_1.jpg" alt></p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li><strong>How To Install Go 1.7 on CentOS 7</strong> <a href="https://www.digitalocean.com/community/tutorials/how-to-install-go-1-7-on-centos-7" target="_blank" rel="noopener">https://www.digitalocean.com/community/tutorials/how-to-install-go-1-7-on-centos-7</a></li>
+<li><strong>supervisor 运行 golang 守护进程</strong> <a href="http://www.01happy.com/supervisor-golang-daemon/" target="_blank" rel="noopener">http://www.01happy.com/supervisor-golang-daemon/</a></li>
+<li><strong>Go Web 编程</strong> <a href="https://astaxie.gitbooks.io/build-web-application-with-golang/zh/" target="_blank" rel="noopener">https://astaxie.gitbooks.io/build-web-application-with-golang/zh/</a></li>
+</ul>
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">赞赏</span>
+      <div class="donation-body">
+        <div class="tip text-center">感谢支持 NY 😘</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/01/18/Learning-Reverse-From-Today-D3/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2017/05/09/Learning-Reverse-From-Today-D4/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '277317290454635afa73',
+  clientSecret: '78223c859304da5e8d71bfce136d436c6ff95c37',
+  repo: 'blog-comment',
+  owner: 'forsigner',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['forsigner'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
