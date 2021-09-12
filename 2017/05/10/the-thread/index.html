@@ -19,7 +19,7 @@
 <meta name="keywords" content="Mac OS X,XNU,pthread,Runloop,GCD">
 <meta property="og:type" content="article">
 <meta property="og:title" content="线程到底是什么？">
-<meta property="og:url" content="http://niyaoyao.me/2017/05/10/what-the-thread-it-is/index.html">
+<meta property="og:url" content="http://niyaoyao.me/2017/05/10/the-thread/index.html">
 <meta property="og:site_name" content="N.Y.">
 <meta property="og:description" content="前言本文是以笔者学习中遇到的一个小场景作为线索，从而引发笔者诸如“什么是进程？”“什么是线程？” “GCD 和线程关系是什么？” “NSRunLoop 是什么？”“NSRunLoop 和线程关系是什么？”等诸多疑问，随后又根据这些疑问，一步步抽丝剥茧，找寻这些问题答案的文章。 本文篇幅较长，文章梗概如下。  一个在 OS X Command Line 中出现的与线程有关的场景。 探究进程和线程 探">
 <meta property="og:locale" content="default">
@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://niyaoyao.github.io/images/flow-of-thread-creation.png">
 <meta property="og:image" content="https://niyaoyao.github.io/images/nsthread-callstacksymbols.png">
 <meta property="og:image" content="https://niyaoyao.github.io/images/runloop.png">
-<meta property="og:updated_time" content="2020-06-12T15:52:57.671Z">
+<meta property="og:updated_time" content="2021-09-12T07:16:11.635Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="线程到底是什么？">
 <meta name="twitter:description" content="前言本文是以笔者学习中遇到的一个小场景作为线索，从而引发笔者诸如“什么是进程？”“什么是线程？” “GCD 和线程关系是什么？” “NSRunLoop 是什么？”“NSRunLoop 和线程关系是什么？”等诸多疑问，随后又根据这些疑问，一步步抽丝剥茧，找寻这些问题答案的文章。 本文篇幅较长，文章梗概如下。  一个在 OS X Command Line 中出现的与线程有关的场景。 探究进程和线程 探">
@@ -212,7 +212,7 @@ ga('send', 'pageview');
 
 
 <div class="content content-post CENTER">
-   <article id="post-what-the-thread-it-is" class="article article-type-post" itemprop="blogPost">
+   <article id="post-the-thread" class="article article-type-post" itemprop="blogPost">
   <header class="article-header">
     <h1 class="post-title">线程到底是什么？</h1>
 
@@ -558,10 +558,10 @@ gitalk.render('git')
 
    
   <div class="box-prev-next clearfix">
-    <a class="show pull-left" href="/2017/05/09/Learning-Reverse-From-Today-D4/">
+    <a class="show pull-left" href="/2017/05/09/reverse-d4/">
         <i class="icon icon-angle-left"></i>
     </a>
-    <a class="show pull-right" href="/2017/10/03/docker-for-golang-web-app/">
+    <a class="show pull-right" href="/2017/10/03/docker-go/">
         <i class="icon icon-angle-right"></i>
     </a>
   </div>
