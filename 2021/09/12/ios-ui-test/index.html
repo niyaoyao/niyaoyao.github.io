@@ -19,11 +19,11 @@
 <meta name="keywords" content="OpenGL">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS UI 自动化测试应知应会">
-<meta property="og:url" content="http://niyaoyao.me/2021/09/12/ios-ui-autotest-basic-technologies/index.html">
+<meta property="og:url" content="http://niyaoyao.me/2021/09/12/ios-ui-test/index.html">
 <meta property="og:site_name" content="N.Y.">
 <meta property="og:description" content="前言笔者入职目前的公司整一年，回顾这一年的时间有约一半的时间都在做 UI 自动化测试，比较深入的研究了 iOS 平台下的自动化测试技术，目前也是负责部门的 UI 自动化平台的搭建和维护，故而想借这篇文章一并将所踩过的坑以及学习到的经验技术一并整理分享给大家。本文的内容大致如下：  iOS/macOS UI 自动化测试框架 XCUITest 基于 Web Service 的自动化测试平台架构 App">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2021-09-12T04:08:32.133Z">
+<meta property="og:updated_time" content="2021-09-12T06:38:21.874Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS UI 自动化测试应知应会">
 <meta name="twitter:description" content="前言笔者入职目前的公司整一年，回顾这一年的时间有约一半的时间都在做 UI 自动化测试，比较深入的研究了 iOS 平台下的自动化测试技术，目前也是负责部门的 UI 自动化平台的搭建和维护，故而想借这篇文章一并将所踩过的坑以及学习到的经验技术一并整理分享给大家。本文的内容大致如下：  iOS/macOS UI 自动化测试框架 XCUITest 基于 Web Service 的自动化测试平台架构 App">
@@ -202,7 +202,7 @@ ga('send', 'pageview');
 
 
 <div class="content content-post CENTER">
-   <article id="post-ios-ui-autotest-basic-technologies" class="article article-type-post" itemprop="blogPost">
+   <article id="post-ios-ui-test" class="article article-type-post" itemprop="blogPost">
   <header class="article-header">
     <h1 class="post-title">iOS UI 自动化测试应知应会</h1>
 
@@ -489,7 +489,39 @@ gitalk.render('git')
       // load success
     });
   }
-</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</script>
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 </body>
 </html>

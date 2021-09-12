@@ -12,11 +12,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="Docker,Golang,">
+    <meta name="keywords" content="Golang,Docker,">
   
 
   <meta name="description" content="前言我最近在做自己的个人项目，需要部署一个稳定的 Golang Web App 运行环境。然而之前使用的 supervisor 十分不稳定，导致服务经常跪掉。所以决定学习 Docker，用其来做 Golang 的环境部署工具。另外，学习新东西很有意思，借此机会也学习一下运维和后端的相关技术。 本文分为 Docker 基本概念和 Docker 实践操作两部分，如果只想学习 Docker 的基本操作，">
-<meta name="keywords" content="Docker,Golang">
+<meta name="keywords" content="Golang,Docker">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Docker for Golang Web App">
 <meta property="og:url" content="http://niyaoyao.me/2017/10/03/docker-for-golang-web-app/index.html">
@@ -576,7 +576,23 @@ gitalk.render('git')
       // load success
     });
   }
-</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config("");
 </script>
@@ -594,6 +610,5 @@ gitalk.render('git')
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
-
 </body>
 </html>

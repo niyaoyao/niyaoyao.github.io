@@ -12,11 +12,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="iOS,Mac OS X,">
+    <meta name="keywords" content="Mac OS X,iOS,">
   
 
   <meta name="description" content="前言Objective-C 是 Mac OS X 操作系统下用来开发 iOS 和 Mac OS X 应用的编程语言，是强类型的动态语言 。可以利用 Runtime 这一特性，实现 AOP 、动态埋点、APM等功能需求。那么， OS X 和 iOS 是怎样实现 Objective-C 的运行时的呢？接下来就一探究竟。 本文内容概要：  Build: Compile, Link and Sign Ma">
-<meta name="keywords" content="iOS,Mac OS X">
+<meta name="keywords" content="Mac OS X,iOS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Objective-C Runtime —— From Build To Did Launch">
 <meta property="og:url" content="http://niyaoyao.me/2016/07/29/Objective-C-Runtime-From-Build-To-Did-Launch/index.html">
@@ -699,7 +699,23 @@ gitalk.render('git')
       // load success
     });
   }
-</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config("");
 </script>
@@ -717,6 +733,5 @@ gitalk.render('git')
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
-
 </body>
 </html>
