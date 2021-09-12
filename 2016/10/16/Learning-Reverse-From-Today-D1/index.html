@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>今天开始学逆向：SSH 访问越狱机与导出二进制文件的头文件 | N.Y.</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="iOS,Jail Break,">
+  
+
+  <meta name="description" content="前言一直想学软件安全，从做 Web 时就对安全十分感兴趣，但当时技术积累太少，连基本的 SQL 注入都不会，所以一直未能实现这样的小愿望。然而，这个贼心一直不死，现在，我要重新开启安全学习计划！加油，相信自己可以学会！这一系列的文章用的是 Alone_Monkey 大神的 教程，这位大神目前就职于网易，非常感谢大神的帮助。😁  学习目标这次学习须达到的目标有  SSH 访问越狱机 导出二进制文件">
+<meta name="keywords" content="iOS,Jail Break">
+<meta property="og:type" content="article">
+<meta property="og:title" content="今天开始学逆向：SSH 访问越狱机与导出二进制文件的头文件">
+<meta property="og:url" content="http://niyaoyao.me/2016/10/16/Learning-Reverse-From-Today-D1/index.html">
+<meta property="og:site_name" content="N.Y.">
+<meta property="og:description" content="前言一直想学软件安全，从做 Web 时就对安全十分感兴趣，但当时技术积累太少，连基本的 SQL 注入都不会，所以一直未能实现这样的小愿望。然而，这个贼心一直不死，现在，我要重新开启安全学习计划！加油，相信自己可以学会！这一系列的文章用的是 Alone_Monkey 大神的 教程，这位大神目前就职于网易，非常感谢大神的帮助。😁  学习目标这次学习须达到的目标有  SSH 访问越狱机 导出二进制文件">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-06-12T15:52:57.663Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="今天开始学逆向：SSH 访问越狱机与导出二进制文件的头文件">
+<meta name="twitter:description" content="前言一直想学软件安全，从做 Web 时就对安全十分感兴趣，但当时技术积累太少，连基本的 SQL 注入都不会，所以一直未能实现这样的小愿望。然而，这个贼心一直不死，现在，我要重新开启安全学习计划！加油，相信自己可以学会！这一系列的文章用的是 Alone_Monkey 大神的 教程，这位大神目前就职于网易，非常感谢大神的帮助。😁  学习目标这次学习须达到的目标有  SSH 访问越狱机 导出二进制文件">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38189205-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#学习目标"><span class="toc-text">学习目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#搞一台越狱机"><span class="toc-text">搞一台越狱机</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#用盘古越狱"><span class="toc-text">用盘古越狱</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSH-访问越狱机"><span class="toc-text">SSH 访问越狱机</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#用-Cydia-安装-OpenSSH"><span class="toc-text">用 Cydia 安装 OpenSSH</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSH-连接越狱设备"><span class="toc-text">SSH 连接越狱设备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#退出远程连接"><span class="toc-text">退出远程连接</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#利用-class-dump-导出头文件"><span class="toc-text">利用 class-dump 导出头文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Mac-安装-class-dump"><span class="toc-text">Mac 安装 class-dump</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获得二进制可执行文件"><span class="toc-text">获得二进制可执行文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#越狱机安装-Clutch"><span class="toc-text">越狱机安装 Clutch</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#加密和解密"><span class="toc-text">加密和解密</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#连接设备并解密软件"><span class="toc-text">连接设备并解密软件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#导出头文件"><span class="toc-text">导出头文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-text">小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-Learning-Reverse-From-Today-D1" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">今天开始学逆向：SSH 访问越狱机与导出二进制文件的头文件</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.10.16</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Niyao</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/iOS-Reverse-Engineering/">iOS Reverse Engineering</a>
+  </span>
+
+
+
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一直想学软件安全，从做 Web 时就对安全十分感兴趣，但当时技术积累太少，连基本的 SQL 注入都不会，所以一直未能实现这样的小愿望。然而，这个贼心一直不死，现在，我要重新开启安全学习计划！加油，相信自己可以学会！<br>这一系列的文章用的是 <a href="http://weibo.com/u/1646752654?topnav=1&amp;wvr=6&amp;topsug=1&amp;is_all=1" target="_blank" rel="noopener">Alone_Monkey</a> 大神的 <a href="http://bbs.pediy.com/showthread.php?t=209014" target="_blank" rel="noopener">教程</a>，这位大神目前就职于网易，非常感谢大神的帮助。😁 </p>
+<h2 id="学习目标"><a href="#学习目标" class="headerlink" title="学习目标"></a>学习目标</h2><p>这次学习须达到的目标有</p>
+<ul>
+<li>SSH 访问越狱机</li>
+<li>导出二进制文件的头文件</li>
+</ul>
+<h2 id="搞一台越狱机"><a href="#搞一台越狱机" class="headerlink" title="搞一台越狱机"></a>搞一台越狱机</h2><p>玩逆向工程首要前提是要有一部越狱手机，所以，先看一下如何越狱，并且访问越狱机。</p>
+<p>现在 iOS 已经是 10.0 的版本，但是，可以完美越狱的 iOS 版本只能 9.0 以下。最简单的搞一台越狱机就是在淘宝买一台，越狱的 5C 大概 500～700 元，然后就可以开始玩逆向啦～<br>当然也可以自己越狱，比较常用的越狱软件是盘古越狱，可以越狱的版本到 <a href="http://act.feng.com/wetools/index.php?r=iosRom/index" target="_blank" rel="noopener">威锋网</a> 查看越狱的版本。</p>
+<h3 id="用盘古越狱"><a href="#用盘古越狱" class="headerlink" title="用盘古越狱"></a>用盘古越狱</h3><p>越狱需要拥有一台已经激活的 iOS 系统的设备（iPad／iPhone）。<br>比如，我选择 <a href="http://act.feng.com/wetools/index.php?r=iosRom/index/mid/4" target="_blank" rel="noopener">iPhone4 iOS 7.1.2</a> 的机子，下载对应的 <a href="http://act.feng.com/wetools/index.php?r=iosJailbreak/read/mid/4" target="_blank" rel="noopener">盘古越狱软件</a><br>下载安装完盘古越狱之后，连接设备按照盘古的提示，一步一步做就可以越狱成功啦～</p>
+<h2 id="SSH-访问越狱机"><a href="#SSH-访问越狱机" class="headerlink" title="SSH 访问越狱机"></a>SSH 访问越狱机</h2><p>越狱好了之后，要用 Cydia 安装更新软件，如，OpenSSH， Terminal。</p>
+<p>Cydia是一个让用户在越狱的iOS设备上查找和安装各类软件包，包括软件、系统修改、主题和铃声等的软件管理器。Cydia是高级包装工具和dpkg的图形界面前端，Cydia也是一个去中心化的软件仓库。大多数Cydia中的软件包都是免费的，但也有很多收费程序通过类似App Store的Cydia Store销售。<br>Cydia上除了独立的应用程序之外更多的包是iOS本身和应用程序的扩展、修改和主题。由于这些软件包运行在越狱的设备上，它们可以提供比普通运行在App Store中的应用程序更多的功能，包括在系统范围上修改用户界面，改变按钮作用，提供更多的网络接入方式，以及其他对系统的改进。用户安装Cydia软件一般是为了更加个性化，添加普通程序所无法提供的功能以及获得root、直接访问设备的文件系统和使用命令行工具，以便于开发。大多数Cydia中的软件包都是由独立开发者开发的。</p>
+<h3 id="用-Cydia-安装-OpenSSH"><a href="#用-Cydia-安装-OpenSSH" class="headerlink" title="用 Cydia 安装 OpenSSH"></a>用 Cydia 安装 OpenSSH</h3><p>OpenSSH（OpenBSD Secure Shell）是使用SSH通过计算机网络加密通信的实现。它是替换由SSH Communications Security所提供的商用版本的开放源代码方案。目前OpenSSH是OpenBSD的子项目。<br>Mac OS X 上已经安装好 SSH 客户端，仅需要利用 Cydia 在越狱设备上安装 OpenSSH，设备安装好 OpenSSH 之后，就可以在 Mac 上打开 Terminal 访问 iPhone 了。</p>
+<h3 id="SSH-连接越狱设备"><a href="#SSH-连接越狱设备" class="headerlink" title="SSH 连接越狱设备"></a>SSH 连接越狱设备</h3><ul>
+<li>确保 iPhone 和 Mac 在同一网域。比如，连接的相同 Wi-Fi。</li>
+<li>然后打开网络设置，查看 iPhone 的 IP 地址。如，10.12.67.32。</li>
+<li>在终端中输入</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">ssh root@10.12.67.32</span><br></pre></td></tr></table></figure>
+<p>这样就可以远程访问 iPhone 了。<br>连接设备时需要输入密码，默认密码都是 <strong>alpine</strong><br><strong>如何查看手机的 IP ？ 打开设置 -&gt; Wi-Fi -&gt; 点击当前连接的网络查看详情。</strong></p>
+<p><strong>为了保证安全，最好修改越狱设备的密码</strong></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">iPhone:~ root<span class="comment"># passwd</span></span><br><span class="line">Changing password <span class="keyword">for</span> root.</span><br><span class="line">New password:</span><br><span class="line">Retype new password:</span><br></pre></td></tr></table></figure>
+<p>但是！！！最重要的是！！！<br><strong>一定要记住自己修改的密码！</strong><br><strong>一定要记住自己修改的密码！</strong><br><strong>一定要记住自己修改的密码！</strong><br>否则，就要修改 /private/etc/master.passwd 中的 root 密码<br>但是，没有权限还是改不了😭<br>最终无奈还是乖乖 DFU 刷机再越狱。。。惨痛的教训啊！！！</p>
+<h3 id="退出远程连接"><a href="#退出远程连接" class="headerlink" title="退出远程连接"></a>退出远程连接</h3><p>在终端输入下面的命令</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+<h2 id="利用-class-dump-导出头文件"><a href="#利用-class-dump-导出头文件" class="headerlink" title="利用 class-dump 导出头文件"></a>利用 class-dump 导出头文件</h2><p>为什么要导出头文件？<br>我个人认为出于以下目的：</p>
+<ul>
+<li>通过导出头文件，直观地得到应用的类、方法等数据结构。</li>
+<li>通过导出的类、方法等可以想象出软件原有的结构。</li>
+<li>得到应用的方法后，可以在运行时进行调用。</li>
+</ul>
+<h3 id="Mac-安装-class-dump"><a href="#Mac-安装-class-dump" class="headerlink" title="Mac 安装 class-dump"></a>Mac 安装 class-dump</h3><p><strong>class-dump is a command-line utility for examining the Objective-C segment of Mach-O files.</strong><br>class-dump 是检测 Mach-O 文件 Objective-C 类的一个命令行工具。<br>Google code 上的 class-dump-z 的版本已经失效了，但是，可以在 GayHub 上找到 class-dump 项目，下载地址 <a href="http://stevenygard.com/projects/class-dump/" target="_blank" rel="noopener">class-dump</a> 。</p>
+<p>下载 tar 包之后，在终端中输入以下命令行，解压 tar 包，并复制到 /usr/bin/ 目录下。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">$ tar -zxvf class-dump-3.5.tar.gz</span><br><span class="line">$ sudo cp class-dump-3.5/class-dump /usr/bin/</span><br></pre></td></tr></table></figure>
+<p>但是升级 OS X 10.11.6 版本及以上之后会报以下错误：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">csrutil <span class="built_in">disable</span></span><br><span class="line">csrutil: failed to modify system integrity configuration. This tool needs to be executed from the Recovery OS.</span><br></pre></td></tr></table></figure>
+<p>这是由于 Apple 为了防止安装恶意软件，将这个权限关闭了。开启该权限，需要重启 Mac ，并在听到开机提示声后按住 Command + R 键，在 Utilities 下拉菜单中找到 Terminal 选项，打开并输入以下命令。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">csrutil <span class="built_in">disable</span></span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>
+<p>(原链接)[<a href="http://osxdaily.com/2015/10/05/disable-rootless-system-integrity-protection-mac-os-x/" target="_blank" rel="noopener">http://osxdaily.com/2015/10/05/disable-rootless-system-integrity-protection-mac-os-x/</a>]</p>
+<p>系统重启成功后，再将 class-dump 重新复制到 /usr/bin/ 目录下，就能直接使用了。<br>其实，也可以直接在 iPhone 上安装 class-dump （iOS 也是 Darwin 核心的类 UNIX 机子嘛～），但是用 iPhone 导出头文件实在麻烦，所以直接在 Mac 上安装好 class-dump ，然后得到应用的二进制文件之后，利用 scp 推送到 Mac 上，就可以在 Mac 上直接导出头文件了。<br>以上便是在 Mac 上安装 class-dump 的过程，接下来看看如何获得越狱设备上的应用二进制文件。 </p>
+<h3 id="获得二进制可执行文件"><a href="#获得二进制可执行文件" class="headerlink" title="获得二进制可执行文件"></a>获得二进制可执行文件</h3><h4 id="越狱机安装-Clutch"><a href="#越狱机安装-Clutch" class="headerlink" title="越狱机安装 Clutch"></a>越狱机安装 Clutch</h4><p><strong>Clutch is a high-speed iOS decryption tool. Clutch supports the iPhone, iPod Touch, and iPad as well as all iOS version, architecture types, and most binaries. Clutch is meant only for educational purposes and security research.</strong><br><a href="https://github.com/KJCracks/Clutch" target="_blank" rel="noopener">Clutch</a> 是 iOS 的一款高速解密工具。这个工具在 GitHub 上是开源的，<a href="https://github.com/KJCracks/Clutch/releases" target="_blank" rel="noopener">Release 下载地址</a>。</p>
+<h4 id="加密和解密"><a href="#加密和解密" class="headerlink" title="加密和解密"></a>加密和解密</h4><p>为什么要使用 Clutch？<br>用户在 AppStore 上下载安装的应用软件，都是经过加密的。<br>在正向开发的时候，需要进行 <strong>code sign</strong>，即代码签名，那么我们就需要申请一个苹果的授权证书。而该证书是被苹果 Certificate Authority 签过名的合法的证书。申请这个证书就需要在开发的 Mac 上生成 <strong>CertificateSigningRequest.certSigningRequest</strong> 文件，该文件申请者信息（此信息是用申请者的私钥加密的）、申请者公钥（此信息是申请者使用的私钥对应的公钥）、摘要算法和公钥加密算法。那么，当代码在开发者的 Mac 上编译打包之后就会利用 Mac 上的私钥进行加密，然后利用上传的 CSR 文件中的公钥进行解密。<br>RSA 的应用场景还有很多，比如，支付宝的支付签名也是利用 RSA 进行加密的。<br>（以上内容，如有错误，敬请指正，共同进步）<br>因此，如果要得到应用可执行文件的头文件，必须先对应用进行解密，这是就需要用 Clutch 工具来对应用的可执行文件进行解密，即所谓的砸壳。<br>但是，越狱机上并不是所有的软件都来源于 App Store ，比如“91助手”之类的软件下载的应用，可以直接利用 class-dump 导出头文件，因为在这种应用市场上下载的应用已经进行过解密了。</p>
+<h4 id="连接设备并解密软件"><a href="#连接设备并解密软件" class="headerlink" title="连接设备并解密软件"></a>连接设备并解密软件</h4><ul>
+<li><p>重复上一节的内容，先利用 SHH 连接设备。</p>
+</li>
+<li><p>下载 Clutch 最新的发布版，并利用 scp 传送到越狱机上。如，IP 地址是 10.12.67.32。（/usr/bin/ 目录是符合 UNIX 标准目录的二进制文件存储目录，命令工具一般存储在该目录。详细可看《今天开始学内核》系列文章）</p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">scp Clutch root@10.12.67.32:/usr/bin/</span><br></pre></td></tr></table></figure>
+<ul>
+<li>测试是否安装成功，查看 Clutch 的版本号。</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">Clutch --version</span><br></pre></td></tr></table></figure>
+<ul>
+<li>安装成功，查看有哪些需要解密的文件。</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">NY:~ root<span class="comment"># Clutch -i</span></span><br><span class="line">Installed apps:</span><br><span class="line">1:   WeChat &lt;com.tencent.xin&gt;</span><br><span class="line">2:   QQ &lt;com.tencent.mqq&gt;</span><br><span class="line">3:   爱思助手 &lt;com.i4.picture&gt;</span><br><span class="line">4:   支付宝 - 让生活更简单 &lt;com.alipay.iphoneclient&gt;</span><br><span class="line">5:   QQ音乐-听歌K歌FM电台,免费下载海量音乐播放器 &lt;com.tencent.QQMusic&gt;</span><br><span class="line">6:   爱思助手 &lt;com.diary.mood&gt;</span><br><span class="line">7:   天气 &lt;com.moji.MojiWeather&gt;</span><br><span class="line">8:   中华万年历-日历,黄历,天气预报,节日,星座,生日提醒 &lt;cn.etouch.ecalendar&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>对支付宝解密</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Clutch </span><br><span class="line">Usage: Clutch [OPTIONS]</span><br><span class="line">-b --binary-dump &lt;value&gt; Only dump binary files from specified bundleID </span><br><span class="line">-d --dump &lt;value&gt;        Dump specified bundleID into .ipa file </span><br><span class="line">-i --print-installed     Print installed applications </span><br><span class="line">   --clean               Clean /var/tmp/clutch directory </span><br><span class="line">   --version             Display version and exit </span><br><span class="line">-? --help                Display this help and exit </span><br><span class="line">-n --no-color            Print with colors disabled</span><br></pre></td></tr></table></figure>
+<p>可以看到 Clutch 的使用说明，如果要活得解密的二进制文件，则用 <strong>-b</strong> 或 <strong>–binary-dump</strong> 。</p>
+<p>那么根据之前得到的支付宝的序号开始进行解密：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">NY:~ root<span class="comment"># Clutch -b 4</span></span><br><span class="line">com.alipay.iphoneclient contains watchOS 2 compatible application. It<span class="string">'s not possible to dump watchOS 2 apps with Clutch 2.0.4 at this moment.</span></span><br><span class="line"><span class="string">ASLR slide: 0x91000</span></span><br><span class="line"><span class="string">Dumping &lt;APTodayWidget&gt; (armv7)</span></span><br><span class="line"><span class="string">Patched cryptid (32bit segment)</span></span><br><span class="line"><span class="string">Writing new checksum</span></span><br><span class="line"><span class="string">Dumping &lt;APIJKPlayer&gt; armv7</span></span><br><span class="line"><span class="string">Successfully dumped framework APIJKPlayer!</span></span><br><span class="line"><span class="string">Dumping &lt;AlipayWallet&gt; (armv7)</span></span><br><span class="line"><span class="string">Patched cryptid (32bit segment)</span></span><br><span class="line"><span class="string">Writing new checksum</span></span><br><span class="line"><span class="string">Finished dumping com.alipay.iphoneclient to /var/tmp/clutch/D432F744-A53A-46FB-BE3C-D3891BCB827A</span></span><br><span class="line"><span class="string">Finished dumping com.alipay.iphoneclient in 151.0 seconds</span></span><br></pre></td></tr></table></figure>
+<p>得到解密之后的包存储位置：<strong>/var/tmp/clutch/D432F744-A53A-46FB-BE3C-D3891BCB827A</strong><br>进入目录 <strong>/var/tmp/clutch/D432F744-A53A-46FB-BE3C-D3891BCB827A／com.alipay.iphoneclient/</strong> 找到 AlipayWallet 的二进制文件，并利用 scp 传送到 Mac 上。</p>
+<p><strong>scp AlipayWallet niyao@10.12.67.12:/Users/niyao/N.Y<a href="https://niyaoyao.github.io/Reverse" target="_blank" rel="noopener">https://niyaoyao.github.io/Reverse</a></strong></p>
+<p>至此，对二进制文件的解密过程就结束了，接下来在看一下头文件的导出过程。</p>
+<h3 id="导出头文件"><a href="#导出头文件" class="headerlink" title="导出头文件"></a>导出头文件</h3><p>在 Mac 上进入 AlipayWallet 存储的位置，并输入以下命令行。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class-dump AlipayWallet &gt; AlipayWallet_class_dump.h</span><br></pre></td></tr></table></figure>
+<p>最后，就可在目录中打开 txt 文件，并看到道出的头文件的类、属性、方法等内容了。<br>那导出的头文件有什么具体的作用将在下一篇文章《今天开始学逆向：用 Cycript 进行运行时分析及应用操作》中介绍。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>本篇文章主要学习了以下内容：</p>
+<ul>
+<li>如何得到一台越狱机。这是学习 OS X 和 iOS 内核以及 iOS 逆向的前提。</li>
+<li>利用 SSH 连接越狱设备。</li>
+<li>在越狱设备上安装 Cluth，并对加密后的应用进行解密。</li>
+<li>在 Mac OS X 上安装 class-dump，并利用 class-dump 导出可执行文件的头文件。</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li>AloneMonkey 大神的文章 <a href="http://bbs.pediy.com/showthread.php?t=209014" target="_blank" rel="noopener">http://bbs.pediy.com/showthread.php?t=209014</a></li>
+<li>漫谈iOS程序的证书和签名机制 <a href="http://www.pchou.info/ios/2015/12/14/ios-certification-and-code-sign.html" target="_blank" rel="noopener">http://www.pchou.info/ios/2015/12/14/ios-certification-and-code-sign.html</a></li>
+<li>威锋网 <a href="http://act.feng.com/wetools/index.php?r=iosRom/index" target="_blank" rel="noopener">http://act.feng.com/wetools/index.php?r=iosRom/index</a></li>
+<li>class-dump 下载地址 <a href="http://stevenygard.com/projects/class-dump/" target="_blank" rel="noopener">http://stevenygard.com/projects/class-dump/</a></li>
+<li>Clutch 下载地址 <a href="https://github.com/KJCracks/Clutch/releases" target="_blank" rel="noopener">https://github.com/KJCracks/Clutch/releases</a></li>
+</ul>
+
+    
+  </div>
+  
+    
+<!-- Gitalk评论插件通用代码 -->
+<div id="git"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: 'e929305d1df52067f223',
+  clientSecret: '9a6f94df61c1533c67cfbcbb038520090e2ba4da',
+  repo: 'blog-comments',
+  owner: 'niyaoyao',
+  admin: ['niyaoyao'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('git')
+</script>
+<!-- Gitalk代码结束 -->
+
+  
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2016/10/09/react-native-basic-syntax/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2016/10/18/Learning-Kernel-From-Today-D1/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+<!-- Gitalk评论插件通用代码 -->
+<div id="git"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: 'e929305d1df52067f223',
+  clientSecret: '9a6f94df61c1533c67cfbcbb038520090e2ba4da',
+  repo: 'blog-comments',
+  owner: 'niyaoyao',
+  admin: ['niyaoyao'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('git')
+</script>
+<!-- Gitalk代码结束 -->
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+</body>
+</html>

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>划水 leetcode：3 | N.Y.</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="forsigner,前端,设计,Hexo主题,前端开发,用户体验,设计,frontend,design,nodejs,JavaScript">
+  
+
+  <meta name="description" content="前言第二篇算法总结，总结 leetcode 第 3 题。 3. Longest Substring Without Repeating Characters Given a string, find the length of the longest substring without repeating characters.  审题&amp;amp;思路本题大意：给定一个字符串，找到最长无重复自负的子">
+<meta property="og:type" content="article">
+<meta property="og:title" content="划水 leetcode：3">
+<meta property="og:url" content="http://niyaoyao.me/2019/10/21/lc-01/index.html">
+<meta property="og:site_name" content="N.Y.">
+<meta property="og:description" content="前言第二篇算法总结，总结 leetcode 第 3 题。 3. Longest Substring Without Repeating Characters Given a string, find the length of the longest substring without repeating characters.  审题&amp;amp;思路本题大意：给定一个字符串，找到最长无重复自负的子">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-06-12T15:52:57.667Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="划水 leetcode：3">
+<meta name="twitter:description" content="前言第二篇算法总结，总结 leetcode 第 3 题。 3. Longest Substring Without Repeating Characters Given a string, find the length of the longest substring without repeating characters.  审题&amp;amp;思路本题大意：给定一个字符串，找到最长无重复自负的子">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38189205-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Longest-Substring-Without-Repeating-Characters"><span class="toc-text">3. Longest Substring Without Repeating Characters</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#审题-amp-思路"><span class="toc-text">审题&amp;思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#思路误区"><span class="toc-text">思路误区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解题"><span class="toc-text">解题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#低性能的遍历"><span class="toc-text">低性能的遍历</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#滑动窗口"><span class="toc-text">滑动窗口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#滑动窗口优化"><span class="toc-text">滑动窗口优化</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解题总结"><span class="toc-text">解题总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-lc-01" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">划水 leetcode：3</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.10.21</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Niyao</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>第二篇算法总结，总结 leetcode 第 3 题。</p>
+<h2 id="3-Longest-Substring-Without-Repeating-Characters"><a href="#3-Longest-Substring-Without-Repeating-Characters" class="headerlink" title="3. Longest Substring Without Repeating Characters"></a>3. Longest Substring Without Repeating Characters</h2><blockquote>
+<p>Given a string, find the length of the longest substring without repeating characters.</p>
+</blockquote>
+<h3 id="审题-amp-思路"><a href="#审题-amp-思路" class="headerlink" title="审题&amp;思路"></a>审题&amp;思路</h3><p>本题大意：给定一个字符串，找到最长无重复自负的子字符串的长度。</p>
+<h3 id="思路误区"><a href="#思路误区" class="headerlink" title="思路误区"></a>思路误区</h3><p>这道题一开始以为可以找到两个相同字符并计算之间的长度，但相同字符之间可能存在不同字符开头所构成的子字符串比相同字符之间子字符串长度更长。</p>
+<h3 id="解题"><a href="#解题" class="headerlink" title="解题"></a>解题</h3><p>本题难易：中等。</p>
+<h4 id="低性能的遍历"><a href="#低性能的遍历" class="headerlink" title="低性能的遍历"></a>低性能的遍历</h4><p>本题的解题直觉是遍历字符串找出不同子字符串，为了优化性能，我一遍循环实现遍历，但由于设置了标志位，所以如果遇到相同字符回到该字符的上一个位置的下一个字符，重新开始查找。性能较差，如果遇到最坏情况可能会达到 O(n^2)的情况。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> Solution &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">lengthOfLongestSubstring</span><span class="params">(<span class="built_in">string</span> s)</span> </span>&#123;</span><br><span class="line">    	</span><br><span class="line">    	<span class="keyword">int</span> maxLength = <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">map</span>&lt;<span class="keyword">char</span>, <span class="keyword">int</span>&gt; stringMap;</span><br><span class="line">        <span class="keyword">int</span> sameIndex = <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"NY String:"</span> &lt;&lt; s &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.length(); i++) &#123;</span><br><span class="line">            <span class="built_in">cout</span> &lt;&lt; <span class="string">"\nCurrent: s[i]="</span> &lt;&lt; s[i] &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (stringMap[s[i]])</span><br><span class="line">            &#123;</span><br><span class="line">                sameIndex = stringMap[s[i]];</span><br><span class="line">                i = sameIndex;</span><br><span class="line">                stringMap = <span class="built_in">map</span>&lt;<span class="keyword">char</span>, <span class="keyword">int</span>&gt;();</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                stringMap[s[i]] = i;</span><br><span class="line">            &#125;</span><br><span class="line">            maxLength = stringMap.size() &gt; maxLength ? stringMap.size() : maxLength;</span><br><span class="line">            printMap(stringMap);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> maxLength;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>控制台输出</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">NY String:abcdefggadvopesgacbesmqrs</span><br><span class="line"></span><br><span class="line">Current: s[i]=a</span><br><span class="line">a</span><br><span class="line">Current: s[i]=b</span><br><span class="line">ab</span><br><span class="line">Current: s[i]=c</span><br><span class="line">abc</span><br><span class="line">Current: s[i]=d</span><br><span class="line">abcd</span><br><span class="line">Current: s[i]=e</span><br><span class="line">abcde</span><br><span class="line">Current: s[i]=f</span><br><span class="line">abcdef</span><br><span class="line">Current: s[i]=g</span><br><span class="line">abcdefg</span><br><span class="line">Current: s[i]=g</span><br><span class="line"></span><br><span class="line">Current: s[i]=g</span><br><span class="line">g</span><br><span class="line">Current: s[i]=a</span><br><span class="line">ag</span><br><span class="line">Current: s[i]=d</span><br><span class="line">adg</span><br><span class="line">Current: s[i]=v</span><br><span class="line">adgv</span><br><span class="line">Current: s[i]=o</span><br><span class="line">adgov</span><br><span class="line">Current: s[i]=p</span><br><span class="line">adgopv</span><br><span class="line">Current: s[i]=e</span><br><span class="line">adegopv</span><br><span class="line">Current: s[i]=s</span><br><span class="line">adegopsv</span><br><span class="line">Current: s[i]=g</span><br><span class="line"></span><br><span class="line">Current: s[i]=a</span><br><span class="line">a</span><br><span class="line">Current: s[i]=d</span><br><span class="line">ad</span><br><span class="line">Current: s[i]=v</span><br><span class="line">adv</span><br><span class="line">Current: s[i]=o</span><br><span class="line">adov</span><br><span class="line">Current: s[i]=p</span><br><span class="line">adopv</span><br><span class="line">Current: s[i]=e</span><br><span class="line">adeopv</span><br><span class="line">Current: s[i]=s</span><br><span class="line">adeopsv</span><br><span class="line">Current: s[i]=g</span><br><span class="line">adegopsv</span><br><span class="line">Current: s[i]=a</span><br><span class="line"></span><br><span class="line">Current: s[i]=d</span><br><span class="line">d</span><br><span class="line">Current: s[i]=v</span><br><span class="line">dv</span><br><span class="line">Current: s[i]=o</span><br><span class="line">dov</span><br><span class="line">Current: s[i]=p</span><br><span class="line">dopv</span><br><span class="line">Current: s[i]=e</span><br><span class="line">deopv</span><br><span class="line">Current: s[i]=s</span><br><span class="line">deopsv</span><br><span class="line">Current: s[i]=g</span><br><span class="line">degopsv</span><br><span class="line">Current: s[i]=a</span><br><span class="line">adegopsv</span><br><span class="line">Current: s[i]=c</span><br><span class="line">acdegopsv</span><br><span class="line">Current: s[i]=b</span><br><span class="line">abcdegopsv</span><br><span class="line">Current: s[i]=e</span><br><span class="line"></span><br><span class="line">Current: s[i]=s</span><br><span class="line">s</span><br><span class="line">Current: s[i]=g</span><br><span class="line">gs</span><br><span class="line">Current: s[i]=a</span><br><span class="line">ags</span><br><span class="line">Current: s[i]=c</span><br><span class="line">acgs</span><br><span class="line">Current: s[i]=b</span><br><span class="line">abcgs</span><br><span class="line">Current: s[i]=e</span><br><span class="line">abcegs</span><br><span class="line">Current: s[i]=s</span><br><span class="line"></span><br><span class="line">Current: s[i]=g</span><br><span class="line">g</span><br><span class="line">Current: s[i]=a</span><br><span class="line">ag</span><br><span class="line">Current: s[i]=c</span><br><span class="line">acg</span><br><span class="line">Current: s[i]=b</span><br><span class="line">abcg</span><br><span class="line">Current: s[i]=e</span><br><span class="line">abceg</span><br><span class="line">Current: s[i]=s</span><br><span class="line">abcegs</span><br><span class="line">Current: s[i]=m</span><br><span class="line">abcegms</span><br><span class="line">Current: s[i]=q</span><br><span class="line">abcegmqs</span><br><span class="line">Current: s[i]=r</span><br><span class="line">abcegmqrs</span><br><span class="line">Current: s[i]=s</span><br><span class="line"></span><br><span class="line">Current: s[i]=m</span><br><span class="line">m</span><br><span class="line">Current: s[i]=q</span><br><span class="line">mq</span><br><span class="line">Current: s[i]=r</span><br><span class="line">mqr</span><br><span class="line">Current: s[i]=s</span><br><span class="line">mqrs</span><br></pre></td></tr></table></figure>
+<h4 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h4><p>为了优化遍历的性能，可以使用 HashSet 作为滑动窗口，那么检查当前字符的时间复杂度就可以是 O（1）。</p>
+<blockquote>
+<p>A sliding window is an abstract concept commonly used in array/string problems. A window is a range of elements in the array/string which usually defined by the start and end indices, i.e. [i, j)[i,j) (left-closed, right-open). A sliding window is a window “slides” its two boundaries to the certain direction. For example, if we slide [i, j)[i,j) to the right by 11 element, then it becomes [i+1, j+1)[i+1,j+1) (left-closed, right-open).</p>
+</blockquote>
+<p>滑动窗口方法主要是假定一个前闭后开的区间，在这个区间内如果不存在当前遍历的字符则加入该字符，如果已存在相同字符，则将该字符之前的所有字符移除，直到当前重复字符不存在集合中。</p>
+<p>考察的数据类型为 HashSet ，集合是一种关联容器。集合的特点：1. 元素是唯一的，没有重复的；2. 集合中的元素是排好序的。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> Solution &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">     <span class="function"><span class="keyword">int</span> <span class="title">lengthOfLongestSubstring</span><span class="params">(<span class="built_in">string</span> s)</span> </span>&#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">int</span> maxLength = <span class="number">0</span>, i = <span class="number">0</span>, j = <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt; characterSet;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"String: "</span> &lt;&lt; s &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">        <span class="keyword">while</span> (i &lt; s.length() &amp;&amp; j &lt; s.length()) &#123;</span><br><span class="line">            <span class="built_in">cout</span> &lt;&lt; <span class="string">"Current: s[i]="</span> &lt;&lt; s[i] &lt;&lt; <span class="string">" Current s[j]="</span> &lt;&lt; s[j] &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">            <span class="keyword">if</span> (!(characterSet.find(s[j]) != characterSet.end()))</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="built_in">cout</span> &lt;&lt; <span class="string">"Not Contain Character"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">                characterSet.insert(s[j++]);</span><br><span class="line">                maxLength = max(maxLength, j-i);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                characterSet.erase(s[i++]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt;::iterator it;</span><br><span class="line">            <span class="keyword">for</span>(it = characterSet.begin(); it != characterSet.end(); it++) </span><br><span class="line">                <span class="built_in">cout</span> &lt;&lt; (*it) &lt;&lt; <span class="string">" "</span>;</span><br><span class="line">            <span class="built_in">cout</span> &lt;&lt; <span class="string">" "</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> maxLength;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>控制台输出</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">String: abcdefggadvopesgacbesmqrs</span><br><span class="line">Current: s[i]=a Current s[j]=a</span><br><span class="line">Not Contain Character</span><br><span class="line">a </span><br><span class="line">Current: s[i]=a Current s[j]=b</span><br><span class="line">Not Contain Character</span><br><span class="line">ab </span><br><span class="line">Current: s[i]=a Current s[j]=c</span><br><span class="line">Not Contain Character</span><br><span class="line">abc </span><br><span class="line">Current: s[i]=a Current s[j]=d</span><br><span class="line">Not Contain Character</span><br><span class="line">abcd </span><br><span class="line">Current: s[i]=a Current s[j]=e</span><br><span class="line">Not Contain Character</span><br><span class="line">abcde </span><br><span class="line">Current: s[i]=a Current s[j]=f</span><br><span class="line">Not Contain Character</span><br><span class="line">abcdef </span><br><span class="line">Current: s[i]=a Current s[j]=g</span><br><span class="line">Not Contain Character</span><br><span class="line">abcdefg </span><br><span class="line">Current: s[i]=a Current s[j]=g</span><br><span class="line">bcdefg </span><br><span class="line">Current: s[i]=b Current s[j]=g</span><br><span class="line">cdefg </span><br><span class="line">Current: s[i]=c Current s[j]=g</span><br><span class="line">defg </span><br><span class="line">Current: s[i]=d Current s[j]=g</span><br><span class="line">efg </span><br><span class="line">Current: s[i]=e Current s[j]=g</span><br><span class="line">fg </span><br><span class="line">Current: s[i]=f Current s[j]=g</span><br><span class="line">g </span><br><span class="line">Current: s[i]=g Current s[j]=g</span><br><span class="line"> </span><br><span class="line">Current: s[i]=g Current s[j]=g</span><br><span class="line">Not Contain Character</span><br><span class="line">g </span><br><span class="line">Current: s[i]=g Current s[j]=a</span><br><span class="line">Not Contain Character</span><br><span class="line">ag </span><br><span class="line">Current: s[i]=g Current s[j]=d</span><br><span class="line">Not Contain Character</span><br><span class="line">adg </span><br><span class="line">Current: s[i]=g Current s[j]=v</span><br><span class="line">Not Contain Character</span><br><span class="line">adgv </span><br><span class="line">Current: s[i]=g Current s[j]=o</span><br><span class="line">Not Contain Character</span><br><span class="line">adgov </span><br><span class="line">Current: s[i]=g Current s[j]=p</span><br><span class="line">Not Contain Character</span><br><span class="line">adgopv </span><br><span class="line">Current: s[i]=g Current s[j]=e</span><br><span class="line">Not Contain Character</span><br><span class="line">adegopv </span><br><span class="line">Current: s[i]=g Current s[j]=s</span><br><span class="line">Not Contain Character</span><br><span class="line">adegopsv </span><br><span class="line">Current: s[i]=g Current s[j]=g</span><br><span class="line">adeopsv </span><br><span class="line">Current: s[i]=a Current s[j]=g</span><br><span class="line">Not Contain Character</span><br><span class="line">adegopsv </span><br><span class="line">Current: s[i]=a Current s[j]=a</span><br><span class="line">degopsv </span><br><span class="line">Current: s[i]=d Current s[j]=a</span><br><span class="line">Not Contain Character</span><br><span class="line">adegopsv </span><br><span class="line">Current: s[i]=d Current s[j]=c</span><br><span class="line">Not Contain Character</span><br><span class="line">acdegopsv </span><br><span class="line">Current: s[i]=d Current s[j]=b</span><br><span class="line">Not Contain Character</span><br><span class="line">abcdegopsv </span><br><span class="line">Current: s[i]=d Current s[j]=e</span><br><span class="line">abcegopsv </span><br><span class="line">Current: s[i]=v Current s[j]=e</span><br><span class="line">abcegops </span><br><span class="line">Current: s[i]=o Current s[j]=e</span><br><span class="line">abcegps </span><br><span class="line">Current: s[i]=p Current s[j]=e</span><br><span class="line">abcegs </span><br><span class="line">Current: s[i]=e Current s[j]=e</span><br><span class="line">abcgs </span><br><span class="line">Current: s[i]=s Current s[j]=e</span><br><span class="line">Not Contain Character</span><br><span class="line">abcegs </span><br><span class="line">Current: s[i]=s Current s[j]=s</span><br><span class="line">abceg </span><br><span class="line">Current: s[i]=g Current s[j]=s</span><br><span class="line">Not Contain Character</span><br><span class="line">abcegs </span><br><span class="line">Current: s[i]=g Current s[j]=m</span><br><span class="line">Not Contain Character</span><br><span class="line">abcegms </span><br><span class="line">Current: s[i]=g Current s[j]=q</span><br><span class="line">Not Contain Character</span><br><span class="line">abcegmqs </span><br><span class="line">Current: s[i]=g Current s[j]=r</span><br><span class="line">Not Contain Character</span><br><span class="line">abcegmqrs </span><br><span class="line">Current: s[i]=g Current s[j]=s</span><br><span class="line">abcemqrs </span><br><span class="line">Current: s[i]=a Current s[j]=s</span><br><span class="line">bcemqrs </span><br><span class="line">Current: s[i]=c Current s[j]=s</span><br><span class="line">bemqrs </span><br><span class="line">Current: s[i]=b Current s[j]=s</span><br><span class="line">emqrs </span><br><span class="line">Current: s[i]=e Current s[j]=s</span><br><span class="line">mqrs </span><br><span class="line">Current: s[i]=s Current s[j]=s</span><br><span class="line">mqr </span><br><span class="line">Current: s[i]=m Current s[j]=s</span><br><span class="line">Not Contain Character</span><br><span class="line">mqrs</span><br></pre></td></tr></table></figure>
+<p>比较两个算法的控制台输出结果，相比我的算法，滑动窗口的优势在于，不需要重新在重复的元素开始遍历一遍，减少了时间损耗，时间复杂度 O(2n)。</p>
+<h4 id="滑动窗口优化"><a href="#滑动窗口优化" class="headerlink" title="滑动窗口优化"></a>滑动窗口优化</h4><p>上述滑动窗口的算法，仍然会使 i 进行一遍遍历，如果想优化 2n，则需要使用 Map 对字符的下标索引进行记录，那么我们就可以在找到重复字符时直接跳过那些字符。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> Solution &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">lengthOfLongestSubstring</span><span class="params">(<span class="built_in">string</span> s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> maxLength = <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">map</span>&lt;<span class="keyword">char</span>, <span class="keyword">int</span>&gt; charMap;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"\nString: "</span> &lt;&lt; s &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">        <span class="keyword">int</span> n = s.length();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>; j &lt; n; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">cout</span> &lt;&lt; <span class="string">"\nCurrent: s[i("</span>&lt;&lt;i&lt;&lt;<span class="string">")]="</span> &lt;&lt; s[i] &lt;&lt; <span class="string">" Current s[j("</span>&lt;&lt;j&lt;&lt;<span class="string">")]="</span> &lt;&lt; s[j] &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">            <span class="keyword">if</span> (charMap.find(s[j]) != charMap.end())</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="built_in">cout</span> &lt;&lt; <span class="string">"Contain:"</span> &lt;&lt; s[j] &lt;&lt; <span class="string">" charMap["</span>&lt;&lt; s[j] &lt;&lt;<span class="string">"]="</span> &lt;&lt; charMap[s[j]] &lt;&lt; <span class="string">" i="</span> &lt;&lt; i &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">                i = max(charMap[s[j]], i);</span><br><span class="line">            &#125;</span><br><span class="line">            maxLength = max(maxLength, j - i + <span class="number">1</span>);</span><br><span class="line">            <span class="built_in">cout</span> &lt;&lt; <span class="string">"Max Length:"</span> &lt;&lt; maxLength &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">            charMap[s[j]] = j + <span class="number">1</span>;</span><br><span class="line">            printMap(charMap);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> maxLength;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>控制台输出</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">String: abcdefggadvopesgacbesmqrs</span><br><span class="line"></span><br><span class="line">Current: s[i(0)]=a Current s[j(0)]=a</span><br><span class="line">Max Length:1</span><br><span class="line">a</span><br><span class="line">1 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(0)]=a Current s[j(1)]=b</span><br><span class="line">Max Length:2</span><br><span class="line">ab</span><br><span class="line">1 2 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(0)]=a Current s[j(2)]=c</span><br><span class="line">Max Length:3</span><br><span class="line">abc</span><br><span class="line">1 2 3 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(0)]=a Current s[j(3)]=d</span><br><span class="line">Max Length:4</span><br><span class="line">abcd</span><br><span class="line">1 2 3 4 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(0)]=a Current s[j(4)]=e</span><br><span class="line">Max Length:5</span><br><span class="line">abcde</span><br><span class="line">1 2 3 4 5 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(0)]=a Current s[j(5)]=f</span><br><span class="line">Max Length:6</span><br><span class="line">abcdef</span><br><span class="line">1 2 3 4 5 6 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(0)]=a Current s[j(6)]=g</span><br><span class="line">Max Length:7</span><br><span class="line">abcdefg</span><br><span class="line">1 2 3 4 5 6 7 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(0)]=a Current s[j(7)]=g</span><br><span class="line">Contain:g charMap[g]=7 i=0</span><br><span class="line">Max Length:7</span><br><span class="line">abcdefg</span><br><span class="line">1 2 3 4 5 6 8 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(7)]=g Current s[j(8)]=a</span><br><span class="line">Contain:a charMap[a]=1 i=7</span><br><span class="line">Max Length:7</span><br><span class="line">abcdefg</span><br><span class="line">9 2 3 4 5 6 8 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(7)]=g Current s[j(9)]=d</span><br><span class="line">Contain:d charMap[d]=4 i=7</span><br><span class="line">Max Length:7</span><br><span class="line">abcdefg</span><br><span class="line">9 2 3 10 5 6 8 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(7)]=g Current s[j(10)]=v</span><br><span class="line">Max Length:7</span><br><span class="line">abcdefgv</span><br><span class="line">9 2 3 10 5 6 8 11 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(7)]=g Current s[j(11)]=o</span><br><span class="line">Max Length:7</span><br><span class="line">abcdefgov</span><br><span class="line">9 2 3 10 5 6 8 12 11 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(7)]=g Current s[j(12)]=p</span><br><span class="line">Max Length:7</span><br><span class="line">abcdefgopv</span><br><span class="line">9 2 3 10 5 6 8 12 13 11 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(7)]=g Current s[j(13)]=e</span><br><span class="line">Contain:e charMap[e]=5 i=7</span><br><span class="line">Max Length:7</span><br><span class="line">abcdefgopv</span><br><span class="line">9 2 3 10 14 6 8 12 13 11 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(7)]=g Current s[j(14)]=s</span><br><span class="line">Max Length:8</span><br><span class="line">abcdefgopsv</span><br><span class="line">9 2 3 10 14 6 8 12 13 15 11 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(7)]=g Current s[j(15)]=g</span><br><span class="line">Contain:g charMap[g]=8 i=7</span><br><span class="line">Max Length:8</span><br><span class="line">abcdefgopsv</span><br><span class="line">9 2 3 10 14 6 16 12 13 15 11 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(8)]=a Current s[j(16)]=a</span><br><span class="line">Contain:a charMap[a]=9 i=8</span><br><span class="line">Max Length:8</span><br><span class="line">abcdefgopsv</span><br><span class="line">17 2 3 10 14 6 16 12 13 15 11 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(9)]=d Current s[j(17)]=c</span><br><span class="line">Contain:c charMap[c]=3 i=9</span><br><span class="line">Max Length:9</span><br><span class="line">abcdefgopsv</span><br><span class="line">17 2 18 10 14 6 16 12 13 15 11 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(9)]=d Current s[j(18)]=b</span><br><span class="line">Contain:b charMap[b]=2 i=9</span><br><span class="line">Max Length:10</span><br><span class="line">abcdefgopsv</span><br><span class="line">17 19 18 10 14 6 16 12 13 15 11 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(9)]=d Current s[j(19)]=e</span><br><span class="line">Contain:e charMap[e]=14 i=9</span><br><span class="line">Max Length:10</span><br><span class="line">abcdefgopsv</span><br><span class="line">17 19 18 10 20 6 16 12 13 15 11 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(14)]=s Current s[j(20)]=s</span><br><span class="line">Contain:s charMap[s]=15 i=14</span><br><span class="line">Max Length:10</span><br><span class="line">abcdefgopsv</span><br><span class="line">17 19 18 10 20 6 16 12 13 21 11 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(15)]=g Current s[j(21)]=m</span><br><span class="line">Max Length:10</span><br><span class="line">abcdefgmopsv</span><br><span class="line">17 19 18 10 20 6 16 22 12 13 21 11 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(15)]=g Current s[j(22)]=q</span><br><span class="line">Max Length:10</span><br><span class="line">abcdefgmopqsv</span><br><span class="line">17 19 18 10 20 6 16 22 12 13 23 21 11 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(15)]=g Current s[j(23)]=r</span><br><span class="line">Max Length:10</span><br><span class="line">abcdefgmopqrsv</span><br><span class="line">17 19 18 10 20 6 16 22 12 13 23 24 21 11 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Current: s[i(15)]=g Current s[j(24)]=s</span><br><span class="line">Contain:s charMap[s]=21 i=15</span><br><span class="line">Max Length:10</span><br><span class="line">abcdefgmopqrsv</span><br><span class="line">17 19 18 10 20 6 16 22 12 13 23 24 25 11</span><br></pre></td></tr></table></figure>
+<p>这个算法是有点难理解的，算法并没有实际去查找最长不重复字符字串具体是什么，而是只求当前遍历的字符距离上一个重复的字符的最大距离。</p>
+<h3 id="解题总结"><a href="#解题总结" class="headerlink" title="解题总结"></a>解题总结</h3><ul>
+<li><strong>set 集合是一种关联容器。</strong></li>
+<li><strong>set 集合的特点：1. 元素是唯一的，没有重复的；2. 集合中的元素是排好序的。</strong></li>
+<li><strong>提交代码时须注释掉 console 输出，否则即便是优化后的算法也会超时。</strong> 非常重要！！！</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>现在还是欠缺算法时间复杂度的分析，还是不能用数学公式明确地表示出算法时间复杂度，算法分析仍然需要多练习，虽然有点挫败，慢慢来。买书学习是一定的了。</p>
+
+    
+  </div>
+  
+    
+<!-- Gitalk评论插件通用代码 -->
+<div id="git"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: 'e929305d1df52067f223',
+  clientSecret: '9a6f94df61c1533c67cfbcbb038520090e2ba4da',
+  repo: 'blog-comments',
+  owner: 'niyaoyao',
+  admin: ['niyaoyao'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('git')
+</script>
+<!-- Gitalk代码结束 -->
+
+  
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/10/09/lc-00/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/10/22/lc-02/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+<!-- Gitalk评论插件通用代码 -->
+<div id="git"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: 'e929305d1df52067f223',
+  clientSecret: '9a6f94df61c1533c67cfbcbb038520090e2ba4da',
+  repo: 'blog-comments',
+  owner: 'niyaoyao',
+  admin: ['niyaoyao'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('git')
+</script>
+<!-- Gitalk代码结束 -->
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

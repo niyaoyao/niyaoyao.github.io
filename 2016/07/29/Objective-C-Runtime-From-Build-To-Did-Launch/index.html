@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Objective-C Runtime —— From Build To Did Launch | N.Y.</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="iOS,Mac OS X,">
+  
+
+  <meta name="description" content="前言Objective-C 是 Mac OS X 操作系统下用来开发 iOS 和 Mac OS X 应用的编程语言，是强类型的动态语言 。可以利用 Runtime 这一特性，实现 AOP 、动态埋点、APM等功能需求。那么， OS X 和 iOS 是怎样实现 Objective-C 的运行时的呢？接下来就一探究竟。 本文内容概要：  Build: Compile, Link and Sign Ma">
+<meta name="keywords" content="iOS,Mac OS X">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Objective-C Runtime —— From Build To Did Launch">
+<meta property="og:url" content="http://niyaoyao.me/2016/07/29/Objective-C-Runtime-From-Build-To-Did-Launch/index.html">
+<meta property="og:site_name" content="N.Y.">
+<meta property="og:description" content="前言Objective-C 是 Mac OS X 操作系统下用来开发 iOS 和 Mac OS X 应用的编程语言，是强类型的动态语言 。可以利用 Runtime 这一特性，实现 AOP 、动态埋点、APM等功能需求。那么， OS X 和 iOS 是怎样实现 Objective-C 的运行时的呢？接下来就一探究竟。 本文内容概要：  Build: Compile, Link and Sign Ma">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://niyaoyao.github.io/images/runtime-build-01.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/runtime-build-02.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/runtime-build-03.png">
+<meta property="og:image" content="https://s3.amazonaws.com/media-p.slid.es/uploads/539805/images/2804352/Screen_Shot_2016-06-30_at_11.15.39_AM.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/runtime-build-04.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/runtime-build-05.gif">
+<meta property="og:updated_time" content="2020-06-12T15:52:57.665Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Objective-C Runtime —— From Build To Did Launch">
+<meta name="twitter:description" content="前言Objective-C 是 Mac OS X 操作系统下用来开发 iOS 和 Mac OS X 应用的编程语言，是强类型的动态语言 。可以利用 Runtime 这一特性，实现 AOP 、动态埋点、APM等功能需求。那么， OS X 和 iOS 是怎样实现 Objective-C 的运行时的呢？接下来就一探究竟。 本文内容概要：  Build: Compile, Link and Sign Ma">
+<meta name="twitter:image" content="https://niyaoyao.github.io/images/runtime-build-01.png">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38189205-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Build-Compile-Link-and-Sign"><span class="toc-text">Build: Compile, Link and Sign</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#编译"><span class="toc-text">编译</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#常见编译器"><span class="toc-text">常见编译器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#预处理-（Preprocessor）"><span class="toc-text">预处理 （Preprocessor）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#语法分析和语义分析"><span class="toc-text">语法分析和语义分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#目标代码生成和优化"><span class="toc-text">目标代码生成和优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#汇编器"><span class="toc-text">汇编器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#链接器"><span class="toc-text">链接器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Code-Sign"><span class="toc-text">Code Sign</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Mach-O-文件"><span class="toc-text">Mach-O 文件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Mach-O-文件结构"><span class="toc-text">Mach-O 文件结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Header"><span class="toc-text">Header</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Segment"><span class="toc-text">Segment</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#text-section"><span class="toc-text">__text section</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Runtime"><span class="toc-text">Runtime</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#runtime-dyld-amp-dylib"><span class="toc-text">runtime, dyld &amp; dylib</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#符号表"><span class="toc-text">符号表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动态库"><span class="toc-text">动态库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码分析"><span class="toc-text">源码分析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Q-amp-A"><span class="toc-text">Q&amp;A</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Open-Source"><span class="toc-text">Open Source</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Reference"><span class="toc-text">Reference</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Recommend-Book"><span class="toc-text">Recommend Book</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-Objective-C-Runtime-From-Build-To-Did-Launch" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Objective-C Runtime —— From Build To Did Launch</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.07.29</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Niyao</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Mac-OS-X-iOS-Operation-System/">Mac OS X & iOS Operation System</a>
+  </span>
+
+
+
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Objective-C 是 Mac OS X 操作系统下用来开发 iOS 和 Mac OS X 应用的编程语言，是<a href="https://en.wikipedia.org/wiki/Type_conversion" target="_blank" rel="noopener">强类型</a>的<a href="https://en.wikipedia.org/wiki/Dynamic_programming_language" target="_blank" rel="noopener">动态语言</a> 。可以利用 Runtime 这一特性，实现 <a href="https://en.wikipedia.org/wiki/Aspect-oriented_programming" target="_blank" rel="noopener">AOP</a> 、动态埋点、<a href="https://en.wikipedia.org/wiki/Application_performance_management" target="_blank" rel="noopener">APM</a>等功能需求。那么， OS X 和 iOS 是怎样实现 Objective-C 的运行时的呢？接下来就一探究竟。</p>
+<p>本文内容概要：</p>
+<ul>
+<li>Build: Compile, Link and Sign</li>
+<li>Mach-O</li>
+<li>Runtime</li>
+</ul>
+<h1 id="Build-Compile-Link-and-Sign"><a href="#Build-Compile-Link-and-Sign" class="headerlink" title="Build: Compile, Link and Sign"></a>Build: Compile, Link and Sign</h1><p>当我们用 Xcode 编译运行程序或打包项目时，只需要点按几个按钮就行。但是具体的编译打包的过程如何探究呢？可以，先按住 command+B 两个按键来进行 Build 操作。<br>以最简单的 HellWorld 项目（只有一个 main.m 的 Mac OS X Command Line Application）为例，打开 Report Navigator (command+8)，查看 All Message 选项卡。</p>
+<p><img src="https://niyaoyao.github.io/images/runtime-build-01.png" alt></p>
+<p>通过观察，可以发现， Build 主要主要进行了 Compile, Link 以及 Sign 三个过程，接下来就分别对这三个过程进行探究。</p>
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>在 Build 项目过程中，首先进行的是编译代码源文件这个步骤，在进行编译过程探讨之前，先简单了解一下常见的编译器。</p>
+<h3 id="常见编译器"><a href="#常见编译器" class="headerlink" title="常见编译器"></a>常见编译器</h3><ul>
+<li><p>Clang（发音为/ˈklæŋ/） 是一个 C, C++, Objective-C 和 Objective-C++ 编程语言的编译器前端。它采用了底层虚拟机（LLVM）作为其后端。它的目标是提供一个GNU编译器套装（GCC）的替代品。作者是克里斯·拉特纳，在苹果公司的赞助支持下进行开发，而源代码授权是使用类BSD的伊利诺伊大学厄巴纳-香槟分校开源码许可。</p>
+</li>
+<li><p>GCC（GNU Compiler Collection，GNU编译器套装），是一套由GNU开发的编程语言编译器。它是一套以GPL及LGPL许可证所发布的自由软件，也是GNU项目的关键部分，亦是自由的类Unix及苹果电脑 Mac OS X 操作系统的标准编译器。 GCC（特别是其中的 C 语言编译器）也常被认为是跨平台编译器的事实标准。</p>
+</li>
+</ul>
+<h3 id="预处理-（Preprocessor）"><a href="#预处理-（Preprocessor）" class="headerlink" title="预处理 （Preprocessor）"></a>预处理 （Preprocessor）</h3><p>预处理过程，主要进行的是词法预处理，对源代码进行符号化（Tokenization）、宏定义的展开、 #include 展开等操作。其中符号化就是将代码的字符串分割标记、进而将标记进行分类的过程。</p>
+<p>比如，<code>sum = 3 + 2;</code> 这句代码，经过符号化之后，得到的语素和标记类型表：</p>
+<table>
+<thead>
+<tr>
+<th>语素</th>
+<th>标记类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sum</td>
+<td>标识符</td>
+</tr>
+<tr>
+<td>=</td>
+<td>赋值操作符</td>
+</tr>
+<tr>
+<td>3</td>
+<td>数字</td>
+</tr>
+<tr>
+<td>+</td>
+<td>加法操作符</td>
+</tr>
+<tr>
+<td>2</td>
+<td>数字</td>
+</tr>
+<tr>
+<td>;</td>
+<td>语句结束符</td>
+</tr>
+</tbody>
+</table>
+<p>这样，一段代码的字符串就完成了符号化的处理，如果想了解更有关词法分析的具体内容，可以查看<a href="https://zh.wikipedia.org/wiki/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA" target="_blank" rel="noopener">有限状态机</a>获得更多内容。</p>
+<p>对于一个 *.m 文件，我们可以利用命令查看程序预处理的过程。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">clang -E main.m</span><br></pre></td></tr></table></figure>
+<p>-E Only run the preprocessor</p>
+<p>clang 命令就是 Objective-C 编程语言的编译器前端， -E 这个选项就是只进行预处理的操作。</p>
+<h3 id="语法分析和语义分析"><a href="#语法分析和语义分析" class="headerlink" title="语法分析和语义分析"></a>语法分析和语义分析</h3><ul>
+<li>语法分析</li>
+</ul>
+<p>语法分析（Syntactic analysis，也叫Parsing）是根据某种给定的形式文法对由单词序列（如英语单词序列）构成的输入文本进行分析并确定其语法结构的一种过程。简单点说，语法分析就是将符号化的字符串，转化抽象为可以被计算机存储的树形结构，即抽象语法树（<a href="https://zh.wikipedia.org/wiki/%E6%8A%BD%E8%B1%A1%E8%AA%9E%E6%B3%95%E6%A8%B9" target="_blank" rel="noopener">AST</a>）。</p>
+<ul>
+<li>语法分析器</li>
+</ul>
+<p>语法分析器（Parser）通常是作为编译器或解释器的组件出现的，它的作用是进行语法检查、并构建由输入的单词组成的数据结构（一般是语法分析树、抽象语法树等层次化的数据结构）。语法分析器通常使用一个独立的词法分析器从输入字符流中分离出一个个的“单词”，并将单词流作为其输入。实际开发中，语法分析器可以手工编写，也可以使用工具（半）自动生成。</p>
+<p>例如，在 Foundation 框架中提供了一个 XML 的 Parser，NSXMLParser，可以使用该类进行 XML 的解析，从而生成程序需要的数据结构。</p>
+<ul>
+<li>语义分析</li>
+</ul>
+<p><a href="https://en.wikipedia.org/wiki/Semantic_analysis_(compilers" target="_blank" rel="noopener">语义分析</a>（Semantic analysis），是编译构建中通常在语法分析之后执行的一个过程，以集合从源码中获得的必要的语义信息。语义分析通常包括类型检查，以确保在使用变量前声明了该变量。</p>
+<ul>
+<li>抽象语法树</li>
+</ul>
+<p>如下图所示，在代码的字符串进行符号化后，循环语句的符号化后的内容转化为一棵解析树 (parse tree)，并形成一棵抽象语法树（Abstract Syntax Tree）。循环语句为树根，各个语素为叶子节点。</p>
+<p><img src="https://niyaoyao.github.io/images/runtime-build-02.png" alt></p>
+<h3 id="目标代码生成和优化"><a href="#目标代码生成和优化" class="headerlink" title="目标代码生成和优化"></a>目标代码生成和优化</h3><ul>
+<li>中间代码</li>
+</ul>
+<p>在生成目标代码之前，源码级优化器将整个抽象语法树（AST）转换为更低级的中间代码(LLVM IR, Intermidiate Code)，并对生成的中间码做优化。</p>
+<p>得到优化后的中间代码后，代码生成器（Code Generator）将中间代码转换成目标机器代码，最后目标代码优化器(Target Code Optimizer)对转换后的目标代码进行优化，比如，选择合适的寻址方式、删除多余的指令等，最终输出汇编代码。</p>
+<p>如下所示，目标代码生成的过程，可以利用命令行来具体观察。</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">➜ HelloWorld git:(master) ✗ clang -S -o - main.m</span><br><span class="line">.section __TEXT,__text,regular,pure_instructions</span><br><span class="line">.macosx_version_min <span class="number">10</span>, <span class="number">11</span></span><br><span class="line">.globl _main</span><br><span class="line">.align <span class="number">4</span>, <span class="number">0x90</span></span><br><span class="line">_main: <span class="meta">## @main</span></span><br><span class="line">.cfi_startproc</span><br><span class="line"><span class="meta">## BB#0:</span></span><br><span class="line">pushq %rbp</span><br><span class="line">Ltmp0:</span><br><span class="line">.cfi_def_cfa_offset <span class="number">16</span></span><br><span class="line">Ltmp1:</span><br><span class="line">.cfi_offset %rbp, <span class="number">-16</span></span><br><span class="line">movq %rsp, %rbp</span><br><span class="line">Ltmp2:</span><br><span class="line">.cfi_def_cfa_register %rbp</span><br><span class="line">subq $<span class="number">32</span>, %rsp</span><br><span class="line">movl $<span class="number">0</span>, <span class="number">-4</span>(%rbp)</span><br><span class="line">movl %edi, <span class="number">-8</span>(%rbp)</span><br><span class="line">movq %rsi, <span class="number">-16</span>(%rbp)</span><br><span class="line">callq _objc_autoreleasePoolPush</span><br><span class="line">leaq L__unnamed_cfstring_(%rip), %rsi</span><br><span class="line">movq %rsi, %rdi</span><br><span class="line">movq %rax, <span class="number">-24</span>(%rbp) <span class="meta">## 8-byte Spill</span></span><br><span class="line">movb $<span class="number">0</span>, %al</span><br><span class="line">callq _NSLog</span><br><span class="line">movq <span class="number">-24</span>(%rbp), %rdi <span class="meta">## 8-byte Reload</span></span><br><span class="line">callq _objc_autoreleasePoolPop</span><br><span class="line">xorl %eax, %eax</span><br><span class="line">addq $<span class="number">32</span>, %rsp</span><br><span class="line">popq %rbp</span><br><span class="line">retq</span><br><span class="line">.cfi_endproc</span><br><span class="line"></span><br><span class="line">.section __TEXT,__cstring,cstring_literals</span><br><span class="line">L_.str: <span class="meta">## @.str</span></span><br><span class="line">.asciz <span class="string">"Hello, World!"</span></span><br><span class="line"></span><br><span class="line">.section __DATA,__cfstring</span><br><span class="line">.align <span class="number">3</span> <span class="meta">## @_unnamed_cfstring_</span></span><br><span class="line">L__unnamed_cfstring_:</span><br><span class="line">.quad ___CFConstantStringClassReference</span><br><span class="line">.long <span class="number">1992</span> <span class="meta">## 0x7c8</span></span><br><span class="line">.space <span class="number">4</span></span><br><span class="line">.quad L_.str</span><br><span class="line">.quad <span class="number">13</span> <span class="meta">## 0xd</span></span><br><span class="line">.section __DATA,__objc_imageinfo,regular,no_dead_strip</span><br><span class="line">L_OBJC_IMAGE_INFO:</span><br><span class="line">.long <span class="number">0</span></span><br><span class="line">.long <span class="number">0</span></span><br><span class="line">.subsections_via_symbols</span><br></pre></td></tr></table></figure>
+<p>在上面的控制台输出结果中， <code>.section</code> <code>.globl</code> <code>.align</code> 等以<code>.</code>开头的指令，即为汇编指令。例如，</p>
+<p><code>.section __TEXT,__text,regular,pure_instructions</code> 作用是指定执行 __TEXT 段</p>
+<p><code>.globl _main</code> 说明 _main 是一个外部符号，即 main 函数。</p>
+<p><code>.align 4, 0x90</code> 则表示后面代码的对齐方式按照16(2的4次幂)字节对齐，如果需要的话用0x90对齐。</p>
+<p>而其他的<code>movl</code> <code>movq</code> <code>callq</code> <code>subq</code> 等则是 x86_64 的汇编代码，<code>%rsi</code> <code>%rbp</code> <code>%rsp</code> 等则表示的是寄存器。例如，</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">leaq L__unnamed_cfstring_(%rip), %rsi</span><br><span class="line">movq %rsi, %rdi</span><br><span class="line">movq %rax, <span class="number">-24</span>(%rbp) <span class="meta">## 8-byte Spill</span></span><br><span class="line">movb $<span class="number">0</span>, %al</span><br><span class="line">callq _NSLog</span><br></pre></td></tr></table></figure>
+<p>指令 <code>leaq</code> 先将 <code>L__unnamed_cfstring_</code> 指针加载到 <code>rsi</code> 寄存器中，之后 <code>movq</code> 将 <code>rsi</code> 寄存器中的值移到 <code>rdi</code> 中。然后，把用来存储参数的寄存器数量（0）存储在寄存器 al 中。最后， <code>callq</code> 调用了 <code>NSLog</code> 函数。</p>
+<blockquote>
+<p>补充： <code>movq</code> <code>movb</code> <code>movl</code> 区别是什么？</p>
+<p><code>movq</code> <code>movb</code> <code>movl</code> 的作用都是指令将第二个操作数（可以是寄存器的内容、内存中的内容或值）复制到第一个操作数（寄存器或内存）。但区别是各自的后缀不同。不同后缀表示了不同的操作数大小。</p>
+<ul>
+<li>b = byte (8 bit)</li>
+<li>s = short (16 bit integer) or single (32-bit floating point)</li>
+<li>w = word (16 bit)</li>
+<li>l = long (32 bit integer or 64-bit floating point)</li>
+<li>q = quad (64 bit)</li>
+<li>t = ten bytes (80-bit floating point)</li>
+</ul>
+</blockquote>
+<h3 id="汇编器"><a href="#汇编器" class="headerlink" title="汇编器"></a>汇编器</h3><p><a href="https://en.wikipedia.org/wiki/Assembly_language#Assembler" target="_blank" rel="noopener">汇编器(Assembler)</a>，是通过翻译操作和地址词句及语法组合体成为它们的数字化等价物，来创建目标代码（object code）的。汇编器的过程，实质上是把机器码转变成一些字母，编译的时候再把输入的指令字母替换成为晦涩难懂机器码。</p>
+<h3 id="链接器"><a href="#链接器" class="headerlink" title="链接器"></a>链接器</h3><ul>
+<li>链接器</li>
+</ul>
+<p>链接器（Linker），是一个程序，将一个或多个由编译器或汇编器生成的目标文件外加库链接为一个可执行文件。例如，一个项目里有多个 ViewController.m 文件，则先把这些文件输出各自的 *.o 文件，之后在输出可以运行的 *.o 文件。下图分别展示了，链接 Hello 项目的程序文件，和链接 Storyboards 的文件的过程。</p>
+<p><img src="https://niyaoyao.github.io/images/runtime-build-03.png" alt></p>
+<ul>
+<li>空间分配、符号决议和重定位</li>
+</ul>
+<p>链接过程主要包括地址和空间分配、符号决议和重定位等步骤。以下面的符号调用为例。</p>
+<blockquote>
+<p>callq _printf</p>
+</blockquote>
+<p>printf() 是 libc 库中的一个函数，当程序运行时，可执行文件需要能需要知道 printf() 在内存中的具体位置，但是 Mach-O 文件（OS X 和 iOS 的可执行文件，后面详述）的符号表存储的地址是内存地址的偏移量，因而，在链接过程中，连接器把一些指令对 _printf 符号的地址引用加以修正。</p>
+<ul>
+<li>静态库链接</li>
+</ul>
+<p>在一个 C 语言的运行库中，包含了很多跟系统功能相关的代码。把这些零散的目标文件直接提供给开发者，很大程度上会造成文件传输管理组织不方便的问题。因而，常会把这些目标文件压缩到一起，形成 *.a 的静态链接库。</p>
+<ul>
+<li>dyld</li>
+</ul>
+<p><a href="https://github.com/opensource-apple/dyld" target="_blank" rel="noopener">dyld（the dynamic link editor）</a>，是 OS X 和 iOS 的动态链接器，在 Objective-C 程序装载进内存后，Runtime 加载 objc 定义的类，动态链接器将会配合 ImageLoader 链接各种函数库。<br>如下图，在程序运行时， dyld 动态链接 libobjc.A.dylib<br><img src="https://s3.amazonaws.com/media-p.slid.es/uploads/539805/images/2804352/Screen_Shot_2016-06-30_at_11.15.39_AM.png" alt></p>
+<ul>
+<li>ImageLoader</li>
+</ul>
+<p>ImageLoader 类是一个用于辅助加载特定可执行文件格式的抽象基类，需要开发者重定义子类。而 ImageLoader 的作用就是加载可执行文件的镜像到内存中，以便 dyld 动态链接器在 Runtime 时链接相关函数库。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> ImageLoader &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">uint32_t</span> DefinitionFlags;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> DefinitionFlags kNoDefinitionOptions = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> DefinitionFlags kWeakDefinition = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">uint32_t</span> ReferenceFlags;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> ReferenceFlags kNoReferenceOptions = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> ReferenceFlags kWeakReference = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> ReferenceFlags kTentativeDefinition = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">enum</span> PrebindMode &#123; kUseAllPrebinding, kUseSplitSegPrebinding, kUseAllButAppPredbinding, kUseNoPrebinding &#125;;</span><br><span class="line"><span class="keyword">enum</span> BindingOptions &#123; kBindingNone, kBindingLazyPointers, kBindingNeverSetLazyPointers &#125;;</span><br><span class="line"><span class="keyword">enum</span> SharedRegionMode &#123; kUseSharedRegion, kUsePrivateSharedRegion, kDontUseSharedRegion, kSharedRegionIsSharedCache &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// other codes...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="Code-Sign"><a href="#Code-Sign" class="headerlink" title="Code Sign"></a>Code Sign</h2><p>Build 最后一步就是代码签名（Code Sign），即利用我们项目的证书和描述文件进行签名认证，最后打包成 *.ipa 文件。</p>
+<p>以上就是 OS X 和 iOS 项目的 Build 的具体过程，接下来详细研究从编译到链接生成的 Mach-O 文件到底是什么？</p>
+<h1 id="Mach-O-文件"><a href="#Mach-O-文件" class="headerlink" title="Mach-O 文件"></a>Mach-O 文件</h1><p><a href="https://zh.wikipedia.org/wiki/Mach-O" target="_blank" rel="noopener">Mach-O</a> 为 Mach Object 文件格式的缩写，它是一种用于可执行文件，目标代码，动态库，内核转储的文件格式。作为a.out格式的替代，Mach-O 提供了更强的扩展性，并提升了符号表中信息的访问速度。</p>
+<h2 id="Mach-O-文件结构"><a href="#Mach-O-文件结构" class="headerlink" title="Mach-O 文件结构"></a>Mach-O 文件结构</h2><p><img src="https://niyaoyao.github.io/images/runtime-build-04.png" alt></p>
+<p>一个 Mach-O 文件包含三个最主要的部分：</p>
+<ul>
+<li>在每个 Mach-O 文件的开头是 Header ，用来标识这个文件是 Mach-O 文件。 Header 也包含其他基础文件类型的信息，比如，目标架构，以及那些影响该文件的剩余部分的一些特定选项的标志。</li>
+<li>紧接 Header 之后的是 Load commands ，一系列不定长的加载命令。这些加载命令具体说明了 Mach-O 文件的布局和联系特征。</li>
+<li>在 Load commands 之后，是 Data 。Data 包涵一个或多个 segment ，每个 segment 包含零个或多个 section 。每个 section 包含代码或特定类型的数据。每个 segment 定义了一个虚拟内存地址偏移量的区域，从而，动态链接将其映射到进程的地址空间。</li>
+<li>在用户级全链接的 Mach-O 文件中，最后一个 segment 是 link edit （链接器）段。这个段包含了链接器信息表，比如，符号表、字符串表等，被动态链接器链接到它所依赖的库的一个可执行文件或 Mach-O 文件的 bundle。</li>
+</ul>
+<h2 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h2><p>Mach-O 文件的 Header 部分规定了运行的目标架构，这样允许内核确保在基于 PowerPC 架构的 Macintosh 程序代码，不能在基于 Intel 架构的计算机上运行。</p>
+<p>利用命令行来观察 Header 部分：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">➜ HelloWorld git:(master) ✗ otool -h hello.o</span><br><span class="line">hello.o:</span><br><span class="line">Mach header</span><br><span class="line">magic cputype cpusubtype caps filetype ncmds sizeofcmds flags</span><br><span class="line"><span class="number">0xfeedfacf</span> <span class="number">16777223</span> <span class="number">3</span> <span class="number">0x80</span> <span class="number">2</span> <span class="number">18</span> <span class="number">1616</span> <span class="number">0x00200085</span></span><br></pre></td></tr></table></figure>
+<h2 id="Segment"><a href="#Segment" class="headerlink" title="Segment"></a>Segment</h2><p>一个 segment 定义了一个字节以及地址和内存私有属性在 Mach-O 文件中的范围，当动态链接起加载应用程序时，这个范围的那些字节被映射到虚拟内存。</p>
+<p>通常是通过名称来获取 segment 和 section。 segment 的命名规范是 <code>__</code> 加上全大写的单词，如，<code>__TEXT</code>。 section 的命名规范是 <code>__</code> 加上全小写的单词，如，<code>__text</code>。</p>
+<p>用命令行来观察具体的 segment 和 section 的结构。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">➜ HelloWorld git:(master) ✗ size -l -x -m hello.o</span><br><span class="line">Segment __PAGEZERO: <span class="number">0x100000000</span> (vmaddr <span class="number">0x0</span> fileoff <span class="number">0</span>)</span><br><span class="line">Segment __TEXT: <span class="number">0x1000</span> (vmaddr <span class="number">0x100000000</span> fileoff <span class="number">0</span>)</span><br><span class="line">Section __text: <span class="number">0x41</span> (addr <span class="number">0x100000f20</span> offset <span class="number">3872</span>)</span><br><span class="line">Section __stubs: <span class="number">0x12</span> (addr <span class="number">0x100000f62</span> offset <span class="number">3938</span>)</span><br><span class="line">Section __stub_helper: <span class="number">0x2e</span> (addr <span class="number">0x100000f74</span> offset <span class="number">3956</span>)</span><br><span class="line">Section __cstring: <span class="number">0xe</span> (addr <span class="number">0x100000fa2</span> offset <span class="number">4002</span>)</span><br><span class="line">Section __unwind_info: <span class="number">0x48</span> (addr <span class="number">0x100000fb0</span> offset <span class="number">4016</span>)</span><br><span class="line">total <span class="number">0xd7</span></span><br><span class="line">Segment __DATA: <span class="number">0x1000</span> (vmaddr <span class="number">0x100001000</span> fileoff <span class="number">4096</span>)</span><br><span class="line">Section __nl_symbol_ptr: <span class="number">0x10</span> (addr <span class="number">0x100001000</span> offset <span class="number">4096</span>)</span><br><span class="line">Section __la_symbol_ptr: <span class="number">0x18</span> (addr <span class="number">0x100001010</span> offset <span class="number">4112</span>)</span><br><span class="line">Section __cfstring: <span class="number">0x20</span> (addr <span class="number">0x100001028</span> offset <span class="number">4136</span>)</span><br><span class="line">Section __objc_imageinfo: <span class="number">0x8</span> (addr <span class="number">0x100001048</span> offset <span class="number">4168</span>)</span><br><span class="line">total <span class="number">0x50</span></span><br><span class="line">Segment __LINKEDIT: <span class="number">0x1000</span> (vmaddr <span class="number">0x100002000</span> fileoff <span class="number">8192</span>)</span><br><span class="line">total <span class="number">0x100003000</span></span><br></pre></td></tr></table></figure>
+<p>segment 在运行时( runtime )申请的内存比在构建时（ build time ）要更多，它能够申请比它们实际占用的磁盘存储空间更大的内存空间。比如 <code>__PAGEZERO</code> 段，它经由 PowerPC 可执行文件的链接器所生成的数据具有一页虚拟内存的大小，然而它占有磁盘空间的大小只有 0 。</p>
+<p>根据上面的输出结果，可以观察到有 <code>__PAGEZERO</code> <code>__TEXT</code> <code>__DATA</code> <code>__LINKEDIT</code> 四个 segment 。出于分页的目的， header 以及 load commands 被认为是 Mach-O 文件第一段的一部分。在一个可执行文件中，header 以及 load commands 处于 <code>__TEXT</code> 段的开头，这通常意味着第一个段 <code>__PAGEZERO</code> 没有包含任何数据。</p>
+<p><code>__TEXT</code> 段包含了可执行代码以及其它只读数据。为了使内核直接将它从可执行的内存到共享的内存，静态链接器设置这个段的虚拟内存访问权限为不允许写入。当这个段已经被映射到内存中，它能够被所有关注它的进程所共享。只读属性同样意味着，<code>__TEXT</code> 段生成的页，将绝对不会被写回磁盘中。当内核需要释放物理内存时，它能够简单地舍弃一个或多个 <code>__TEXT</code> 页，并且当它们下次再被需要时，重新将它们从磁盘中读取出来。</p>
+<p><code>__DATA</code> 段包含了可写的数据。静态链接器设置其虚拟内存的访问权限为可读写。由于它是可写的，一个框架或其它共享库的 <code>__DATA</code> 段逻辑上被每一个链接 <code>__DATA</code> 段复的进程所制的。当那些诸如创建 <code>__DATA</code> 段的内存页是可读写的时候时，内核标记他们为 copy-on-write ，所以，当一个进程写入那些页之一时，该进程得到他自己所属的这个页的私有拷贝。</p>
+<p><code>__LINKEDIT</code> 段包含了被动态链接器使用的原生数据，例如，符号表、字符串以及重定位表入口。</p>
+<h3 id="text-section"><a href="#text-section" class="headerlink" title="__text section"></a>__text section</h3><p>(__TEXT,__text) section 是一个常用的段，所以 <code>otool</code> 专门用 <code>-t</code> 选项来表示。通过命令来观察 (__TEXT,__text) section 的反汇编的代码。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">➜ HelloWorld git:(master) ✗ otool -t -v hello.o</span><br><span class="line">hello.o:</span><br><span class="line">(__TEXT,__text) section</span><br><span class="line">_main:</span><br><span class="line"><span class="number">0000000100000f</span>20 pushq %rbp</span><br><span class="line"><span class="number">0000000100000f</span>21 movq %rsp, %rbp</span><br><span class="line"><span class="number">0000000100000f</span>24 subq $<span class="number">0x20</span>, %rsp</span><br><span class="line"><span class="number">0000000100000f</span>28 movl $<span class="number">0x0</span>, <span class="number">-0x4</span>(%rbp)</span><br><span class="line"><span class="number">0000000100000f</span>2f movl %edi, <span class="number">-0x8</span>(%rbp)</span><br><span class="line"><span class="number">0000000100000f</span>32 movq %rsi, <span class="number">-0x10</span>(%rbp)</span><br><span class="line"><span class="number">0000000100000f</span>36 callq <span class="number">0x100000f6e</span></span><br><span class="line"><span class="number">0000000100000f</span>3b leaq <span class="number">0xe6</span>(%rip), %rsi</span><br><span class="line"><span class="number">0000000100000f</span>42 movq %rsi, %rdi</span><br><span class="line"><span class="number">0000000100000f</span>45 movq %rax, <span class="number">-0x18</span>(%rbp)</span><br><span class="line"><span class="number">0000000100000f</span>49 movb $<span class="number">0x0</span>, %al</span><br><span class="line"><span class="number">0000000100000f</span>4b callq <span class="number">0x100000f62</span></span><br><span class="line"><span class="number">0000000100000f</span>50 movq <span class="number">-0x18</span>(%rbp), %rdi</span><br><span class="line"><span class="number">0000000100000f</span>54 callq <span class="number">0x100000f68</span></span><br><span class="line"><span class="number">0000000100000f</span>59 xorl %eax, %eax</span><br><span class="line"><span class="number">0000000100000f</span>5b addq $<span class="number">0x20</span>, %rsp</span><br><span class="line"><span class="number">0000000100000f</span>5f popq %rbp</span><br><span class="line"><span class="number">0000000100000f</span>60 retq</span><br></pre></td></tr></table></figure>
+<p>是不是感觉似曾相识？反汇编后的输出结果，与上文生成代码部分的汇编代码相同。如果直接查看 (__TEXT,__text) section 的内容，则会是如下的输出形式。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">➜ HelloWorld git:(master) ✗ otool -t hello.o</span><br><span class="line">hello.o:</span><br><span class="line">(__TEXT,__text) section</span><br><span class="line"><span class="number">0000000100000f</span>20 <span class="number">55</span> <span class="number">48</span> <span class="number">89</span> e5 <span class="number">48</span> <span class="number">83</span> ec <span class="number">20</span> c7 <span class="number">45</span> fc <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">89</span></span><br><span class="line"><span class="number">0000000100000f</span>30 <span class="number">7</span>d f8 <span class="number">48</span> <span class="number">89</span> <span class="number">75</span> f0 e8 <span class="number">33</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">48</span> <span class="number">8</span>d <span class="number">35</span> e6 <span class="number">00</span></span><br><span class="line"><span class="number">0000000100000f</span>40 <span class="number">00</span> <span class="number">00</span> <span class="number">48</span> <span class="number">89</span> f7 <span class="number">48</span> <span class="number">89</span> <span class="number">45</span> e8 b0 <span class="number">00</span> e8 <span class="number">12</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span></span><br><span class="line"><span class="number">0000000100000f</span>50 <span class="number">48</span> <span class="number">8b</span> <span class="number">7</span>d e8 e8 <span class="number">0f</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">31</span> c0 <span class="number">48</span> <span class="number">83</span> c4 <span class="number">20</span> <span class="number">5</span>d</span><br><span class="line"><span class="number">0000000100000f</span>60 c3</span><br></pre></td></tr></table></figure>
+<p>(__TEXT,__text) section 的内容包括可执行的机器码。编译器通常只在这个 section 放置可执行代码，没有其他种类的表或数据。</p>
+<h1 id="Runtime"><a href="#Runtime" class="headerlink" title="Runtime"></a>Runtime</h1><p>上文简单介绍了 Objective-C 的编译过程和 Mach-O 文件，但是，这些与 Objective-C 的运行时有什么联系呢？</p>
+<p>前面提到了 ImageLoader 的作用是将编译生成的 Mach-O 文件加载到内存，而动态链接器 dyld ，将解析 Mach-O 文件中的符号表中的符号，并指向他们在动态链接库中的实现，从而 runtime 能够加载 objc 定义的类，动态查找方法对应符号对应的方法的具体实现并调用。</p>
+<p>下面具体看一下符号表和动态链接库的内容。</p>
+<h2 id="runtime-dyld-amp-dylib"><a href="#runtime-dyld-amp-dylib" class="headerlink" title="runtime, dyld &amp; dylib"></a>runtime, dyld &amp; dylib</h2><h3 id="符号表"><a href="#符号表" class="headerlink" title="符号表"></a>符号表</h3><p>在终端的项目目录中输入 <code>nm -nm hello.o</code> ，即会输出如下结果。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">➜ HelloWorld git:(master) ✗ nm -nm hello.o</span><br><span class="line">(undefined) external _NSLog (from Foundation)</span><br><span class="line">(undefined) external ___CFConstantStringClassReference (from CoreFoundation)</span><br><span class="line">(undefined) external _objc_autoreleasePoolPop (from libobjc)</span><br><span class="line">(undefined) external _objc_autoreleasePoolPush (from libobjc)</span><br><span class="line">(undefined) <span class="function">external <span class="title">dyld_stub_binder</span> <span class="params">(from libSystem)</span></span></span><br><span class="line">0000000100000000 (__TEXT,__text) [referenced dynamically] external __mh_execute_header</span><br><span class="line"><span class="number">0000000100000f</span>20 (__TEXT,__text) external _main</span><br></pre></td></tr></table></figure>
+<p>上面的输出即为 Mach-O 的所有符号。从上面的输出信息中，我们不仅可以得知符号的名称，它的私有权限，还可以知道在哪个库可以找到该符号，而动态链接器则利用这些信息来解析该符号。</p>
+<p>以 <code>_NSLog</code> 为例，<code>_NSLog</code> 是 Foundation 动态库的输出函数 <code>NSLog()</code> 的符号，<code>undefined</code> 表示没有实现<code>NSLog()</code> ， <code>external</code> 表示 <code>_NSLog</code> 对于这个 Mach-O 文件不是私有的（同理，<code>non-external</code> 则表示该符号对于这个 Mach-O 文件是私有的）。</p>
+<p>当动态链接器通过 <code>Foundation</code> 动态库解析符号成功时，它将记录 <code>_NSLog</code> 这个符号对应的动态库最终链接的镜像（ image ）。动态链接器记录了符号所依赖的动态库的输出文件，以及这些文件的路径。</p>
+<p>下面则看一下，对应动态库的文件存储路径。</p>
+<h3 id="动态库"><a href="#动态库" class="headerlink" title="动态库"></a>动态库</h3><p>利用 <code>otool -L hello.o</code> 来观察可执行文件所链接的动态库存储路径。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">➜ HelloWorld git:(master) ✗ otool -L hello.o</span><br><span class="line">hello.o:</span><br><span class="line">/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation (compatibility version <span class="number">300.0</span><span class="number">.0</span>, current version <span class="number">1259.0</span><span class="number">.0</span>)</span><br><span class="line">/usr/lib/libobjc.A.dylib (compatibility version <span class="number">1.0</span><span class="number">.0</span>, current version <span class="number">228.0</span><span class="number">.0</span>)</span><br><span class="line">/usr/lib/libSystem.B.dylib (compatibility version <span class="number">1.0</span><span class="number">.0</span>, current version <span class="number">1226.10</span><span class="number">.1</span>)</span><br><span class="line">/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation (compatibility version <span class="number">150.0</span><span class="number">.0</span>, current version <span class="number">1258.1</span><span class="number">.0</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p>例如以下代码，是利用 <code>method_exchangeImplementations</code> 方法进行方法交换，以达到 hook 方法的目的。</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">+ (<span class="keyword">void</span>)exchangeImplementationOriginClass:(Class)originClass</span><br><span class="line">originSelector:(SEL)originSelector</span><br><span class="line">destinationClass:(Class)destinationClass</span><br><span class="line">destinationSelector:(SEL)destinationSelector &#123;</span><br><span class="line">method_exchangeImplementations(</span><br><span class="line">class_getInstanceMethod(originClass, originSelector),</span><br><span class="line">class_getInstanceMethod(destinationClass, destinationSelector));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在调方法处设置断点观察调用栈，可以看到如下信息。</p>
+<p><img src="https://niyaoyao.github.io/images/runtime-build-05.gif" alt></p>
+<p>调用栈是从 <code>_dyld_start</code> 开始，进入 <code>dyld</code> 的 <code>main</code>， 然后 <code>dyld</code> 进行初始化等操作。在这之后， <code>ImageLoader</code> 将可执行文件加载镜像到内存中 <code>load_images</code>。再之后，进入 <code>UIViewController</code> 分类的 <code>load</code> 方法，最后调用这个方法。</p>
+<p>然后，在 lldb 中输入 <code>dis</code> 命令观察汇编的输出。</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">NYRuntimeDemo`+[NYRuntime exchangeImplementationOriginClass:originSelector:destinationClass:destinationSelector:]:</span><br><span class="line"><span class="number">0x10b5dd1c0</span> &lt;+<span class="number">0</span>&gt;: pushq %rbp</span><br><span class="line"><span class="number">0x10b5dd1c1</span> &lt;+<span class="number">1</span>&gt;: movq %rsp, %rbp</span><br><span class="line"><span class="number">0x10b5dd1c4</span> &lt;+<span class="number">4</span>&gt;: subq $<span class="number">0x40</span>, %rsp</span><br><span class="line"><span class="number">0x10b5dd1c8</span> &lt;+<span class="number">8</span>&gt;: movq %rdi, <span class="number">-0x8</span>(%rbp)</span><br><span class="line"><span class="number">0x10b5dd1cc</span> &lt;+<span class="number">12</span>&gt;: movq %rsi, <span class="number">-0x10</span>(%rbp)</span><br><span class="line"><span class="number">0x10b5dd1d0</span> &lt;+<span class="number">16</span>&gt;: movq %rdx, <span class="number">-0x18</span>(%rbp)</span><br><span class="line"><span class="number">0x10b5dd1d4</span> &lt;+<span class="number">20</span>&gt;: movq %rcx, <span class="number">-0x20</span>(%rbp)</span><br><span class="line"><span class="number">0x10b5dd1d8</span> &lt;+<span class="number">24</span>&gt;: movq %r8, <span class="number">-0x28</span>(%rbp)</span><br><span class="line"><span class="number">0x10b5dd1dc</span> &lt;+<span class="number">28</span>&gt;: movq %r9, <span class="number">-0x30</span>(%rbp)</span><br><span class="line"><span class="number">0x10b5dd1e0</span> &lt;+<span class="number">32</span>&gt;: movq <span class="number">-0x18</span>(%rbp), %rdi</span><br><span class="line"><span class="number">0x10b5dd1e4</span> &lt;+<span class="number">36</span>&gt;: movq <span class="number">-0x20</span>(%rbp), %rsi</span><br><span class="line"><span class="number">0x10b5dd1e8</span> &lt;+<span class="number">40</span>&gt;: callq <span class="number">0x10b5dd782</span> ; symbol stub <span class="keyword">for</span>: class_getInstanceMethod</span><br><span class="line"><span class="number">0x10b5dd1ed</span> &lt;+<span class="number">45</span>&gt;: movq <span class="number">-0x28</span>(%rbp), %rdi</span><br><span class="line"><span class="number">0x10b5dd1f1</span> &lt;+<span class="number">49</span>&gt;: movq <span class="number">-0x30</span>(%rbp), %rsi</span><br><span class="line"><span class="number">0x10b5dd1f5</span> &lt;+<span class="number">53</span>&gt;: movq %rax, <span class="number">-0x38</span>(%rbp)</span><br><span class="line"><span class="number">0x10b5dd1f9</span> &lt;+<span class="number">57</span>&gt;: callq <span class="number">0x10b5dd782</span> ; symbol stub <span class="keyword">for</span>: class_getInstanceMethod</span><br><span class="line">-&gt; <span class="number">0x10b5dd1fe</span> &lt;+<span class="number">62</span>&gt;: movq <span class="number">-0x38</span>(%rbp), %rdi</span><br><span class="line"><span class="number">0x10b5dd202</span> &lt;+<span class="number">66</span>&gt;: movq %rax, %rsi</span><br><span class="line"><span class="number">0x10b5dd205</span> &lt;+<span class="number">69</span>&gt;: callq <span class="number">0x10b5dd788</span> ; symbol stub <span class="keyword">for</span>: method_exchangeImplementations</span><br><span class="line"><span class="number">0x10b5dd20a</span> &lt;+<span class="number">74</span>&gt;: addq $<span class="number">0x40</span>, %rsp</span><br><span class="line"><span class="number">0x10b5dd20e</span> &lt;+<span class="number">78</span>&gt;: popq %rbp</span><br><span class="line"><span class="number">0x10b5dd20f</span> &lt;+<span class="number">79</span>&gt;: retq</span><br></pre></td></tr></table></figure>
+<p>可以观察到，调用 <code>class_getInstanceMethod</code> <code>method_exchangeImplementations</code> 的方法对应的符号的内存地址 <code>callq 0x10b5dd782</code> 和 <code>callq 0x10b5dd788</code>。</p>
+<p>上文已经提到，动态链接器会在运行时解析这些符号，并且确保这些符号指向他们在动态库中的实现。这便是 runtime 的整个过程。</p>
+<p>示例代码下载地址：</p>
+<p><a href="https://github.com/niyaoyao/Runtime_dyld_Mach-O" target="_blank" rel="noopener">https://github.com/niyaoyao/Runtime_dyld_Mach-O</a></p>
+<h1 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h1><ul>
+<li>Q1：weak、strong等特性在什么时候被决议？</li>
+</ul>
+<p>在运行时的时候。__weak 关键字和 property 的 weak 属性，会在运行时的时候执行如下的函数。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Initialize a fresh weak pointer to some object location.</span></span><br><span class="line"><span class="comment">* It would be used for code like:</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* (The nil case)</span></span><br><span class="line"><span class="comment">* __weak id weakPtr;</span></span><br><span class="line"><span class="comment">* (The non-nil case)</span></span><br><span class="line"><span class="comment">* NSObject *o = ...;</span></span><br><span class="line"><span class="comment">* __weak id weakPtr = o;</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* This function IS NOT thread-safe with respect to concurrent</span></span><br><span class="line"><span class="comment">* modifications to the weak variable. (Concurrent weak clear is safe.)</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* @param location Address of __weak ptr.</span></span><br><span class="line"><span class="comment">* @param newObj Object ptr.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">id</span><br><span class="line">objc_initWeak(id *location, id newObj)</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">if</span> (!newObj) &#123;</span><br><span class="line">*location = nil;</span><br><span class="line"><span class="keyword">return</span> nil;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> storeWeak&lt;<span class="literal">false</span><span class="comment">/*old*/</span>, <span class="literal">true</span><span class="comment">/*new*/</span>, <span class="literal">true</span><span class="comment">/*crash*/</span>&gt;</span><br><span class="line">(location, (objc_object*)newObj);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上便是 weak 的指针的初始化的源码，可以看到如果新的 weak 对象为空，则返回空指针，否则，存储新的 weak 指针到 <code>weak_table</code> 中。具体的 store 过程可以下载 <code>objc4</code> 源码查看。</p>
+<ul>
+<li>Q2：性能问题</li>
+</ul>
+<p>method swizzling 方法本身并不会产生很大的性能损耗。因为 <code>method_exchangeImplementations</code> 只进行了方法实现的指针交换。如以下代码所示。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">method_exchangeImplementations</span><span class="params">(Method m1, Method m2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="keyword">if</span> (!m1 || !m2) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">rwlock_writer_t</span> lock(runtimeLock);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (ignoreSelector(m1-&gt;name) || ignoreSelector(m2-&gt;name)) &#123;</span><br><span class="line"><span class="comment">// Ignored methods stay ignored. Now they're both ignored.</span></span><br><span class="line">m1-&gt;imp = (IMP)&amp;_objc_ignored_method;</span><br><span class="line">m2-&gt;imp = (IMP)&amp;_objc_ignored_method;</span><br><span class="line"><span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">IMP m1_imp = m1-&gt;imp;</span><br><span class="line">m1-&gt;imp = m2-&gt;imp;</span><br><span class="line">m2-&gt;imp = m1_imp;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// RR/AWZ updates are slow because class is unknown</span></span><br><span class="line"><span class="comment">// Cache updates are slow because class is unknown</span></span><br><span class="line"><span class="comment">// fixme build list of classes whose Methods are known externally?</span></span><br><span class="line"></span><br><span class="line">flushCaches(nil);</span><br><span class="line"></span><br><span class="line">updateCustomRR_AWZ(nil, m1);</span><br><span class="line">updateCustomRR_AWZ(nil, m2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="Open-Source"><a href="#Open-Source" class="headerlink" title="Open Source"></a>Open Source</h1><ul>
+<li>dyld <a href="https://github.com/opensource-apple/dyld" target="_blank" rel="noopener">https://github.com/opensource-apple/dyld</a></li>
+<li>objc4 <a href="https://opensource.apple.com/tarballs/objc4/" target="_blank" rel="noopener">https://opensource.apple.com/tarballs/objc4/</a></li>
+</ul>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
+<li>PPT for this Article <a href="https://niyaoyao.github.io/Sessions/Objective-C-Runtime-From-Build-To-Did-Launch.html#/" target="_blank" rel="noopener">https://niyaoyao.github.io/Sessions/Objective-C-Runtime-From-Build-To-Did-Launch.html#/</a></li>
+<li>Build <a href="https://www.objc.io/issues/6-build-tools/build-process/" target="_blank" rel="noopener">https://www.objc.io/issues/6-build-tools/build-process/</a></li>
+<li>Compile <a href="https://www.objc.io/issues/6-build-tools/compiler/" target="_blank" rel="noopener">https://www.objc.io/issues/6-build-tools/compiler/</a></li>
+<li>Mach-O <a href="https://www.objc.io/issues/6-build-tools/mach-o-executables/" target="_blank" rel="noopener">https://www.objc.io/issues/6-build-tools/mach-o-executables/</a></li>
+<li>Main <a href="http://blog.sunnyxx.com/2014/08/30/objc-pre-main/" target="_blank" rel="noopener">http://blog.sunnyxx.com/2014/08/30/objc-pre-main/</a></li>
+<li>Load <a href="http://draveness.me/load/" target="_blank" rel="noopener">http://draveness.me/load/</a></li>
+<li>dyld <a href="https://www.mikeash.com/pyblog/friday-qa-2012-11-09-dyld-dynamic-linking-on-os-x.html" target="_blank" rel="noopener">https://www.mikeash.com/pyblog/friday-qa-2012-11-09-dyld-dynamic-linking-on-os-x.html</a></li>
+<li>Archive <a href="http://liumh.com/2015/11/25/ios-auto-archive-ipa/" target="_blank" rel="noopener">http://liumh.com/2015/11/25/ios-auto-archive-ipa/</a></li>
+<li>X86汇编快速入门 <a href="http://www.cnblogs.com/YukiJohnson/archive/2012/10/27/2741836.html" target="_blank" rel="noopener">http://www.cnblogs.com/YukiJohnson/archive/2012/10/27/2741836.html</a></li>
+<li>在OS X上玩x86_64汇编: Day 1 <a href="http://www.jianshu.com/p/6b2f4c17eec2" target="_blank" rel="noopener">http://www.jianshu.com/p/6b2f4c17eec2</a></li>
+<li>System V Application Binary Interface <a href="http://x86-64.org/documentation/abi.pdf" target="_blank" rel="noopener">http://x86-64.org/documentation/abi.pdf</a></li>
+<li>X86 Assembly/GAS Syntax <a href="https://en.wikibooks.org/wiki/X86_Assembly/GAS_Syntax" target="_blank" rel="noopener">https://en.wikibooks.org/wiki/X86_Assembly/GAS_Syntax</a></li>
+<li>OS X ABI Mach-O File Format Reference <a href="https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/MachORuntime/" target="_blank" rel="noopener">https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/MachORuntime/</a> （该页面样式跪了，可以直接用 Xcode 的帮助文档搜索 “ OS X ABI Mach-O File Format Reference”）</li>
+</ul>
+<h1 id="Recommend-Book"><a href="#Recommend-Book" class="headerlink" title="Recommend Book"></a>Recommend Book</h1><ul>
+<li>《程序员的自我修养——链接、装载与库》</li>
+</ul>
+
+    
+  </div>
+  
+    
+<!-- Gitalk评论插件通用代码 -->
+<div id="git"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: 'e929305d1df52067f223',
+  clientSecret: '9a6f94df61c1533c67cfbcbb038520090e2ba4da',
+  repo: 'blog-comments',
+  owner: 'niyaoyao',
+  admin: ['niyaoyao'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('git')
+</script>
+<!-- Gitalk代码结束 -->
+
+  
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2015/03/02/xcode-errors/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2016/09/29/Learning-React-From-Today-D1/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+<!-- Gitalk评论插件通用代码 -->
+<div id="git"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: 'e929305d1df52067f223',
+  clientSecret: '9a6f94df61c1533c67cfbcbb038520090e2ba4da',
+  repo: 'blog-comments',
+  owner: 'niyaoyao',
+  admin: ['niyaoyao'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('git')
+</script>
+<!-- Gitalk代码结束 -->
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+</body>
+</html>

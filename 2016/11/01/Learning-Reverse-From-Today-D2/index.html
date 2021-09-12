@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>今天开始学逆向：用 Cycript 进行运行时分析及应用操作 | N.Y.</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="iOS,Jail Break,">
+  
+
+  <meta name="description" content="前言上一篇文章已经学习了使用 SSH 连接越狱设备，以及利用 Clutch, class-dump 等工具进行砸壳和导出头文件的操作。本篇文章会在上一篇文章的基础上再一点运行时的分析，所以，需要先复习一下功课啦。 Cycript 运行时分析Cycript 官网 什么是 CycriptCycript 糅合了 ES6， Objective-C++ 与 Java 等语法风格的脚本语言，是作为一个 Cyc">
+<meta name="keywords" content="iOS,Jail Break">
+<meta property="og:type" content="article">
+<meta property="og:title" content="今天开始学逆向：用 Cycript 进行运行时分析及应用操作">
+<meta property="og:url" content="http://niyaoyao.me/2016/11/01/Learning-Reverse-From-Today-D2/index.html">
+<meta property="og:site_name" content="N.Y.">
+<meta property="og:description" content="前言上一篇文章已经学习了使用 SSH 连接越狱设备，以及利用 Clutch, class-dump 等工具进行砸壳和导出头文件的操作。本篇文章会在上一篇文章的基础上再一点运行时的分析，所以，需要先复习一下功课啦。 Cycript 运行时分析Cycript 官网 什么是 CycriptCycript 糅合了 ES6， Objective-C++ 与 Java 等语法风格的脚本语言，是作为一个 Cyc">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://niyaoyao.github.io/images/cycript_install.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/mach_o_segments.gif">
+<meta property="og:updated_time" content="2020-06-12T15:52:57.664Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="今天开始学逆向：用 Cycript 进行运行时分析及应用操作">
+<meta name="twitter:description" content="前言上一篇文章已经学习了使用 SSH 连接越狱设备，以及利用 Clutch, class-dump 等工具进行砸壳和导出头文件的操作。本篇文章会在上一篇文章的基础上再一点运行时的分析，所以，需要先复习一下功课啦。 Cycript 运行时分析Cycript 官网 什么是 CycriptCycript 糅合了 ES6， Objective-C++ 与 Java 等语法风格的脚本语言，是作为一个 Cyc">
+<meta name="twitter:image" content="https://niyaoyao.github.io/images/cycript_install.png">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38189205-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cycript-运行时分析"><span class="toc-text">Cycript 运行时分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是-Cycript"><span class="toc-text">什么是 Cycript</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装-Cycript"><span class="toc-text">安装 Cycript</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#玩起来"><span class="toc-text">玩起来</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Mach-O-文件"><span class="toc-text">Mach-O 文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#导出头文件"><span class="toc-text">导出头文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#利用-Cycript-进行运行时分析"><span class="toc-text">利用 Cycript 进行运行时分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cycript-其他姿势"><span class="toc-text">Cycript 其他姿势</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-text">小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-Learning-Reverse-From-Today-D2" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">今天开始学逆向：用 Cycript 进行运行时分析及应用操作</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.11.01</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Niyao</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/iOS-Reverse-Engineering/">iOS Reverse Engineering</a>
+  </span>
+
+
+
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>上一篇文章已经学习了使用 SSH 连接越狱设备，以及利用 Clutch, class-dump 等工具进行砸壳和导出头文件的操作。<br>本篇文章会在上一篇文章的基础上再一点运行时的分析，所以，需要先复习一下功课啦。</p>
+<h2 id="Cycript-运行时分析"><a href="#Cycript-运行时分析" class="headerlink" title="Cycript 运行时分析"></a>Cycript 运行时分析</h2><p><a href="http://www.cycript.org/" target="_blank" rel="noopener">Cycript 官网</a></p>
+<h3 id="什么是-Cycript"><a href="#什么是-Cycript" class="headerlink" title="什么是 Cycript"></a>什么是 Cycript</h3><p>Cycript 糅合了 ES6， Objective-C++ 与 Java 等语法风格的脚本语言，是作为一个 Cycript-to-JavaScript 编译器的实现，并且使用了（未修改）的 JavaScript 内核作为其虚拟机。Cycript 主要被用于 iOS 的逆向工程。</p>
+<h3 id="安装-Cycript"><a href="#安装-Cycript" class="headerlink" title="安装 Cycript"></a>安装 Cycript</h3><p>越狱设备安装 Cycript 可以在官网下载 SDK，然后再推送到越狱设备上。但比较方便的方法是在 Cydia 里搜索并下载。</p>
+<p><img src="https://niyaoyao.github.io/images/cycript_install.png" alt></p>
+<h3 id="玩起来"><a href="#玩起来" class="headerlink" title="玩起来"></a>玩起来</h3><p>上一篇说到从 App Store 下载应用都是经过签名加密的，并且利用 Clutch 砸壳得到解密后的 ipa 包，那这次试一下在助手市场下载应用进行头文件导出的操作。<br>以美图秀秀为例，在助手市场下载之后进入应用存储目录，查找美图秀秀存储的目录。</p>
+<p>iOS 常用的文件目录：</p>
+<ul>
+<li>home ~ 目录 /var/root</li>
+<li>应用存储目录 /var/mobile/Containers/Bundle/Application</li>
+<li>照片存储目录 /private/var/mobile/Media/DCIM</li>
+<li>命令存储目录 /usr/bin</li>
+</ul>
+<p>进入 <strong>/var/mobile/Containers/Bundle/Application</strong> 目录，ls 子目录，找到美图秀秀的存储位置。<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">NY:/var/mobile/Containers/Bundle/Application root<span class="comment"># ls 8D71E631-48D6-4FE6-A8BE-5394AD898DD7/</span></span><br><span class="line">MTXX.app/  iTunesMetadata.plist</span><br></pre></td></tr></table></figure></p>
+<h4 id="Mach-O-文件"><a href="#Mach-O-文件" class="headerlink" title="Mach-O 文件"></a>Mach-O 文件</h4><p><img src="https://niyaoyao.github.io/images/mach_o_segments.gif" alt></p>
+<p>直接进入 MTXX.app 目录下，将二进制可执行文件 <strong>MTXX</strong> 直接 scp 推到 Mac 上。<br>在 OS X 和 iOS 操作系统下的二进制可执行文件为 Mach-O 文件，可以利用 otool 命令查看。</p>
+<ul>
+<li>查看 Mach-O 头</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">➜  Reverse otool -h MTXX</span><br><span class="line">Mach header</span><br><span class="line">      magic cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags</span><br><span class="line"> 0xfeedface      12          9  0x00           2    61       6368 0x00218085</span><br><span class="line">Mach header</span><br><span class="line">      magic cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags</span><br><span class="line"> 0xfeedfacf 16777228          0  0x00           2    61       7104 0x00218085</span><br></pre></td></tr></table></figure>
+<p>Mach-O 为 Mach Object 文件格式的缩写，它是一种用于可执行文件，目标代码，动态库，内核转储的文件格式。作为a.out格式的替代，Mach-O 提供了更强的扩展性，并提升了符号表中信息的访问速度。</p>
+<p>一个 Mach-O 文件包含三个最主要的部分：</p>
+<ul>
+<li>在每个 Mach-O 文件的开头是 Header ，用来标识这个文件是 Mach-O 文件。 Header 也包含其他基础文件类型的信息，比如，目标架构，以及那些影响该文件的剩余部分的一些特定选项的标志。<br>紧接 Header 之后的是 Load commands ，一系列不定长的加载命令。这些加载命令具体说明了 Mach-O 文件的布局和联系特征。</li>
+<li>在 Load commands 之后，是 Data 。Data 包涵一个或多个 segment ，每个 segment 包含零个或多个 section 。每个 section 包含代码或特定类型的数据。每个 segment 定义了一个虚拟内存地址偏移量的区域，从而，动态链接将其映射到进程的地址空间。</li>
+<li><p>在用户级全链接的 Mach-O 文件中，最后一个 segment 是 link edit （链接器）段。这个段包含了链接器信息表，比如，符号表、字符串表等，被动态链接器链接到它所依赖的库的一个可执行文件或 Mach-O 文件的 bundle。<br>得到 Mach-O</p>
+</li>
+<li><p>查看 Segment 和 Section</p>
+</li>
+</ul>
+<p>可以利用 size 查看 Mach-O 文件的 Segment 和 Section<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">size <span class="_">-l</span> -x -m MTXX</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>查看符号表及对应的动态链接库</li>
+</ul>
+<p>利用 nm 命令查看 Mach-O 的符号名<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">nm -nm MTXX</span><br></pre></td></tr></table></figure></p>
+<p>以上命令的输出比较多，就不复制粘贴了。</p>
+<h4 id="导出头文件"><a href="#导出头文件" class="headerlink" title="导出头文件"></a>导出头文件</h4><p>结合上一篇文章的内容，导出头文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">class-dump MTXX &gt; MTXX.h</span><br></pre></td></tr></table></figure>
+<h4 id="利用-Cycript-进行运行时分析"><a href="#利用-Cycript-进行运行时分析" class="headerlink" title="利用 Cycript 进行运行时分析"></a>利用 Cycript 进行运行时分析</h4><ul>
+<li>获得进程 PID</li>
+</ul>
+<p>在越狱设备中开启美图秀秀，并切回到越狱设备的终端，找到美图秀秀的进程编号 PID。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">NY:~ root<span class="comment"># ps aux | grep "MTXX"</span></span><br><span class="line">mobile     949   3.9  3.3   737672  34540   ??  Ss    6:28PM   0:03.82 /var/mobile/Containers/Bundle/Application/8D71E631-48D6-4FE6-A8BE-5394AD898DD7/MTXX.app/MTXX</span><br><span class="line">root       956   3.3  0.0   536256    456 s000  R+    6:28PM   0:00.01 grep MTXX</span><br></pre></td></tr></table></figure>
+<p>找到 mobile 对应的 PID 949，之后利用 Cycript 进行运行时分析</p>
+<ul>
+<li>使用 Cycript </li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">NY:~ root<span class="comment"># cycript -help</span></span><br><span class="line">cycript: invalid option -- h</span><br><span class="line">usage: cycript [-c] [-p &lt;pid|name&gt;] [-r &lt;host:port&gt;] [&lt;script&gt; [&lt;arg&gt;...]]</span><br><span class="line">NY:~ root<span class="comment"># cycript -p 949</span></span><br></pre></td></tr></table></figure>
+<p>可以知道只要加上 -p 选项即可进入 Cycript 的运行状态。<br>Cycript 换行不太方便，直接输入回车键会立即执行脚本。所以，我采用多个空格来实现换行。</p>
+<ul>
+<li>美图秀秀运行时分析</li>
+</ul>
+<p>结合已经得到的头文件，找到头文件中的类以及该类对应的方法，尝试使用 Cycript 执行这些方法。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cy# var delegate = UIApp.delegate</span><br><span class="line">cy# var window = delegate.window</span><br><span class="line">#&quot;&lt;UIWindow: 0x14e64a00; frame = (0 0; 320 568); autoresize = W+H; gestureRecognizers = &lt;NSArray: 0x14e64ed0&gt;; layer = &lt;UIWindowLayer: 0x14e63ab0&gt;&gt;&quot;</span><br><span class="line">cy# var rootViewController = window.rootViewController</span><br><span class="line">#&quot;&lt;UINavigationController: 0x14e5fff0&gt;&quot;</span><br><span class="line">cy# var childVC = rootViewController.childViewControllers</span><br><span class="line">@[#&quot;&lt;HomeViewController: 0x14d8c3e0&gt;&quot;]</span><br><span class="line">cy# var homeVC = [childVC firstObject]</span><br><span class="line">#&quot;&lt;HomeViewController: 0x14d8c3e0&gt;&quot;</span><br><span class="line">cy# [homeVC pullDownToCamera]</span><br><span class="line">cy# [[[UIAlertView alloc] initWithTitle:@&quot;Cycript Test&quot; message:@&quot;Runtime Modify&quot; delegate:ni cancelButtonTitle:@&quot;Done&quot; otherButtonTitles:nil, nil] show]</span><br></pre></td></tr></table></figure></p>
+<p>在 App 的运行时，我们可以执行已有的方法，比如，在窗口上弹出一个 UIAlertView 。<br>再比如，从 MTXX.h 中查找到 HomeViewController 有 pullDownToCamera 的实例方法。当调用 pullDownToCamera 方法时，手机屏幕就会弹出照相机的界面。<br>因此，通过调用导出的头文件中方法，并根据应用运行时的表现，就可以大概想象出应用的基本结构。</p>
+<h4 id="Cycript-其他姿势"><a href="#Cycript-其他姿势" class="headerlink" title="Cycript 其他姿势"></a>Cycript 其他姿势</h4><ul>
+<li>应用代理</li>
+</ul>
+<p>在 Cycript 中 UIApp 与 [UIApplication sharedApplication] 作用相同<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">NY:~ root# cycript -p SpringBoard</span><br><span class="line">cy# UIApp</span><br><span class="line">#&quot;&lt;SpringBoard: 0x148aa400&gt;&quot;</span><br><span class="line">cy# [UIApplication sharedApplication]</span><br><span class="line">#&quot;&lt;SpringBoard: 0x148aa400&gt;&quot;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>创建一个新的实例</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var delegate = new Instance(0x148aa400)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>获得对象的 ivar</li>
+</ul>
+<p>ivar(instance variable) 即对象的实例变量，以上面的 delegate 为例，delegate 的实例变量为<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cy# var delegate = new Instance(0x148aa400)</span><br><span class="line">#&quot;&lt;SpringBoard: 0x148aa400&gt;&quot;</span><br><span class="line">cy# *delegate</span><br><span class="line">&#123;isa:SpringBoard,_delegate:#&quot;&lt;SpringBoard: 0x148aa400&gt;&quot;,_exclusiveTouchWindows:[NSSet setWithArray:@[]]],_event:#&quot;&lt;UIInternalEvent: 0x145aeff0&gt;&quot;,_touchesEvent:#&quot;&lt;UITouchesEvent: 0x145af0f0&gt; timestamp: 0 touches: &#123;(\n)&#125;&quot;,_motionEvent:#&quot;&lt;UIMotionEvent: 0x145952b0&gt; timestamp: 0 subtype: 0&quot;,_remoteControlEvent:#&quot;&lt;UIRemoteControlEvent: 0x146ab470&gt;&quot;,_remoteControlEventObservers:0,_topLevelNibObjects:null,_networkResourcesCurrentlyLoadingCount:0,_hideNetworkActivityIndicatorTimer:null,_editAlertView:null,_statusBar:#&quot;&lt;UIStatusBar: 0x148c0800; frame = (0 0; 320 24); opaque = NO; autoresize = W+BM; userInteractionEnabled = NO; layer = &lt;CALayer: 0x145a78d0&gt;&gt;&quot;,_statusBarRequestedStyle:306,_statusBarWindow:#&quot;&lt;UIStatusBarWindow: 0x146f51f0; frame = (0 0; 320 568); opaque = NO; gestureRecognizers = &lt;NSArray: 0x146a63c0&gt;; layer = &lt;UIWindowLayer: 0x146eabe0&gt;&gt;&quot;,_observerBlocks:@[],_postCommitActions:@[],_mainStoryboardName:null,_tintViewDurationStack:@[],_statusBarTintColorLockingControllers:null,_statusBarTintColorLockingCount:0,_preferredContentSizeCategory:null,_applicationFlags:@error,_defaultTopNavBarTintColor:null,_undoButtonIndex:0,_redoButtonIndex:0,_moveEvent:#&quot;&lt;UIMoveEvent: 0x146d9590&gt;&quot;,_physicalButtonsEvent:#&quot;&lt;UIPhysicalButtonsEvent: 0x146b1240&gt;&quot;,_wheelEvent:#&quot;&lt;UIWheelEvent: 0x146e0600&gt;&quot;,_physicalButtonMap:@&#123;101:#&quot;&lt;_UIPhysicalButton: 0x15c89a10&gt;&quot;,104:#&quot;&lt;_UIPhysicalButton: 0x147d0280&gt;&quot;&#125;,_physicalKeyboardEvent:#&quot;&lt;UIPhysicalKeyboardEvent: 0x146a7570&gt;&quot;,_alwaysHitTestsForMainScreen:0,_backgroundHitTestWindow:null,_eventQueue:@[],_childEventMap:&amp;&#123;&#125;,_disableTouchCoalescingCount:0,_classicMode:0,_actionsPendingInitialization:null,_idleTimerDisabledReasons:@error,_currentTimestampWhenFirstTouchCameDown:0,_currentLocationWhereFirstTouchCameDown:&#123;x:0,y:0&#125;,_currentActivityUUID:null,_currentActivityType:null,_sceneSettingsDiffInspector:#&quot;&lt;UIApplicationSceneSettingsDiffInspector:0x1459ef50&gt; -&gt; &lt;BSMutableSettings:0x14572e70&gt; -&gt; &#123;\n\t(7) = &lt;BSMutableSettings:0x1459f7b0&gt; -&gt; &#123;\n\t(2) = (\n    \&quot;&lt;__NSMallocBlock__: 0x145a5b90&gt;\&quot;\n)\n&#125;\</span><br></pre></td></tr></table></figure></p>
+<p>即，获得对象的实例变量方法是，直接输入 &lt;*对象名&gt; 。</p>
+<ul>
+<li>打印对象方法</li>
+</ul>
+<p>如下代码所示，第一个参数是类名<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function printMethods(className, isa) &#123;</span><br><span class="line">  var count = new new Type(&quot;I&quot;);</span><br><span class="line">  var classObj = (isa != undefined) ? objc_getClass(className)-&gt;isa : objc_getClass(className);</span><br><span class="line">  var methods = class_copyMethodList(classObj, count);</span><br><span class="line">  var methodsArray = [];</span><br><span class="line">  for(var i = 0; i &lt; *count; i++) &#123;</span><br><span class="line">    var method = methods[i];</span><br><span class="line">    methodsArray.push(&#123;selector:method_getName(method), implementation:method_getImplementation(method)&#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  free(methods);</span><br><span class="line">  return methodsArray;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>用法如下<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cy# printMethods(&quot;NSRunLoop&quot;, true)</span><br><span class="line">[&#123;selector:@selector(_mapkit_networkIORunLoop),implementation:&amp;(extern &quot;C&quot; id 629301593(id, SEL, ...))&#125;,&#123;selector:@selector(set_mapkit_networkIORunLoop:),implementation:&amp;(extern &quot;C&quot; id 629301645(id, SEL, ...))&#125;,&#123;selector:@selector(_new:),implementation:&amp;(extern &quot;C&quot; id 617824525(id, SEL, ...))&#125;,&#123;selector:@selector(currentRunLoop),implementation:&amp;(extern &quot;C&quot; id 617612889(id, SEL, ...))&#125;,&#123;selector:@selector(mainRunLoop),implementation:&amp;(extern &quot;C&quot; id 617895681(id, SEL, ...))&#125;]</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>Hook 方法</li>
+</ul>
+<p>系统默认的 currentRunLoop 会返回 CFRunLoop 实例的详细描述，如下所示。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cy# [NSRunLoop currentRunLoop]</span><br><span class="line">#&quot;&lt;CFRunLoop 0x14698f50 [0x321be700]&gt;&#123;wakeup port = 0x1403, stopped = false, ignoreWakeUps = false, \ncurrent mode = kCFRunLoopDefaultMode,\ncommon modes = &lt;CFBasicHash 0x14698fd0 [0x321be700]&gt;&#123;type = mutable set, count = 2,\nentries =&gt;\n\t0 : &lt;CFString 0x326dc838 [0x321be700]&gt;&#123;contents = \&quot;UITrackingRunLoopMode\&quot;&#125;\n\t1 : &lt;CFString 0x321a4cc8 [0x321be700]&gt;&#123;contents = \&quot;kCFRunLoopDefaultMode\&quot;&#125;\n&#125;\n,\ncommon mode items = &lt;CFBasicHash 0x14699410 [0x321be700]&gt;&#123;type = mutable set, count = 65,\nentries =&gt;\n\t0 : &lt;CFRunLoopSource 0x145addf0 [0x321be700]&gt;&#123;signalled = No, valid = Yes, order = -1, context = &lt;CFRunLoopSource context&gt;&#123;version = 0, info = 0x0, callout = &lt;redacted&gt; (0x2b3ce001)&#125;&#125;\n\t1 : &lt;CFRunLoopSource 0x1459f330 [0x321be700]&gt;&#123;signalled = No, valid = Yes, order = 0, context = &lt;CFRunLoopSource context&gt;&#123;version = 0, info = 0x0, callout = &lt;redacted&gt; (0x2a84fee9)&#125;&#125;\n\t2 : &lt;CFRunLoopSource 0x1464db60 [0x321be700]&gt;&#123;signalled = No, valid = Yes, order = 0, context = &lt;CFRunLoopSource context&gt;&#123;version = 0, info = 0x0, callout = ??? (0x2b74bb79)&#125;&#125;\n\t3 : &lt;CFRunLoopObserver 0x145a41f0 [0x321be700]&gt;&#123;valid = Yes, activities = 0xa0, repeats = Yes, order = 2147483647, callout = &lt;redacted&gt; (0x27577875), context = &lt;CFArray 0x145a4170 [0x321be700]&gt;&#123;type = mutable-small, count = 1, values = (\n\t0 : &lt;0x734028&gt;\n)&#125;&#125;\n\t4 : &lt;CFRunLoopSource 0x158dd350 [0x321be700]&gt;&#123;signalled = No, valid = Yes, order = 0, context = &lt;CFRunLoopSource MIG Server&gt; &#123;port = 103255, subsystem = 0x4b3f30, context = 0x0&#125;&#125;\n\t5 : &lt;CFRunLoopSource 0x146571f0 [0x321be700]&gt;&#123;signalled = No, valid = Yes, order = 0, context = &lt;CFMachPort 0x14657060 [0x321be700]&gt;&#123;valid = Yes, port = 8003, source = 0x146571f0, callout = &lt;redacted&gt; (0x25a979e1), context = &lt;CFMachPort context 0x0&gt;&#125;&#125;\n\t6 : &lt;CFRunLoopSource 0x146f38c0 [0x321be700]&gt;&#123;signalled = No, valid = Yes, order = 0, context = &lt;CFMachPort 0x146f91f0 [0x321be700]&gt;&#123;valid = Yes, port = 1331b, source = 0x146f38c0, callout = &lt;redacted&gt; (0x2beb16e9), context = &lt;CFMachPort context 0x158d4370&gt;&#125;&#125;\n\t7 : &lt;CFRunLoopTimer 0</span><br></pre></td></tr></table></figure></p>
+<p>将原来方法替换掉<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cy# original_NSRunLoop_description = NSRunLoop.prototype[&apos;description&apos;];</span><br><span class="line">(extern &quot;C&quot; id &quot;:description&quot;(id, SEL))</span><br><span class="line">cy# NSRunLoop.prototype[&apos;description&apos;] = function() &#123; return original_NSRunLoop_description.call(this).toString().substr(0,0) + &quot;This is a replaced description &quot;; &#125;</span><br><span class="line">function () &#123;var e;e=this;return original_NSRunLoop_description.call(e).toString().substr(0,0)+&quot;This is a replaced descripttion &quot;;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>原来的 description 方法被替换为新的描述字符串，再执行方法则会有如下输出。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cy# [NSRunLoop currentRunLoop]</span><br><span class="line">#&quot;This is a replaced descripttion &quot;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>打印视图层级关系</li>
+</ul>
+<p>递归打印视图层级关系<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cy# UIApp.keyWindow.recursiveDescription().toString()</span><br><span class="line">`&lt;_UIAlertControllerShimPresenterWindow: 0x182adce0; frame = (0 0; 320 568); opaque = NO; gestureRecognizers = &lt;NSArray: 0x1826d250&gt;; layer = &lt;UIWindowLayer: 0x18232af0&gt;&gt;</span><br><span class="line">   | &lt;UITransitionView: 0x180f3150; frame = (0 0; 320 568); clipsToBounds = YES; autoresize = H; layer = &lt;CALayer: 0x180c1650&gt;&gt;</span><br><span class="line">   |    | &lt;UIView: 0x16f292f0; frame = (0 0; 320 568); autoresize = W+H; layer = &lt;CALayer: 0x1816e2c0&gt;&gt;</span><br><span class="line">   |    | &lt;_UIAlertControllerView: 0x1816f9e0; frame = (0 0; 320 568); autoresize = W+H; layer = &lt;CALayer: 0x16f7bb90&gt;&gt;</span><br><span class="line">   |    |    | &lt;UIView: 0x16f17f90; frame = (0 0; 320 568); gestureRecognizers = &lt;NSArray: 0x181b9780&gt;; layer = &lt;CALayer: 0x16f12b80&gt;&gt;</span><br><span class="line">   |    |    | &lt;UIView: 0x182a6720; frame = (25 235; 270 98); animations = &#123; &lt;_UIParallaxMotionEffect: 0x16d2f520&gt;=&lt;CAAnimationGroup: 0x1821c430&gt;; &#125;; layer = &lt;CALayer: 0x182b02b0&gt;&gt;</span><br><span class="line">   |    |    |    | &lt;_UIDimmingKnockoutBackdropView: 0x16f36a30; frame = (0 0; 270 98); clipsToBounds = YES; layer = &lt;CALayer: 0x16f7aaf0&gt;&gt;</span><br><span class="line">   |    |    |    |    | &lt;UIView: 0x16f51130; frame = (0 0; 270 98); clipsToBounds = YES; layer = &lt;CALayer: 0x16fe2bd0&gt;&gt;</span><br><span class="line">   |    |    |    |    | &lt;_UIBackdropView: 0x181925f0; frame = (0 0; 270 98); clipsToBounds = YES; opaque = NO; autoresize = W+H; userInteractionEnabled = NO; layer = &lt;_UIBackdropViewLayer: 0x16f807e0&gt;&gt;</span><br><span class="line">   |    |    |    |    |    | &lt;_UIBackdropEffectView: 0x16f53e00; frame = (0 0; 270 98); clipsToBounds = YES; opaque = NO; autoresize = W+H; userInteractionEnabled = NO; layer = &lt;CABackdropLayer: 0x183447d0&gt;&gt;</span><br><span class="line">   |    |    |    |    |    | &lt;UIView: 0x16f1f450; frame = (0 0; 270 98); hidden = YES; opaque = NO; autoresize = W+H; userInteractionEnabled = NO; layer = &lt;CALayer: 0x183e9af0&gt;&gt;</span><br><span class="line">   |    |    |    | &lt;UIView: 0x16f58920; frame = (0 0; 270 98); layer = &lt;CALayer: 0x16f7bbc0&gt;&gt;</span><br><span class="line">   |    |    |    |    | &lt;UIView: 0x181766f0; frame = (0 0; 270 98); clipsToBounds = YES; layer = &lt;CALayer: 0x16d023f0&gt;&gt;</span><br><span class="line">   |    |    |    |    |    | &lt;_UIAlertControllerShadowedScrollView: 0x181f9940; frame = (0 0; 270 54); clipsToBounds = YES; gestureRecogni</span><br></pre></td></tr></table></figure></p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
+<li><p>学习的目标规划<br>开端两篇文章主要学习了几个常用工具的使用，也就是方法论。然而，只懂得使用工具，是不足以学会逆向的，所以后面学习完 IDA 的使用之后，就会整理一篇理论的文章。</p>
+</li>
+<li><p>class-dump<br>对于某些 Swift 混编的项目，会造成 crash 的报错。比如在对天猫应用进行导出头文件的时候，就报如下错误。</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">➜  Reverse class-dump Tmall4iPhone &gt; Tmall4iPhone.h</span><br><span class="line">2016-11-07 18:37:16.748 class-dump[6940:282221] Error: Cannot find offset for address 0x280000000103077b in stringAtAddress:</span><br></pre></td></tr></table></figure>
+<p>可以继续关注原作者会否进行适配，毕竟 Swift 是发展的趋势。</p>
+<ul>
+<li>正向开发和逆向开发的核心<br>从这次学习过程中，我们可以发现，逆向工程和正向工程的区别，就是二进制文件 Mach-O 文件获得方式的区别。正向开发时，是先编写程序，然后编译、链接、签名、打包最终生成含有应用 Mach-O 的包文件。而逆向开发，则是相反，首先是要先获得 Mach-O 文件，再根据二进制文件得到相应的代码，进行分析，修改等操作。</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><p>Cycript 的奇淫技巧<br><a href="http://iphonedevwiki.net/index.php/Cycript_Tricks" target="_blank" rel="noopener">http://iphonedevwiki.net/index.php/Cycript_Tricks</a></p>
+</li>
+<li><p>iOS安全–使用Cycript进行运行时分析<br><a href="http://www.blogfshare.com/ioss-cycript.html" target="_blank" rel="noopener">http://www.blogfshare.com/ioss-cycript.html</a></p>
+</li>
+<li><p>念茜女神的 Hack 实战——解除支付宝 App 手势解锁错误次数限制<br><a href="http://wiki.jikexueyuan.com/project/ios-security-defense/hack-practice.html" target="_blank" rel="noopener">http://wiki.jikexueyuan.com/project/ios-security-defense/hack-practice.html</a></p>
+</li>
+<li><p>iOS逆向工程(Cycript脚本语言使用与实战)<br><a href="http://www.jianshu.com/p/7c41b03c9eb3" target="_blank" rel="noopener">http://www.jianshu.com/p/7c41b03c9eb3</a></p>
+</li>
+<li><p>Cycript 简介以及绕过屏幕解锁密码<br><a href="http://security.ios-wiki.com/issue-4-5/" target="_blank" rel="noopener">http://security.ios-wiki.com/issue-4-5/</a> （这篇文章的无密码解锁部分已过时，所以没有介绍。里面的方法已经废除，可以通过导出头文件查看）</p>
+</li>
+</ul>
+
+    
+  </div>
+  
+    
+<!-- Gitalk评论插件通用代码 -->
+<div id="git"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: 'e929305d1df52067f223',
+  clientSecret: '9a6f94df61c1533c67cfbcbb038520090e2ba4da',
+  repo: 'blog-comments',
+  owner: 'niyaoyao',
+  admin: ['niyaoyao'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('git')
+</script>
+<!-- Gitalk代码结束 -->
+
+  
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2016/10/18/Learning-Kernel-From-Today-D1/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2017/01/18/Learning-Reverse-From-Today-D3/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+<!-- Gitalk评论插件通用代码 -->
+<div id="git"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: 'e929305d1df52067f223',
+  clientSecret: '9a6f94df61c1533c67cfbcbb038520090e2ba4da',
+  repo: 'blog-comments',
+  owner: 'niyaoyao',
+  admin: ['niyaoyao'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('git')
+</script>
+<!-- Gitalk代码结束 -->
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>
