@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>OpenGL Programming -- Draw Rectangle | N.Y.</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="OpenGL," />
+  
+
+  <meta name="description" content="OpenGL Programming with Cocoa创建 MyOpenGLView 类，继承自 NSOpenGLView 。头文件如下。 &#x2F;&#x2F;&#x2F;&#x2F;  MyOpenGLView.h&#x2F;&#x2F;  opengl-mac&#x2F;&#x2F;&#x2F;&#x2F;  Created by niyao on 5&#x2F;17&#x2F;18.&#x2F;&#x2F;  Copyright © 2018 dourui. All rights reserved.&#x2F;&#x2F;#import &amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenGL Programming -- Draw Rectangle">
+<meta property="og:url" content="http://niyaoyao.me/2018/05/26/openglcode/index.html">
+<meta property="og:site_name" content="N.Y.">
+<meta property="og:description" content="OpenGL Programming with Cocoa创建 MyOpenGLView 类，继承自 NSOpenGLView 。头文件如下。 &#x2F;&#x2F;&#x2F;&#x2F;  MyOpenGLView.h&#x2F;&#x2F;  opengl-mac&#x2F;&#x2F;&#x2F;&#x2F;  Created by niyao on 5&#x2F;17&#x2F;18.&#x2F;&#x2F;  Copyright © 2018 dourui. All rights reserved.&#x2F;&#x2F;#import &amp;">
+<meta property="og:locale">
+<meta property="article:published_time" content="2018-05-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-09-30T03:47:46.806Z">
+<meta property="article:author" content="Niyao">
+<meta property="article:tag" content="OpenGL">
+<meta name="twitter:card" content="summary">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico/images/avatar_ny.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    
+<link rel="stylesheet" href="/css/personal-style.css">
+
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38189205-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">Hi~</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">Hi~</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#OpenGL-Programming-with-Cocoa"><span class="toc-text">OpenGL Programming with Cocoa</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-openglcode" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">OpenGL Programming -- Draw Rectangle</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2018.05.26</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Niyao</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/OpenGL/">OpenGL</a>
+  </span>
+
+
+
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h2 id="OpenGL-Programming-with-Cocoa"><a href="#OpenGL-Programming-with-Cocoa" class="headerlink" title="OpenGL Programming with Cocoa"></a>OpenGL Programming with Cocoa</h2><p>创建 MyOpenGLView 类，继承自 NSOpenGLView 。头文件如下。</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  MyOpenGLView.h</span></span><br><span class="line"><span class="comment">//  opengl-mac</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by niyao on 5/17/18.</span></span><br><span class="line"><span class="comment">//  Copyright © 2018 dourui. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="meta-string">&lt;Cocoa/Cocoa.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&lt;OpenGL/gl3.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&lt;OpenGL/OpenGL.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MyOpenGLView</span> : <span class="title">NSOpenGLView</span> </span>&#123;</span><br><span class="line">    GLuint shaderProgram;</span><br><span class="line">    </span><br><span class="line">    GLint positionUniform;</span><br><span class="line">    GLint colourAttribute;</span><br><span class="line">    GLint positionAttribute;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>实现文件如下。</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  MyOpenGLView.m</span></span><br><span class="line"><span class="comment">//  opengl-mac</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by niyao on 5/17/18.</span></span><br><span class="line"><span class="comment">//  Copyright © 2018 dourui. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="meta-string">&quot;MyOpenGLView.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MyOpenGLView</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">instancetype</span>)initWithFrame:(<span class="built_in">NSRect</span>)frameRect &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span> = [<span class="keyword">super</span> initWithFrame:frameRect]) &#123;</span><br><span class="line">        [<span class="keyword">self</span> initGL];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)initGL &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;...was here&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 1. Create a context with opengl pixel format</span></span><br><span class="line">    <span class="built_in">NSOpenGLPixelFormatAttribute</span> pixelFormatAttributes[] =</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">NSOpenGLPFAOpenGLProfile</span>, <span class="built_in">NSOpenGLProfileVersion4_1Core</span>,</span><br><span class="line">        <span class="built_in">NSOpenGLPFAColorSize</span>    , <span class="number">24</span>                           ,</span><br><span class="line">        <span class="built_in">NSOpenGLPFAAlphaSize</span>    , <span class="number">8</span>                            ,</span><br><span class="line">        <span class="built_in">NSOpenGLPFADoubleBuffer</span> ,</span><br><span class="line">        <span class="built_in">NSOpenGLPFAAccelerated</span>  ,</span><br><span class="line">        <span class="built_in">NSOpenGLPFANoRecovery</span>   ,</span><br><span class="line">        <span class="number">0</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="built_in">NSOpenGLPixelFormat</span> *pixelFormat = [[<span class="built_in">NSOpenGLPixelFormat</span> alloc] initWithAttributes:pixelFormatAttributes];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">super</span>.pixelFormat = pixelFormat;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)drawRect:(<span class="built_in">NSRect</span>)dirtyRect &#123;</span><br><span class="line">    [<span class="keyword">super</span> drawRect:dirtyRect];</span><br><span class="line">    <span class="comment">// 2. Make the context current</span></span><br><span class="line">    [[<span class="keyword">self</span> openGLContext] makeCurrentContext];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 3. Define and compile vertex and fragment shaders</span></span><br><span class="line">    GLuint  vs;</span><br><span class="line">    GLuint  fs;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *vss = <span class="string">&quot;#version 330 core\n&quot;</span></span><br><span class="line">    <span class="string">&quot;layout (location = 0) in vec3 aPos;\n&quot;</span></span><br><span class="line">    <span class="string">&quot;void main()\n&quot;</span></span><br><span class="line">    <span class="string">&quot;&#123;\n&quot;</span></span><br><span class="line">    <span class="string">&quot;    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n&quot;</span></span><br><span class="line">    <span class="string">&quot;&#125;\0&quot;</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *fss = <span class="string">&quot;#version 330 core\n&quot;</span></span><br><span class="line">    <span class="string">&quot;out vec4 FragColor;\n&quot;</span></span><br><span class="line">    <span class="string">&quot;void main()\n&quot;</span></span><br><span class="line">    <span class="string">&quot;&#123;\n&quot;</span></span><br><span class="line">    <span class="string">&quot;    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n&quot;</span></span><br><span class="line">    <span class="string">&quot;&#125;\n\0&quot;</span>;</span><br><span class="line">    </span><br><span class="line">    vs = glCreateShader(GL_VERTEX_SHADER);</span><br><span class="line">    glShaderSource(vs, <span class="number">1</span>, &amp;vss, <span class="literal">NULL</span>);</span><br><span class="line">    glCompileShader(vs);</span><br><span class="line">    fs = glCreateShader(GL_FRAGMENT_SHADER);</span><br><span class="line">    glShaderSource(fs, <span class="number">1</span>, &amp;fss, <span class="literal">NULL</span>);</span><br><span class="line">    glCompileShader(fs);</span><br><span class="line">    printf(<span class="string">&quot;vs: %i, fs: %i\n&quot;</span>,vs,fs);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> success;</span><br><span class="line">    <span class="keyword">char</span> infoLog[<span class="number">512</span>];</span><br><span class="line">    glGetShaderiv(vs, GL_COMPILE_STATUS, &amp;success);</span><br><span class="line">    <span class="keyword">if</span> (!success)</span><br><span class="line">    &#123;</span><br><span class="line">        glGetShaderInfoLog(vs, <span class="number">512</span>, <span class="literal">NULL</span>, infoLog);</span><br><span class="line">        printf(<span class="string">&quot;ERROR::SHADER::VERTEX::COMPILATION_FAILED\n%s\n&quot;</span>, infoLog);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    glGetShaderiv(fs, GL_COMPILE_STATUS, &amp;success);</span><br><span class="line">    <span class="keyword">if</span> (!success)</span><br><span class="line">    &#123;</span><br><span class="line">        glGetShaderInfoLog(fs, <span class="number">512</span>, <span class="literal">NULL</span>, infoLog);</span><br><span class="line">        printf(<span class="string">&quot;ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n%s\n&quot;</span>, infoLog);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 4. Attach the shaders</span></span><br><span class="line">    shaderProgram = glCreateProgram();</span><br><span class="line">    glAttachShader(shaderProgram, vs);</span><br><span class="line">    glAttachShader(shaderProgram, fs);</span><br><span class="line">    glLinkProgram(shaderProgram);</span><br><span class="line">    <span class="comment">// check for linking errors</span></span><br><span class="line">    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &amp;success);</span><br><span class="line">    <span class="keyword">if</span> (!success) &#123;</span><br><span class="line">        glGetProgramInfoLog(shaderProgram, <span class="number">512</span>, <span class="literal">NULL</span>, infoLog);</span><br><span class="line">        printf(<span class="string">&quot;ERROR::SHADER::PROGRAM::LINKING_FAILED\n%s\n&quot;</span>, infoLog);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    glDeleteShader(vs);</span><br><span class="line">    glDeleteShader(fs);</span><br><span class="line">    printf(<span class="string">&quot;positionUniform: %i, colourAttribute: %i, positionAttribute: %i\n&quot;</span>,positionUniform,colourAttribute,positionAttribute);</span><br><span class="line">    <span class="comment">// There is no space (or other values) between each set of 3 values. The values are tightly packed in the array.</span></span><br><span class="line">    <span class="keyword">float</span> vertices[] = &#123;</span><br><span class="line">        <span class="number">0.5</span>f,  <span class="number">0.5</span>f, <span class="number">0.0</span>f,  <span class="comment">// top right</span></span><br><span class="line">        <span class="number">0.5</span>f, <span class="number">-0.5</span>f, <span class="number">0.0</span>f,  <span class="comment">// bottom right</span></span><br><span class="line">        <span class="number">-0.5</span>f, <span class="number">-0.5</span>f, <span class="number">0.0</span>f,  <span class="comment">// bottom left</span></span><br><span class="line">        <span class="number">-0.5</span>f,  <span class="number">0.5</span>f, <span class="number">0.0</span>f   <span class="comment">// top left</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> indices[] = &#123;  <span class="comment">// note that we start from 0!</span></span><br><span class="line">        <span class="number">0</span>, <span class="number">1</span>, <span class="number">3</span>,  <span class="comment">// first Triangle</span></span><br><span class="line">        <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>   <span class="comment">// second Triangle</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> VBO, VAO, EBO;</span><br><span class="line">    <span class="comment">// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).</span></span><br><span class="line">    glGenVertexArrays(<span class="number">1</span>, &amp;VAO);</span><br><span class="line">    glBindVertexArray(VAO);</span><br><span class="line">    </span><br><span class="line">    glGenBuffers(<span class="number">1</span>, &amp;VBO);</span><br><span class="line">    glBindBuffer(GL_ARRAY_BUFFER, VBO);</span><br><span class="line">    glBufferData(GL_ARRAY_BUFFER, <span class="keyword">sizeof</span>(vertices), vertices, GL_STATIC_DRAW);</span><br><span class="line">    </span><br><span class="line">    glGenBuffers(<span class="number">1</span>, &amp;EBO);</span><br><span class="line">    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);</span><br><span class="line">    glBufferData(GL_ELEMENT_ARRAY_BUFFER, <span class="keyword">sizeof</span>(indices), indices, GL_STATIC_DRAW);</span><br><span class="line">    </span><br><span class="line">    glVertexAttribPointer(<span class="number">0</span>, <span class="number">3</span>, GL_FLOAT, GL_FALSE, <span class="number">3</span> * <span class="keyword">sizeof</span>(<span class="keyword">float</span>), (<span class="keyword">void</span>*)<span class="number">0</span>);</span><br><span class="line">    glEnableVertexAttribArray(<span class="number">0</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute&#x27;s bound vertex buffer object so afterwards we can safely unbind</span></span><br><span class="line">    glBindBuffer(GL_ARRAY_BUFFER, <span class="number">0</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.</span></span><br><span class="line">    <span class="comment">//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// You can unbind the VAO afterwards so other VAO calls won&#x27;t accidentally modify this VAO, but this rarely happens. Modifying other</span></span><br><span class="line">    <span class="comment">// VAOs requires a call to glBindVertexArray anyways so we generally don&#x27;t unbind VAOs (nor VBOs) when it&#x27;s not directly necessary.</span></span><br><span class="line">    glBindVertexArray(<span class="number">0</span>);</span><br><span class="line">    <span class="comment">// Drawing code here.</span></span><br><span class="line">    glViewport(<span class="number">10</span>, <span class="number">10</span>, <span class="number">100</span>, <span class="number">100</span>);</span><br><span class="line">    glClearColor(<span class="number">0.2</span>f, <span class="number">0.3</span>f, <span class="number">0.3</span>f, <span class="number">1.0</span>f);</span><br><span class="line">    glClear(GL_COLOR_BUFFER_BIT);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// draw our first triangle</span></span><br><span class="line"><span class="comment">//    glUseProgram(shaderProgram);</span></span><br><span class="line"><span class="comment">//    glBindVertexArray(VAO);</span></span><br><span class="line"><span class="comment">//    glDrawArrays(GL_TRIANGLES, 0, 3);</span></span><br><span class="line"><span class="comment">//    glBindVertexArray(0);</span></span><br><span class="line">    glUseProgram(shaderProgram);</span><br><span class="line">    glBindVertexArray(VAO);</span><br><span class="line"></span><br><span class="line">    glDrawElements(GL_TRIANGLES, <span class="number">6</span>, GL_UNSIGNED_INT, <span class="number">0</span>);</span><br><span class="line">    </span><br><span class="line">    [[<span class="keyword">self</span> openGLContext] flushBuffer];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2018/05/23/learning_opengl(es)_opengl_model_pipeline_and_practices/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/09/05/gcp-deploy/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: 'e929305d1df52067f223',
+  clientSecret: '465557188fddc6608846e97927bc2fe7a268f141',
+  repo: 'blog-comments',
+  owner: 'niyaoyao',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: md5(location.pathname),
+  admin: ['niyaoyao'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
