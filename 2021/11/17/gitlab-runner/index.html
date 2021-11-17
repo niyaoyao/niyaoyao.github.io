@@ -1,26 +1,31 @@
 <!DOCTYPE html>
 
 
-  <html class="light page-archives">
+  <html class="light page-post">
 
 
 <head>
   <meta charset="utf-8">
   
-  <title>Archives | N.Y.</title>
+  <title>GitLab Runner 基本概念以及 DevOps 工作流 | N.Y.</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="ny,iOS,Objective-C,Swift,CI/CD,Ruby,frontend,design,nodejs,JavaScript" />
+    <meta name="keywords" content="Python," />
   
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="N.Y.">
-<meta property="og:url" content="http://niyaoyao.me/archives/page/3/index.html">
+  <meta name="description" content="参考https:&#x2F;&#x2F;gitlab.com&#x2F;gitlab-org&#x2F;gitlab-runnerhttps:&#x2F;&#x2F;about.gitlab.com&#x2F;solutions&#x2F;devops-platform&#x2F;https:&#x2F;&#x2F;about.gitlab.com&#x2F;stages-devops-lifecycle&#x2F;https:&#x2F;&#x2F;about.gitlab.com&#x2F;topics&#x2F;concurrent-devops&#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GitLab Runner 基本概念以及 DevOps 工作流">
+<meta property="og:url" content="http://niyaoyao.me/2021/11/17/gitlab-runner/index.html">
 <meta property="og:site_name" content="N.Y.">
+<meta property="og:description" content="参考https:&#x2F;&#x2F;gitlab.com&#x2F;gitlab-org&#x2F;gitlab-runnerhttps:&#x2F;&#x2F;about.gitlab.com&#x2F;solutions&#x2F;devops-platform&#x2F;https:&#x2F;&#x2F;about.gitlab.com&#x2F;stages-devops-lifecycle&#x2F;https:&#x2F;&#x2F;about.gitlab.com&#x2F;topics&#x2F;concurrent-devops&#x2F;">
 <meta property="og:locale">
+<meta property="article:published_time" content="2021-11-16T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-11-17T11:55:06.350Z">
 <meta property="article:author" content="Niyao">
+<meta property="article:tag" content="Python">
 <meta name="twitter:card" content="summary">
 
   
@@ -97,12 +102,8 @@ ga('send', 'pageview');
     <span id="toolbox-mobile" class="toolbox-mobile">Hi~</span>
   
 
-  <div class="content content-archive">
-  <div class="page-header">
-
-  
-
-  
+  <div class="post-header CENTER">
+   
   <div class="toolbox">
     <a class="toolbox-entry" href="/">
       <span class="toolbox-entry-text">Hi~</span>
@@ -192,88 +193,107 @@ ga('send', 'pageview');
   </div>
 
 
+</div>
 
-  <div class="box-blog-info">
-    <a class="avatar" href="/">
-      <img src="/images/avatar_ny.jpg" alt="" />
-    </a>
-    <div class="info">
-      <h3 class="name" style="font-family: calligraffittiregular">
-        N.Y.
-      </h3>
-      <div class="slogan">
-        Sensitive | Thoughtful | Idealism | ❤️ @SuneBear | Cear&#39;s mommy~ 🐱
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-gitlab-runner" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">GitLab Runner 基本概念以及 DevOps 工作流</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2021.11.17</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Niyao</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://gitlab.com/gitlab-org/gitlab-runner">https://gitlab.com/gitlab-org/gitlab-runner</a><br><a target="_blank" rel="noopener" href="https://about.gitlab.com/solutions/devops-platform/">https://about.gitlab.com/solutions/devops-platform/</a><br><a target="_blank" rel="noopener" href="https://about.gitlab.com/stages-devops-lifecycle/">https://about.gitlab.com/stages-devops-lifecycle/</a><br><a target="_blank" rel="noopener" href="https://about.gitlab.com/topics/concurrent-devops/">https://about.gitlab.com/topics/concurrent-devops/</a></p>
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
       </div>
     </div>
   </div>
 
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2021/11/17/python-lang/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2021/11/17/dream-31/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
 </div>
 
 
-  <div class="post-list-box archive-body">
-    <ul class="list-post">  <li class="item-year item item-title item-title-1">
-    <a href="/archives/2016" class="text-year">
-      2016
-      <i class="icon-hou"></i>
-      
-    </a>
-  </li>
-<li class="item-post item">
-  <span class="post-date">10-09</span>
-
-  
-  <a class="post-title" href="/2016/10/09/react-native-basic-syntax/">React Native 基础</a>
-
-
-</li>
-<li class="item-post item">
-  <span class="post-date">09-29</span>
-
-  
-  <a class="post-title" href="/2016/09/29/Learning-React-From-Today-D1/">今天开始学 React：建立一个简单页面</a>
-
-
-</li>
-<li class="item-post item">
-  <span class="post-date">07-29</span>
-
-  
-  <a class="post-title" href="/2016/07/29/oc-compile/">Objective-C Runtime —— From Build To Did Launch</a>
-
-
-</li>
-  <li class="item-year item item-title item-title-0">
-    <a href="/archives/2015" class="text-year">
-      2015
-      <i class="icon-yang"></i>
-      
-    </a>
-  </li>
-<li class="item-post item">
-  <span class="post-date">03-02</span>
-
-  
-  <a class="post-title" href="/2015/03/02/xcode-errors/">Xcode 开发的出错整理</a>
-
-
-</li>
-</ul>
-  </div>
-
-  <div class="archive-footer">
-    
-  <div class="pagination">
-    <nav class="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/page/2/"><i class="icon-angle-left"></i></a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/">2</a><span class="page-number current">3</span>
-    </nav>
-  </div>
-
-
-  </div>
-</div>
-
-
-
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
 
 
 
@@ -372,6 +392,50 @@ ga('send', 'pageview');
 </div>
 
 
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: 'e929305d1df52067f223',
+  clientSecret: '465557188fddc6608846e97927bc2fe7a268f141',
+  repo: 'blog-comments',
+  owner: 'niyaoyao',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: md5(location.pathname),
+  admin: ['niyaoyao'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
 
   
 
