@@ -23,7 +23,7 @@
 <meta property="og:description" content="前言由于公司的项目需要 React Native 的相关技术，之前已经开发过 React 创建 Native 的项目。但是，很久没做 Web 的项目了，觉得这是个机会，开始重拾前端，学习现代前端技术。我是在 Mac OS X 环境进行学习的，Terminal + sublime + atom 是我学习使用的工具。 着手创建第一个 Web 页面安装安装 React 需要借助 npm 。在安装 nod">
 <meta property="og:locale">
 <meta property="article:published_time" content="2016-09-28T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-09-30T03:47:46.802Z">
+<meta property="article:modified_time" content="2024-01-04T07:01:51.202Z">
 <meta property="article:author" content="Niyao">
 <meta property="article:tag" content="Web">
 <meta property="article:tag" content="React">
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="icon" href="/favicon.ico/images/avatar_ny.ico">
+    <link rel="icon" href="/favicon.ico">
   
 
   <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
@@ -94,20 +94,20 @@ ga('send', 'pageview');
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
   
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.2"></head>
 
 <body>
 
 
   
-    <span id="toolbox-mobile" class="toolbox-mobile">Hi~</span>
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
   
 
   <div class="post-header CENTER">
    
   <div class="toolbox">
     <a class="toolbox-entry" href="/">
-      <span class="toolbox-entry-text">Hi~</span>
+      <span class="toolbox-entry-text">盒子</span>
       <i class="icon-angle-down"></i>
       <i class="icon-home"></i>
     </a>
@@ -251,22 +251,18 @@ ga('send', 'pageview');
 <li>Homebrew</li>
 </ul>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">/usr/bin/ruby -e <span class="string">&quot;<span class="subst">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)</span>&quot;</span></span><br></pre></td></tr></table></figure>
-
 <ul>
 <li>node</li>
 </ul>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">brew install node</span><br></pre></td></tr></table></figure>
-
 <ul>
 <li>create-react-app</li>
 </ul>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">npm install -g create-react-app</span><br></pre></td></tr></table></figure>
-
 <h3 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello World"></a>Hello World</h3><p>利用 <strong>create-react-app</strong> 是最佳的方式创建一个新的 React 单应用。</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">reate-react-app hello-world</span><br><span class="line"><span class="built_in">cd</span> hello-world</span><br><span class="line">npm start</span><br></pre></td></tr></table></figure>
-<p>执行以上命令之后就会开启本地服务，并打开 <a target="_blank" rel="noopener" href="http://localhost:3000/%E3%80%82">http://localhost:3000/。</a></p>
-<h4 id="项目目录结构"><a href="#项目目录结构" class="headerlink" title="项目目录结构"></a>项目目录结构</h4><p>在 Terminal 中查看当前目录的文件结构：</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">➜  hello-world ls</span><br><span class="line">README.md    node_modules package.json public       src</span><br></pre></td></tr></table></figure>
+<p>执行以上命令之后就会开启本地服务，并打开 <a target="_blank" rel="noopener" href="http://localhost:3000/。">http://localhost:3000/。</a></p>
+<h4 id="项目目录结构"><a href="#项目目录结构" class="headerlink" title="项目目录结构"></a>项目目录结构</h4><p>在 Terminal 中查看当前目录的文件结构：<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">➜  hello-world <span class="built_in">ls</span></span><br><span class="line">README.md    node_modules package.json public       src</span><br></pre></td></tr></table></figure></p>
 <ul>
 <li>README.md 说明文件</li>
 <li>node_modules node 依赖包</li>
@@ -274,22 +270,19 @@ ga('send', 'pageview');
 <li>public 网页</li>
 <li>src 资源 </li>
 </ul>
-<p>可以分别对该目录下的文件夹进行 ls 操作查看文件详情。</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">➜  hello-world ls public </span><br><span class="line">favicon.ico index.html</span><br><span class="line">➜  hello-world ls src </span><br><span class="line">App.css     App.js      App.test.js index.css   index.js    logo.svg</span><br></pre></td></tr></table></figure>
-
+<p>可以分别对该目录下的文件夹进行 ls 操作查看文件详情。<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">➜  hello-world <span class="built_in">ls</span> public </span><br><span class="line">favicon.ico index.html</span><br><span class="line">➜  hello-world <span class="built_in">ls</span> src </span><br><span class="line">App.css     App.js      App.test.js index.css   index.js    logo.svg</span><br></pre></td></tr></table></figure></p>
 <h4 id="源码结构"><a href="#源码结构" class="headerlink" title="源码结构"></a>源码结构</h4><ul>
 <li>App.js</li>
 </ul>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> logo <span class="keyword">from</span> <span class="string">&#x27;./logo.svg&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;./App.css&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;App&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;App-header&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">          <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&#123;logo&#125;</span> <span class="attr">className</span>=<span class="string">&quot;App-logo&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;logo&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="xml">          <span class="tag">&lt;<span class="name">h2</span>&gt;</span>Welcome to React<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">p</span> <span class="attr">className</span>=<span class="string">&quot;App-intro&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">          To get started, edit <span class="tag">&lt;<span class="name">code</span>&gt;</span>src/App.js<span class="tag">&lt;/<span class="name">code</span>&gt;</span> and save to reload.</span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> App;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>, &#123; <span class="title class_">Component</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> logo <span class="keyword">from</span> <span class="string">&#x27;./logo.svg&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;./App.css&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">App</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span> &#123;</span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;App&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;App-header&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&#123;logo&#125;</span> <span class="attr">className</span>=<span class="string">&quot;App-logo&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;logo&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">h2</span>&gt;</span>Welcome to React<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">p</span> <span class="attr">className</span>=<span class="string">&quot;App-intro&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          To get started, edit <span class="tag">&lt;<span class="name">code</span>&gt;</span>src/App.js<span class="tag">&lt;/<span class="name">code</span>&gt;</span> and save to reload.</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">App</span>;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>index.html</li>
 </ul>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!doctype <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;shortcut icon&quot;</span> <span class="attr">href</span>=<span class="string">&quot;%PUBLIC_URL%/favicon.ico&quot;</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">      Notice the use of %PUBLIC_URL% in the tag above.</span></span><br><span class="line"><span class="comment">      It will be replaced with the URL of the `public` folder during the build.</span></span><br><span class="line"><span class="comment">      Only files inside the `public` folder can be referenced from the HTML.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">      Unlike &quot;/favicon.ico&quot; or &quot;favicon.ico&quot;, &quot;%PUBLIC_URL%/favicon.ico&quot; will</span></span><br><span class="line"><span class="comment">      work correctly both with client-side routing and a non-root public URL.</span></span><br><span class="line"><span class="comment">      Learn how to configure a non-root public URL by running `npm run build`.</span></span><br><span class="line"><span class="comment">    --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>React App<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;root&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">      This HTML file is a template.</span></span><br><span class="line"><span class="comment">      If you open it directly in the browser, you will see an empty page.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">      You can add webfonts, meta tags, or analytics to this file.</span></span><br><span class="line"><span class="comment">      The build step will place the bundled scripts into the &lt;body&gt; tag.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">      To begin the development, run `npm start`.</span></span><br><span class="line"><span class="comment">      To create a production bundle, use `npm run build`.</span></span><br><span class="line"><span class="comment">    --&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!doctype <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;shortcut icon&quot;</span> <span class="attr">href</span>=<span class="string">&quot;%PUBLIC_URL%/favicon.ico&quot;</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">      Notice the use of %PUBLIC_URL% in the tag above.</span></span><br><span class="line"><span class="comment">      It will be replaced with the URL of the `public` folder during the build.</span></span><br><span class="line"><span class="comment">      Only files inside the `public` folder can be referenced from the HTML.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">      Unlike &quot;/favicon.ico&quot; or &quot;favicon.ico&quot;, &quot;%PUBLIC_URL%/favicon.ico&quot; will</span></span><br><span class="line"><span class="comment">      work correctly both with client-side routing and a non-root public URL.</span></span><br><span class="line"><span class="comment">      Learn how to configure a non-root public URL by running `npm run build`.</span></span><br><span class="line"><span class="comment">    --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>React App<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;root&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">      This HTML file is a template.</span></span><br><span class="line"><span class="comment">      If you open it directly in the browser, you will see an empty page.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">      You can add webfonts, meta tags, or analytics to this file.</span></span><br><span class="line"><span class="comment">      The build step will place the bundled scripts into the &lt;body&gt; tag.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">      To begin the development, run `npm start`.</span></span><br><span class="line"><span class="comment">      To create a production bundle, use `npm run build`.</span></span><br><span class="line"><span class="comment">    --&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>通过观察 App.js 和 index.html 文件可以得知，App 中利用 JSX 渲染的元素的父节点是 id 为 root 的 div 元素。</p>
 <p>因此，要是想在 Root 里面添加子元素就需要在 App.js 中利用 JSX 编码。</p>
 <h3 id="整合进已有的应用"><a href="#整合进已有的应用" class="headerlink" title="整合进已有的应用"></a>整合进已有的应用</h3><h4 id="安装-React-DOM"><a href="#安装-React-DOM" class="headerlink" title="安装 React DOM"></a>安装 React DOM</h4><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">npm install --save react react-dom</span><br></pre></td></tr></table></figure>
 <h4 id="通过-CDN"><a href="#通过-CDN" class="headerlink" title="通过 CDN"></a>通过 CDN</h4><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">&lt;script src=<span class="string">&quot;https://unpkg.com/react@15/dist/react.js&quot;</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=<span class="string">&quot;https://unpkg.com/react-dom@15/dist/react-dom.js&quot;</span>&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
 <li><p>学习技术的套路<br>我认为，React 的入门姿势还是很 easy 的，嗯，能创建 hello world 项目就算入门了。<br>这次的学习认识了 React 单应用的项目结构。刚开始学习应用层的开发，就是学习框架的使用。Web 开发如此，Native 的套路也是如此。但是，对于 React 的学习不能只停留在框架的使用层面，后面肯定需要学习 JavaScript ES6 和 node.js 语言原理，再往后面业务逻辑熟练之后就开始玩架构、玩性能。然而不论怎样终端的开发，最终都是对系统资源的使用，所以，了解操作系统原理才是最关键的，这样玩什么都很 High。</p>
 </li>
@@ -526,6 +519,22 @@ gitalk.render('gitalk-container')
     });
   }
 </script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="//cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
 </body>
 </html>

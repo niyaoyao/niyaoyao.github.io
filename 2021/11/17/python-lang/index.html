@@ -15,15 +15,15 @@
     <meta name="keywords" content="Python," />
   
 
-  <meta name="description" content="前言本文是一篇根据日常开发整理的 Python 实用语法集合，简单记录并分享，方便自己回顾查阅。 Python 命令行传参利用命令行参数列表获取参数Python 可以通过 sys 模块获取命令行参数列表。 import sysprint(len(sys.argv))print(sys.argv)  通过获取 argv 的参数列表，获取传参数组，然后根据入参顺序固定传参对应的操作，执行相关函数。当我">
+  <meta name="description" content="前言本文是一篇根据日常开发整理的 Python 实用语法集合，简单记录并分享，方便自己回顾查阅。 Python 命令行传参利用命令行参数列表获取参数Python 可以通过 sys 模块获取命令行参数列表。 import sysprint(len(sys.argv))print(sys.argv) 通过获取 argv 的参数列表，获取传参数组，然后根据入参顺序固定传参对应的操作，执行相关函数。当我们">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python 实用语法总结">
 <meta property="og:url" content="http://niyaoyao.me/2021/11/17/python-lang/index.html">
 <meta property="og:site_name" content="N.Y.">
-<meta property="og:description" content="前言本文是一篇根据日常开发整理的 Python 实用语法集合，简单记录并分享，方便自己回顾查阅。 Python 命令行传参利用命令行参数列表获取参数Python 可以通过 sys 模块获取命令行参数列表。 import sysprint(len(sys.argv))print(sys.argv)  通过获取 argv 的参数列表，获取传参数组，然后根据入参顺序固定传参对应的操作，执行相关函数。当我">
+<meta property="og:description" content="前言本文是一篇根据日常开发整理的 Python 实用语法集合，简单记录并分享，方便自己回顾查阅。 Python 命令行传参利用命令行参数列表获取参数Python 可以通过 sys 模块获取命令行参数列表。 import sysprint(len(sys.argv))print(sys.argv) 通过获取 argv 的参数列表，获取传参数组，然后根据入参顺序固定传参对应的操作，执行相关函数。当我们">
 <meta property="og:locale">
 <meta property="article:published_time" content="2021-11-16T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-11-25T13:09:53.535Z">
+<meta property="article:modified_time" content="2024-01-04T07:01:51.204Z">
 <meta property="article:author" content="Niyao">
 <meta property="article:tag" content="Python">
 <meta name="twitter:card" content="summary">
@@ -31,7 +31,7 @@
   
 
   
-    <link rel="icon" href="/favicon.ico/images/avatar_ny.ico">
+    <link rel="icon" href="/favicon.ico">
   
 
   <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
@@ -93,20 +93,20 @@ ga('send', 'pageview');
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
   
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.2"></head>
 
 <body>
 
 
   
-    <span id="toolbox-mobile" class="toolbox-mobile">Hi~</span>
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
   
 
   <div class="post-header CENTER">
    
   <div class="toolbox">
     <a class="toolbox-entry" href="/">
-      <span class="toolbox-entry-text">Hi~</span>
+      <span class="toolbox-entry-text">盒子</span>
       <i class="icon-angle-down"></i>
       <i class="icon-home"></i>
     </a>
@@ -242,30 +242,21 @@ ga('send', 'pageview');
       <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文是一篇根据日常开发整理的 Python 实用语法集合，简单记录并分享，方便自己回顾查阅。</p>
 <h2 id="Python-命令行传参"><a href="#Python-命令行传参" class="headerlink" title="Python 命令行传参"></a>Python 命令行传参</h2><h3 id="利用命令行参数列表获取参数"><a href="#利用命令行参数列表获取参数" class="headerlink" title="利用命令行参数列表获取参数"></a>利用命令行参数列表获取参数</h3><p>Python 可以通过 sys 模块获取命令行参数列表。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(sys.argv))</span><br><span class="line"><span class="built_in">print</span>(sys.argv)</span><br></pre></td></tr></table></figure>
-
 <p>通过获取 argv 的参数列表，获取传参数组，然后根据入参顺序固定传参对应的操作，执行相关函数。当我们在 <strong>terminal</strong> 中输入 <code>python test.py</code> 时，就会输出命令行参数列表。</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">➜  PythonTest python test.py</span><br><span class="line">1</span><br><span class="line">[&#x27;test.py&#x27;]</span><br></pre></td></tr></table></figure>
-
 <p>从控制台输出可知， <code>sys.argv</code> 会将当前程序脚本名称也视为入参，而利用参数列表获取传参有两个弊端：参数传参表意不明，参数顺序不可改变。因此，接下来介绍另一种命令行参数获取方式。</p>
-<h3 id="利用-argparse-模块获取参数"><a href="#利用-argparse-模块获取参数" class="headerlink" title="利用 argparse 模块获取参数"></a>利用 argparse 模块获取参数</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line"><span class="keyword">global</span> args</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_args</span>():</span></span><br><span class="line">    <span class="keyword">global</span> args</span><br><span class="line">    parse = argparse.ArgumentParser()</span><br><span class="line">    parse.add_argument(<span class="string">&#x27;-t&#x27;</span>, <span class="string">&#x27;--type&#x27;</span>, <span class="built_in">help</span>=<span class="string">&#x27;The Type of Process.&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, required=<span class="literal">True</span>)</span><br><span class="line">    args = parse.parse_args()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">  read_args()</span><br><span class="line">  <span class="built_in">type</span> = args.<span class="built_in">type</span></span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;Current Type ---&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">type</span>))</span><br><span class="line">  <span class="built_in">print</span>(<span class="built_in">len</span>(sys.argv))</span><br><span class="line">  <span class="built_in">print</span>(sys.argv)</span><br></pre></td></tr></table></figure>
-
+<h3 id="利用-argparse-模块获取参数"><a href="#利用-argparse-模块获取参数" class="headerlink" title="利用 argparse 模块获取参数"></a>利用 argparse 模块获取参数</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line"><span class="keyword">global</span> args</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">read_args</span>():</span><br><span class="line">    <span class="keyword">global</span> args</span><br><span class="line">    parse = argparse.ArgumentParser()</span><br><span class="line">    parse.add_argument(<span class="string">&#x27;-t&#x27;</span>, <span class="string">&#x27;--type&#x27;</span>, <span class="built_in">help</span>=<span class="string">&#x27;The Type of Process.&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, required=<span class="literal">True</span>)</span><br><span class="line">    args = parse.parse_args()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">  read_args()</span><br><span class="line">  <span class="built_in">type</span> = args.<span class="built_in">type</span></span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;Current Type ---&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">type</span>))</span><br><span class="line">  <span class="built_in">print</span>(<span class="built_in">len</span>(sys.argv))</span><br><span class="line">  <span class="built_in">print</span>(sys.argv)</span><br></pre></td></tr></table></figure>
 <p>与利用参数列表获取传参不同对于， <code>argparse</code> 模块需要创建参数解析实例，并且入参需要设置参数名称的简写、全写、类型，是否必须等属性。如果我们将入参设置为必须传参，那么当我们再次在 <strong>terminal</strong> 中输入 <code>python test.py</code> 时，就会报错，提示 <code>argument -t/--type is required</code>。</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">➜  PythonTest python test.py</span><br><span class="line">usage: test.py [-h] -t TYPE</span><br><span class="line">test.py: error: argument -t/--type is required</span><br></pre></td></tr></table></figure>
-
 <p>当我们输入 <code>python test.py -t aaa</code> 命令时，就可以获得正确的输出结果。</p>
-<h2 id="执行其他命令"><a href="#执行其他命令" class="headerlink" title="执行其他命令"></a>执行其他命令</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run_command</span>(<span class="params">cmd=<span class="string">&#x27;&#x27;</span></span>):</span></span><br><span class="line">    ret = os.system(cmd)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Execute Command: &#123;&#125;&quot;</span>.<span class="built_in">format</span>(cmd))</span><br><span class="line">    <span class="keyword">if</span> ret != <span class="number">0</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Error with Code: &#123;&#125;&quot;</span>.<span class="built_in">format</span>(ret))</span><br><span class="line">        sys.exit(-<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-
+<h2 id="执行其他命令"><a href="#执行其他命令" class="headerlink" title="执行其他命令"></a>执行其他命令</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">run_command</span>(<span class="params">cmd=<span class="string">&#x27;&#x27;</span></span>):</span><br><span class="line">    ret = os.system(cmd)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Execute Command: &#123;&#125;&quot;</span>.<span class="built_in">format</span>(cmd))</span><br><span class="line">    <span class="keyword">if</span> ret != <span class="number">0</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Error with Code: &#123;&#125;&quot;</span>.<span class="built_in">format</span>(ret))</span><br><span class="line">        sys.exit(-<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 <h2 id="文件扫描及读写"><a href="#文件扫描及读写" class="headerlink" title="文件扫描及读写"></a>文件扫描及读写</h2><h3 id="遍历目录"><a href="#遍历目录" class="headerlink" title="遍历目录"></a>遍历目录</h3><p>Python 用于扫描文件目录是很常见的应用场景，对于提高工作效率非常有助。比如，我们打印某个目录下的所有文件。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">traverse_dir</span>(<span class="params">root=<span class="string">&#x27;/&#x27;</span></span>):</span></span><br><span class="line">    <span class="keyword">for</span> parent, _, files <span class="keyword">in</span> os.walk(root):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;&#123;&#125; ---&gt;&#x27;</span>.<span class="built_in">format</span>(parent))</span><br><span class="line">        <span class="keyword">for</span> _file <span class="keyword">in</span> files:</span><br><span class="line">            <span class="built_in">print</span>(_file)</span><br></pre></td></tr></table></figure>
-
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">traverse_dir</span>(<span class="params">root=<span class="string">&#x27;/&#x27;</span></span>):</span><br><span class="line">    <span class="keyword">for</span> parent, _, files <span class="keyword">in</span> os.walk(root):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;&#123;&#125; ---&gt;&#x27;</span>.<span class="built_in">format</span>(parent))</span><br><span class="line">        <span class="keyword">for</span> _file <span class="keyword">in</span> files:</span><br><span class="line">            <span class="built_in">print</span>(_file)</span><br></pre></td></tr></table></figure>
 <p>除了文件遍历还可以进行文件读写</p>
-<h3 id="文件读写"><a href="#文件读写" class="headerlink" title="文件读写"></a>文件读写</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">traverse_dir</span>(<span class="params">root=<span class="string">&#x27;/&#x27;</span></span>):</span></span><br><span class="line">    <span class="keyword">for</span> parent, _, files <span class="keyword">in</span> os.walk(root):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;&#123;&#125; ---&gt;&#x27;</span>.<span class="built_in">format</span>(parent))</span><br><span class="line">        <span class="keyword">for</span> _file <span class="keyword">in</span> files:</span><br><span class="line">            <span class="built_in">print</span>(_file)</span><br><span class="line">            file_name, file_ext = os.path.splitext(_file)</span><br><span class="line">            file_path = os.path.join(parent, _file)</span><br><span class="line">            <span class="keyword">if</span> file_ext == <span class="string">&#x27;.json&#x27;</span>:</span><br><span class="line">                <span class="keyword">with</span> <span class="built_in">open</span>(file_path, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> json_file:</span><br><span class="line">                    content = json_file.read()</span><br><span class="line">                    <span class="built_in">print</span>(content)</span><br><span class="line">            <span class="keyword">if</span> file_ext == <span class="string">&#x27;.md&#x27;</span>:</span><br><span class="line">                <span class="keyword">with</span> <span class="built_in">open</span>(file_path, <span class="string">&quot;w&quot;</span>) <span class="keyword">as</span> md_file:</span><br><span class="line">                    md_file.write(<span class="string">&quot;# HelloWorld\n## My first doc\nHappy~~&quot;</span>)</span><br></pre></td></tr></table></figure>
-
+<h3 id="文件读写"><a href="#文件读写" class="headerlink" title="文件读写"></a>文件读写</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">traverse_dir</span>(<span class="params">root=<span class="string">&#x27;/&#x27;</span></span>):</span><br><span class="line">    <span class="keyword">for</span> parent, _, files <span class="keyword">in</span> os.walk(root):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;&#123;&#125; ---&gt;&#x27;</span>.<span class="built_in">format</span>(parent))</span><br><span class="line">        <span class="keyword">for</span> _file <span class="keyword">in</span> files:</span><br><span class="line">            <span class="built_in">print</span>(_file)</span><br><span class="line">            file_name, file_ext = os.path.splitext(_file)</span><br><span class="line">            file_path = os.path.join(parent, _file)</span><br><span class="line">            <span class="keyword">if</span> file_ext == <span class="string">&#x27;.json&#x27;</span>:</span><br><span class="line">                <span class="keyword">with</span> <span class="built_in">open</span>(file_path, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> json_file:</span><br><span class="line">                    content = json_file.read()</span><br><span class="line">                    <span class="built_in">print</span>(content)</span><br><span class="line">            <span class="keyword">if</span> file_ext == <span class="string">&#x27;.md&#x27;</span>:</span><br><span class="line">                <span class="keyword">with</span> <span class="built_in">open</span>(file_path, <span class="string">&quot;w&quot;</span>) <span class="keyword">as</span> md_file:</span><br><span class="line">                    md_file.write(<span class="string">&quot;# HelloWorld\n## My first doc\nHappy~~&quot;</span>)</span><br></pre></td></tr></table></figure>
 <p>通过 <code>with open(file_path, &#39;r&#39;) as</code> 就可以对文件进行读写操作，使用了 <code>with ... as</code> 就不需要再对文件进行关闭，文件操作更加方便。</p>
 <h3 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h3><p>正则表达式用于字符串匹配，对于 Python 来说正则表达式常用的场景，查找匹配字符串，裁剪字符串等。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">search_uuid</span>(<span class="params">simulator_list=[]</span>):</span></span><br><span class="line">    uuids = []</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> simulator_list:</span><br><span class="line">        reg_result = re.search(<span class="string">r&#x27;\w&#123;4,&#125;-\w&#123;4,&#125;-\w&#123;4,&#125;-\w&#123;4,&#125;-\w&#123;4,&#125;&#x27;</span>, item)</span><br><span class="line">        <span class="keyword">if</span> reg_result:</span><br><span class="line">            uuid = reg_result.group()</span><br><span class="line">            <span class="keyword">if</span> uuid <span class="keyword">not</span> <span class="keyword">in</span> uuids:</span><br><span class="line">                uuids.append(uuid)</span><br><span class="line">    <span class="keyword">return</span> uuids</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sub_number</span>(<span class="params">origin_string=<span class="string">&#x27;&#x27;</span>, replace_string=<span class="string">&#x27;&#x27;</span></span>):</span></span><br><span class="line">    content_line = re.sub(<span class="string">r&#x27;\d+&#x27;</span>, replace_string, origin_string)</span><br><span class="line">    <span class="keyword">return</span> content_line</span><br></pre></td></tr></table></figure>
-
-
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">search_uuid</span>(<span class="params">simulator_list=[]</span>):</span><br><span class="line">    uuids = []</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> simulator_list:</span><br><span class="line">        reg_result = re.search(<span class="string">r&#x27;\w&#123;4,&#125;-\w&#123;4,&#125;-\w&#123;4,&#125;-\w&#123;4,&#125;-\w&#123;4,&#125;&#x27;</span>, item)</span><br><span class="line">        <span class="keyword">if</span> reg_result:</span><br><span class="line">            uuid = reg_result.group()</span><br><span class="line">            <span class="keyword">if</span> uuid <span class="keyword">not</span> <span class="keyword">in</span> uuids:</span><br><span class="line">                uuids.append(uuid)</span><br><span class="line">    <span class="keyword">return</span> uuids</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sub_number</span>(<span class="params">origin_string=<span class="string">&#x27;&#x27;</span>, replace_string=<span class="string">&#x27;&#x27;</span></span>):</span><br><span class="line">    content_line = re.sub(<span class="string">r&#x27;\d+&#x27;</span>, replace_string, origin_string)</span><br><span class="line">    <span class="keyword">return</span> content_line</span><br></pre></td></tr></table></figure>
 <h2 id="异常捕获"><a href="#异常捕获" class="headerlink" title="异常捕获"></a>异常捕获</h2><h2 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h2><h3 id="日志打印"><a href="#日志打印" class="headerlink" title="日志打印"></a>日志打印</h3><h2 id="模块化"><a href="#模块化" class="headerlink" title="模块化"></a>模块化</h2><h3 id="包的概念"><a href="#包的概念" class="headerlink" title="包的概念"></a>包的概念</h3><h3 id="模块化命令传参"><a href="#模块化命令传参" class="headerlink" title="模块化命令传参"></a>模块化命令传参</h3>
     
   </div>
@@ -494,6 +485,22 @@ gitalk.render('gitalk-container')
     });
   }
 </script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="//cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
 </body>
 </html>
