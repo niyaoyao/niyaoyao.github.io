@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>React Native 基础 | N.Y.</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Web,React Native,JavaScript," />
+  
+
+  <meta name="description" content="前言纵观软件开发模式的历史，从过去的 C&#x2F;S 到 B&#x2F;S，到如今移动互联网如春笋之势迅猛崛起，互联网的展示形态愈来愈多样化。然而，互联网形态不管以怎样形态示人，其本质仍然是服务端与客户端的数据通信。所以，一个 Web 就紧紧只能局限于网页吗？又或是，互联网软件工程的发展只能是移动终端的天下吗？ 必然不是的。跨平台的需求，一直从未舍弃。而愈来愈多的跨平台框架，也火爆开发圈。除了 Facebook 的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React Native 基础">
+<meta property="og:url" content="http://niyaoyao.me/2016/10/09/react-native-basic-syntax/index.html">
+<meta property="og:site_name" content="N.Y.">
+<meta property="og:description" content="前言纵观软件开发模式的历史，从过去的 C&#x2F;S 到 B&#x2F;S，到如今移动互联网如春笋之势迅猛崛起，互联网的展示形态愈来愈多样化。然而，互联网形态不管以怎样形态示人，其本质仍然是服务端与客户端的数据通信。所以，一个 Web 就紧紧只能局限于网页吗？又或是，互联网软件工程的发展只能是移动终端的天下吗？ 必然不是的。跨平台的需求，一直从未舍弃。而愈来愈多的跨平台框架，也火爆开发圈。除了 Facebook 的">
+<meta property="og:locale">
+<meta property="og:image" content="https://niyaoyao.github.io/images/qrcod_ny_1.jpg">
+<meta property="article:published_time" content="2016-10-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-04-15T15:21:28.587Z">
+<meta property="article:author" content="Niyao">
+<meta property="article:tag" content="Web">
+<meta property="article:tag" content="React Native">
+<meta property="article:tag" content="JavaScript">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://niyaoyao.github.io/images/qrcod_ny_1.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico/images/avatar_ny.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    
+<link rel="stylesheet" href="/css/personal-style.css">
+
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38189205-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">Hi~</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">Hi~</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#React-Native-%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95"><span class="toc-text">React Native 基础语法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#State-%E5%92%8C-Props-%E7%AE%80%E4%BB%8B"><span class="toc-text">State 和 Props 简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7"><span class="toc-text">属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8A%B6%E6%80%81"><span class="toc-text">状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E5%8C%96"><span class="toc-text">模块化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Component-%E5%AE%9E%E8%B7%B5"><span class="toc-text">Component 实践</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AA-Component"><span class="toc-text">自定义一个 Component</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Navigator-%E6%B3%A8%E6%84%8F"><span class="toc-text">Navigator 注意</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A1%A5%E6%8E%A5"><span class="toc-text">桥接</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8-JS-%E6%96%87%E4%BB%B6%E4%B8%AD%E5%AE%9A%E4%B9%89%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%9D%97"><span class="toc-text">在 JS 文件中定义桥接模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8-JS-%E6%96%87%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8%E6%A8%A1%E5%9D%97%E6%96%B9%E6%B3%95"><span class="toc-text">在 JS 文件中使用模块方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-Objective-C-%E7%A8%8B%E5%BA%8F%E6%96%87%E4%BB%B6"><span class="toc-text">创建 Objective-C 程序文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Debug"><span class="toc-text">Debug</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%A5%E9%94%99%E6%95%B4%E7%90%86"><span class="toc-text">报错整理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#React-Native-%E7%9B%B8%E5%85%B3"><span class="toc-text">React Native 相关</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Native-%E6%8A%A5%E9%94%99"><span class="toc-text">Native 报错</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#node-%E6%9C%8D%E5%8A%A1%E9%94%99%E8%AF%AF"><span class="toc-text">node 服务错误</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A5%87%E8%91%A9%E8%AE%B0%E5%BD%95"><span class="toc-text">奇葩记录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text"> </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E5%BC%95%E7%94%A8"><span class="toc-text">函数引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E7%BB%91%E5%AE%9A-this"><span class="toc-text">方法绑定 this</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-text">小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-text">参考资料</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-react-native-basic-syntax" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">React Native 基础</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.10.09</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Niyao</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Cross-platform/">Cross-platform</a>
+  </span>
+
+
+
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>纵观软件开发模式的历史，从过去的 C/S 到 B/S，到如今移动互联网如春笋之势迅猛崛起，互联网的展示形态愈来愈多样化。然而，互联网形态不管以怎样形态示人，其本质仍然是服务端与客户端的数据通信。所以，一个 Web 就紧紧只能局限于网页吗？又或是，互联网软件工程的发展只能是移动终端的天下吗？</p>
+<p>必然不是的。跨平台的需求，一直从未舍弃。而愈来愈多的跨平台框架，也火爆开发圈。除了 Facebook 的 React Native ，阿里巴巴也开源了自己研发的 weex ，结合 Vue.js 进行跨平台开发。而微信也开始做微信小应用这样的尝试。所以，现在要跟上潮流，打通任督二脉，探索未来应用开发的发展。</p>
+<p>而在这么美好的大饼实现之前，必然是要先务实地学习如何使用这些开源轮子做开发。（以上自认真心扯）</p>
+<p>本系列分为 React Native 、weex+Vue.js 、微信小应用三个开源框架的基础学习。希望对读者有用。</p>
+<p>如果有需要交流，请见文末联系方式。</p>
+<h2 id="React-Native-基础语法"><a href="#React-Native-基础语法" class="headerlink" title="React Native 基础语法"></a>React Native 基础语法</h2><p>本篇文章都以 ES6 语法规范为本。</p>
+<h3 id="State-和-Props-简介"><a href="#State-和-Props-简介" class="headerlink" title="State 和 Props 简介"></a>State 和 Props 简介</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Props </span><br><span class="line">Most components can be customized when they are created, with different parameters. These creation parameters are called props.</span><br><span class="line"></span><br><span class="line">State </span><br><span class="line">There are two types of data that control a component: props and state. props are set by the parent and they are fixed throughout the lifetime of a component. For data that is going to change, we have to use state.</span><br></pre></td></tr></table></figure>
+<p>Props<br>大部分组件创建时，可以由不同的参数进行自定义。这些创建的参数被称之为属性 props 。</p>
+<h3 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Video</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> defaultProps = &#123;</span><br><span class="line">        <span class="attr">autoPlay</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">maxLoops</span>: <span class="number">10</span>,</span><br><span class="line">    &#125;;  <span class="comment">// 注意这里有分号</span></span><br><span class="line">    <span class="keyword">static</span> propTypes = &#123;</span><br><span class="line">        <span class="attr">autoPlay</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">bool</span>.<span class="property">isRequired</span>,</span><br><span class="line">        <span class="attr">maxLoops</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">number</span>.<span class="property">isRequired</span>,</span><br><span class="line">        <span class="attr">posterFrameSrc</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">string</span>.<span class="property">isRequired</span>,</span><br><span class="line">        <span class="attr">videoSrc</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">string</span>.<span class="property">isRequired</span>,</span><br><span class="line">    &#125;;  <span class="comment">// 注意这里有分号</span></span><br><span class="line">    <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            <span class="language-xml"><span class="tag">&lt;<span class="name">View</span> /&gt;</span></span></span><br><span class="line">        );</span><br><span class="line">    &#125; <span class="comment">// 注意这里既没有分号也没有逗号</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中，<strong>defaultProps</strong> 是为属性赋初始值，<strong>propTypes</strong> 是为属性赋予数据类型。<br>并且属于类的成员变量</p>
+<h3 id="状态"><a href="#状态" class="headerlink" title="状态"></a>状态</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Video</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">    state = &#123;</span><br><span class="line">        <span class="attr">loopsRemaining</span>: <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">maxLoops</span>,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>需要理解的是，props是一个父组件传递给子组件的数据流，这个数据流可以一直传递到子孙组件。而state代表的是一个组件内部自身的状态（可以是父组件、子孙组件）。<br>改变一个组件自身状态，从语义上来说，就是这个组件内部已经发生变化，有可能需要对此组件以及组件所包含的子孙组件进行重渲染。<br>而props是父组件传递的参数，可以被用于显示内容，或者用于此组件自身状态的设置（部分props可以用来设置组件的state），不仅仅是组件内部state改变才会导致重渲染，父组件传递的props发生变化，也会执行。<br>既然两者的变化都有可能导致组件重渲染，所以只有理解pros与state的意义，才能很好地决定到底什么时候用props或state<br>State<br>如果component的某些状态需要被改变，并且会影响到component的render，那么这些状态就应该用state表示。 例如：一个购物车的component，会根据用户在购物车中添加的产品和产品数量，显示不同的价格，那么“总价”这个状态，就应该用state表示。</p>
+<p>Props<br>如果component的某些状态由外部所决定，并且会影响到component的render，那么这些状态就应该用props表示。 例如：一个下拉菜单的component，有哪些菜单项，是由这个component的使用者和使用场景决定的，那么“菜单项”这个状态，就应该用props表示，并且由外部传入。</p>
+<h3 id="模块化"><a href="#模块化" class="headerlink" title="模块化"></a>模块化</h3><p>模块功能主要由两个命令构成： export 和 import 。 export 命令用于规定模块的对外接口，import 命令用于输入其他模块提供的功能。</p>
+<ul>
+<li>export 命令</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">如果 <span class="keyword">export</span> <span class="keyword">default</span> &#123;&#125; 定义，那么在文件中引入组件时 <span class="keyword">import</span> a <span class="keyword">from</span> <span class="string">&#x27;a&#x27;</span> </span><br><span class="line"></span><br><span class="line">如果 <span class="keyword">export</span> <span class="keyword">const</span> b = &#123;&#125; 定义，那么在文件中引入组件时 <span class="keyword">import</span> &#123; b &#125; <span class="keyword">from</span> <span class="string">&#x27;b&#x27;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>export default 命令</li>
+</ul>
+<p>从前面的例子可以看出，使用 import 命令的时候，用户需要知道所要加载的变量名或函数名，否则无法加载。但是，用户肯定希望快速上手，未必愿意阅读文档，去了解模块有哪些属性和方法。</p>
+<p>使用 export 命令定义了模块的对外接口以后，其他JS文件就可以通过import命令加载这个模块（文件）。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// constant-scene.js</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> kSceneWayBillMain = <span class="string">&#x27;ny.scene.waybill.main&#x27;</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> kSceneWayBillPrePickupList = <span class="string">&#x27;ny.scene.waybill.prepickup&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// scene-login.js</span></span><br><span class="line"><span class="keyword">import</span> &#123;kSceneLogin, kSceneWayBillMain&#125; <span class="keyword">from</span> <span class="string">&#x27;./constant-scene&#x27;</span>;</span><br><span class="line"><span class="comment">// some code ...</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SaboRN</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">props</span>) &#123;</span><br><span class="line">    <span class="variable language_">super</span>(props);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> route = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="title class_">AppContext</span>.<span class="property">token</span> == <span class="literal">null</span>) &#123;</span><br><span class="line">      route = &#123;<span class="attr">title</span>: <span class="string">&#x27;登录&#x27;</span>, <span class="attr">scene</span>: kSceneLogin&#125;;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      route = &#123;<span class="attr">title</span>: <span class="string">&#x27;运单&#x27;</span>, <span class="attr">scene</span>: kSceneWayBillMain&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">Navigator</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">initialRoute</span>=<span class="string">&#123;route&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">renderScene</span>=<span class="string">&#123;</span> <span class="attr">this._renderScene.bind</span>(<span class="attr">this</span>) &#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      /&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">_renderScene</span>(<span class="params">route, navigator</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> scene = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">if</span> (route.<span class="property">scene</span> == kSceneLogin) &#123;</span><br><span class="line">      scene = <span class="language-xml"><span class="tag">&lt;<span class="name">LoginScene</span> <span class="attr">navigator</span>=<span class="string">&#123;navigator&#125;</span> /&gt;</span></span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      scene = <span class="language-xml"><span class="tag">&lt;<span class="name">MainScene</span> <span class="attr">navigator</span>=<span class="string">&#123;navigator&#125;</span> /&gt;</span></span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      scene</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上代码就是在入口 js 文件中使用 constant-scene.js 定义的常量。</p>
+<h2 id="Component-实践"><a href="#Component-实践" class="headerlink" title="Component 实践"></a>Component 实践</h2><h3 id="自定义一个-Component"><a href="#自定义一个-Component" class="headerlink" title="自定义一个 Component"></a>自定义一个 Component</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>, &#123; <span class="title class_">Component</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">View</span>, <span class="title class_">TouchableOpacity</span>,<span class="title class_">Text</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-native&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="variable constant_">SCREEN_HEIGHT</span>, <span class="variable constant_">SCREEN_WIDTH</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./constant-global-definition&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> lineHeight = <span class="number">0.25</span>;</span><br><span class="line"><span class="keyword">let</span> buttonHeight = <span class="number">50</span>;</span><br><span class="line"><span class="keyword">let</span> themeColor = <span class="string">&#x27;#FECE56&#x27;</span>;</span><br><span class="line"><span class="keyword">let</span> grayLight = <span class="string">&#x27;#EEEEEE&#x27;</span>;</span><br><span class="line"><span class="keyword">let</span> grayMiddle = <span class="string">&#x27;#999999&#x27;</span>;</span><br><span class="line"><span class="keyword">let</span> grayDark = <span class="string">&#x27;#666666&#x27;</span>;</span><br><span class="line"><span class="keyword">let</span> fontColor = <span class="string">&#x27;#333333&#x27;</span>;</span><br><span class="line"><span class="keyword">let</span> white = <span class="string">&#x27;#FFFFFF&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">Line</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  <span class="keyword">static</span> propTypes = &#123;</span><br><span class="line">    <span class="attr">left</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">number</span>.<span class="property">isRequired</span>,</span><br><span class="line">    <span class="attr">top</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">number</span>.<span class="property">isRequired</span>,</span><br><span class="line">    <span class="attr">width</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">number</span>.<span class="property">isRequired</span>,</span><br><span class="line">    <span class="attr">height</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">number</span>,</span><br><span class="line">    <span class="attr">color</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">string</span>,</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">static</span> defaultProps = &#123;</span><br><span class="line">    <span class="attr">left</span>:<span class="number">0</span>,</span><br><span class="line">    <span class="attr">top</span>:<span class="number">0</span>,</span><br><span class="line">    <span class="attr">width</span>: <span class="variable constant_">SCREEN_WIDTH</span>,</span><br><span class="line">    <span class="attr">height</span>: lineHeight,</span><br><span class="line">    <span class="attr">color</span>: grayLight,</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> left = <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">left</span>;</span><br><span class="line">    <span class="keyword">let</span> top = <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">top</span>;</span><br><span class="line">    <span class="keyword">let</span> width = <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">width</span>;</span><br><span class="line">    <span class="keyword">let</span> height = <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">height</span>;</span><br><span class="line">    <span class="keyword">let</span> color = <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">color</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span>(</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">View</span> <span class="attr">style</span>=<span class="string">&#123;&#123;height:</span> <span class="attr">lineHeight</span>, <span class="attr">backgroundColor:</span> <span class="attr">color</span>, <span class="attr">width:</span> <span class="attr">width</span>, <span class="attr">marginLeft:</span> <span class="attr">left</span>, <span class="attr">marginTop:</span> <span class="attr">top</span>&#125;&#125; /&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">CommonButton</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  <span class="keyword">static</span> propTypes = &#123;</span><br><span class="line">    <span class="attr">left</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">number</span>.<span class="property">isRequired</span>,</span><br><span class="line">    <span class="attr">top</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">number</span>.<span class="property">isRequired</span>,</span><br><span class="line">    <span class="attr">width</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">number</span>.<span class="property">isRequired</span>,</span><br><span class="line">    <span class="attr">height</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">number</span>,</span><br><span class="line">    <span class="attr">title</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">string</span>,</span><br><span class="line">    <span class="attr">titleColor</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">string</span>,</span><br><span class="line">    <span class="attr">backgroundColor</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">string</span>,</span><br><span class="line">    <span class="attr">cornerRadius</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">number</span>,</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">static</span> defaultProps = &#123;</span><br><span class="line">    <span class="attr">left</span>:<span class="number">0</span>,</span><br><span class="line">    <span class="attr">top</span>:<span class="number">0</span>,</span><br><span class="line">    <span class="attr">width</span>: <span class="variable constant_">SCREEN_WIDTH</span>,</span><br><span class="line">    <span class="attr">buttonHeight</span>: buttonHeight,</span><br><span class="line">    <span class="attr">title</span>: <span class="string">&#x27;Button Title&#x27;</span>,</span><br><span class="line">    <span class="attr">titleColor</span>: white,</span><br><span class="line">    <span class="attr">backgroundColor</span>: themeColor,</span><br><span class="line">    <span class="attr">buttonPressed</span>: <span class="function">() =&gt;</span> &#123;<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;pressed&#x27;</span>); <span class="keyword">return</span>;&#125;,</span><br><span class="line">    <span class="attr">cornerRadius</span>: <span class="number">5</span>,</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    padding = <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">cornerRadius</span>;</span><br><span class="line">    <span class="keyword">var</span> buttonStyle = &#123;</span><br><span class="line">      <span class="attr">padding</span>:padding,</span><br><span class="line">      <span class="attr">marginTop</span>: <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">top</span>,</span><br><span class="line">      <span class="attr">marginLeft</span>: <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">left</span>,</span><br><span class="line">      <span class="attr">width</span>: <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">width</span>,</span><br><span class="line">      <span class="attr">height</span>: <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">buttonHeight</span>,</span><br><span class="line">      <span class="attr">backgroundColor</span>: <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">backgroundColor</span>,</span><br><span class="line">      borderRadius : <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">cornerRadius</span>,</span><br><span class="line">    &#125;;</span><br><span class="line">    paddingEdge = <span class="number">2</span> * padding;</span><br><span class="line">    <span class="keyword">var</span> textStyle = &#123;</span><br><span class="line">      <span class="attr">width</span>: <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">width</span> - paddingEdge,</span><br><span class="line">      <span class="attr">height</span>: <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">buttonHeight</span> - paddingEdge,</span><br><span class="line">      <span class="attr">lineHeight</span>: <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">buttonHeight</span> - paddingEdge,</span><br><span class="line">      <span class="attr">color</span>: <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">titleColor</span>,</span><br><span class="line">      <span class="attr">textAlign</span>: <span class="string">&#x27;center&#x27;</span>,</span><br><span class="line">      <span class="attr">backgroundColor</span>: <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">backgroundColor</span>,</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span>(</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">View</span> <span class="attr">style</span>=<span class="string">&#123;buttonStyle&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">TouchableOpacity</span> <span class="attr">onPress</span>=<span class="string">&#123;this.props.buttonPressed&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">Text</span> <span class="attr">style</span>=<span class="string">&#123;textStyle&#125;</span>&gt;</span>&#123;this.props.title&#125;<span class="tag">&lt;/<span class="name">Text</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">TouchableOpacity</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">View</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>以上就是定义了默认的一条线和另一个按钮的组件，并将这两个组件对外开放使用。其中，</p>
+<h3 id="Navigator-注意"><a href="#Navigator-注意" class="headerlink" title="Navigator 注意"></a>Navigator 注意</h3><p>Navigator 并不是原生的 UINavigationController 。它是 React Native 自定的导航实例，但是可以根据 Navigator route 来判断当前的页面，并且父类可以通过 props 将 Navigator 传递给子类，并且由子类进行页面跳转的控制。上面的代码就是 Navigator 的初始化，而在子类中，获得 Navigator 则需要利用 props。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="title function_">_goToMain</span>(<span class="params"></span>) &#123;</span><br><span class="line">  route = &#123;<span class="attr">title</span>:<span class="string">&#x27;运单&#x27;</span>, kSceneWayBillMain&#125;;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">navigator</span>.<span class="title function_">push</span>(route);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="桥接"><a href="#桥接" class="headerlink" title="桥接"></a>桥接</h2><p>原生代码和 JS 代码进行通信需要创建具体的 Module 类，并且，必须保证 JS 的模块名，和原生代码的类名保持一致，否则在应用运行时，将找不到模块而崩溃。</p>
+<h3 id="在-JS-文件中定义桥接模块"><a href="#在-JS-文件中定义桥接模块" class="headerlink" title="在 JS 文件中定义桥接模块"></a>在 JS 文件中定义桥接模块</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">NativeModules</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-native&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">RNBridgeModule</span> = <span class="title class_">NativeModules</span>.<span class="property">RNBridgeModule</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">addEvent</span>(<span class="params">eventName, location</span>) &#123;</span><br><span class="line">  <span class="title class_">RNBridgeModule</span>.<span class="title function_">addEvent</span>(eventName, location);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="在-JS-文件中使用模块方法"><a href="#在-JS-文件中使用模块方法" class="headerlink" title="在 JS 文件中使用模块方法"></a>在 JS 文件中使用模块方法</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import &#123; addEvent &#125; from &#x27;./app-native-module&#x27;</span><br><span class="line">// some code ...</span><br><span class="line">addEvent(&#x27;aaa&#x27;, &#x27;bbb&#x27;);</span><br></pre></td></tr></table></figure>
+<p>注意，在定义桥接模块的时候，直接将 addEvent 方法对外暴露，所以直接使用方法即可。</p>
+<h3 id="创建-Objective-C-程序文件"><a href="#创建-Objective-C-程序文件" class="headerlink" title="创建 Objective-C 程序文件"></a>创建 Objective-C 程序文件</h3><figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 头文件</span></span><br><span class="line"><span class="meta">#import <span class="string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="string">&lt;RCTBridgeModule.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">RNBridgeModule</span> : <span class="title">NSObject</span> &lt;<span class="title">RCTBridgeModule</span>&gt;</span></span><br><span class="line"></span><br><span class="line">+ (<span class="type">void</span>)setup;</span><br><span class="line">+ (<span class="keyword">instancetype</span>)sharedManager;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现文件</span></span><br><span class="line"><span class="meta">#import <span class="string">&quot;RNBridgeModule.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">RNBridgeModule</span></span></span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">instancetype</span>)sharedManager &#123;</span><br><span class="line">    <span class="keyword">static</span> RNBridgeModule *manager = <span class="literal">nil</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> onceToken;</span><br><span class="line">    <span class="built_in">dispatch_once</span>(&amp;onceToken, ^&#123;</span><br><span class="line">        manager = [[<span class="keyword">self</span> alloc] init];</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> manager;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (<span class="type">void</span>)setup &#123;</span><br><span class="line">    [RNBridgeModule sharedManager];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">RCT_EXPORT_MODULE();</span><br><span class="line"></span><br><span class="line">RCT_EXPORT_METHOD(addEvent:(<span class="built_in">NSString</span> *)event location:(<span class="built_in">NSString</span> *)location) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;%@ %@&quot;</span>, event, location);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>在头文件中需要引入 RCTBridgeModule 头文件，并且要遵循 RCTBridgeModule 协议。</p>
+<p>实现文件中，必须写上 <strong>RCT_EXPORT_MODULE();</strong> 方法。</p>
+<p><strong>In addition to implementing the RCTBridgeModule protocol, your class must also include the RCT_EXPORT_MODULE() macro. This takes an optional argument that specifies the name that the module will be accessible as in your JavaScript code (more on this later).</strong></p>
+<p>然后，自定义自己的桥接函数。这样在原生调用的时候，就能跟踪到， JS 的模块方法之中。</p>
+<h2 id="Debug"><a href="#Debug" class="headerlink" title="Debug"></a>Debug</h2><p>原生应用调试如果一直输出 log 会很难定位到具体代码，那么就开启 Remote Debug 比较好，然后利用 Chrome 的调试工具进行 JS 的调试。</p>
+<h2 id="报错整理"><a href="#报错整理" class="headerlink" title="报错整理"></a>报错整理</h2><h3 id="React-Native-相关"><a href="#React-Native-相关" class="headerlink" title="React Native 相关"></a>React Native 相关</h3><ul>
+<li>却少符号</li>
+</ul>
+<p>比如，结尾的}<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[1] index.ios.js: Unexpected token (18:7)</span><br><span class="line">[2] SyntaxError /Users/niyao/N.Y./Demo/ny_native/ny_react/scene-login.js: Unexpected token, expected &#125; (47:28)</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>元素的属性（实例的方法，属性）</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Unhandled JS Exception: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. Check the render method of `Navigator`.</span><br></pre></td></tr></table></figure>
+<ul>
+<li>模块化的写法不对导致如下错误</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Unable to resolve module login-view from /Users/niyao/N.Y./Demo/ny_native/ny_react/index.ios.js: Unable to find this module in its module map or any of the node_modules directories under /Users/node_modules/login-view and its parent directories</span><br><span class="line"></span><br><span class="line">This might be related to https://github.com/facebook/react-native/issues/4968</span><br><span class="line">To resolve try the following:</span><br><span class="line">  1. Clear watchman watches: `watchman watch-del-all`.</span><br><span class="line">  2. Delete the `node_modules` folder: `rm -rf node_modules &amp;&amp; npm install`.</span><br><span class="line">  3. Reset packager cache: `rm -fr $TMPDIR/react-*` or `npm start -- --reset-cache`.</span><br><span class="line">2016-11-10 16:39:58.732 [fatal][tid:main] Unable to resolve module login-view from /Users/niyao/N.Y./Demo/ny_native/ny_react/index.ios.js: Unable to find this module in its module map or any of the node_modules directories under /Users/node_modules/login-view and its parent directories</span><br><span class="line"></span><br><span class="line">This might be related to https://github.com/facebook/react-native/issues/4968</span><br><span class="line">To resolve try the following:</span><br><span class="line">  1. Clear watchman watches: `watchman watch-del-all`.</span><br><span class="line">  2. Delete the `node_modules` folder: `rm -rf node_modules &amp;&amp; npm install`.</span><br><span class="line">  3. Reset packager cache: `rm -fr $TMPDIR/react-*` or `npm start -- --reset-cache`.</span><br></pre></td></tr></table></figure>
+<ul>
+<li>JSX 没有结束</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SyntaxError /Users/niyao/N.Y./Demo/ny_native/ny_react/index.ios.js: Adjacent JSX elements must be wrapped in an enclosing tag (26:6)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>JSX 的属性语法错误</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[fatal][tid:main] SyntaxError /Users/niyao/N.Y./Demo/ny_native/ny_react/index.ios.js: Unterminated JSX contents (41:47)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>空对象</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Unhandled JS Exception: undefined is not a function (evaluating &#x27;navigator.getCurrentRoutes(0)&#x27;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>绑定 this</li>
+</ul>
+<p>在ES5下，React.createClass会把所有的方法都bind一遍，这样可以提交到任意的地方作为回调函数，而this不会变化。但官方现在逐步认为这反而是不标准、不易理解的。</p>
+<p>在ES6下，你需要通过bind来绑定this引用，或者使用箭头函数（它会绑定当前scope的this引用）来调用<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Unhandled JS Exception: undefined is not an object (evaluating &#x27;this.props.navigator&#x27;)</span><br></pre></td></tr></table></figure><br><a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/31304017/react-native-navigatorios-undefined-is-not-an-object-evaluating-this-props-n">http://stackoverflow.com/questions/31304017/react-native-navigatorios-undefined-is-not-an-object-evaluating-this-props-n</a></p>
+<h3 id="Native-报错"><a href="#Native-报错" class="headerlink" title="Native 报错"></a>Native 报错</h3><p>iOS 忘了设置 status bar 的 plist 属性<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[RCTStatusBarManager.m:118] RCTStatusBarManager module requires that the                 UIViewControllerBasedStatusBarAppearance key in the Info.plist is set to NO</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>state</li>
+</ul>
+<p>要传进状态对象，指定需要修改的 Key 的对象<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Unhandled JS Exception: setState(...): takes an object of state variables to update or a function which returns an object of state variables.</span><br><span class="line">// wrong</span><br><span class="line">  addCount() &#123;</span><br><span class="line">    console.log(this.state.count);</span><br><span class="line">    this.setState(this.state.count+1);</span><br><span class="line">  &#125;</span><br><span class="line">// right</span><br><span class="line">  addCount() &#123;</span><br><span class="line">    console.log(this.state.count);</span><br><span class="line">    this.setState(&#123;count: this.state.count+1&#125;);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>RN CSS 样式出错</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Unhandled JS Exception: &quot;lineHight&quot; is not a valid style property.</span><br><span class="line">StyleSheet inputStyle: &#123;</span><br><span class="line">  &quot;height&quot;: 44,</span><br><span class="line">  &quot;backgroundColor&quot;: &quot;#fff&quot;,</span><br><span class="line">  &quot;fontSize&quot;: 14,</span><br><span class="line">  &quot;lineHight&quot;: 44,</span><br><span class="line">  &quot;padding&quot;: 5</span><br><span class="line">&#125;</span><br><span class="line">Valid style props: [</span><br><span class="line">  &quot;alignItems&quot;,</span><br><span class="line">  &quot;alignSelf&quot;,</span><br><span class="line">  &quot;backfaceVisibility&quot;,</span><br><span class="line">  &quot;backgroundColor&quot;,</span><br><span class="line">  &quot;borderBottomColor&quot;,</span><br><span class="line">  &quot;borderBottomLeftRadius&quot;,</span><br><span class="line">  &quot;borderBottomRightRadius&quot;,</span><br><span class="line">  &quot;borderBottomWidth&quot;,</span><br><span class="line">  &quot;borderColor&quot;,</span><br><span class="line">  &quot;borderLeftColor&quot;,</span><br><span class="line">  &quot;borderLeftWidth&quot;,</span><br><span class="line">  &quot;borderRadius&quot;,</span><br><span class="line">  &quot;borderRightColor&quot;,</span><br><span class="line">  &quot;borderRightWidth&quot;,</span><br><span class="line">  &quot;borderStyle&quot;,</span><br><span class="line">  &quot;borderTopColor&quot;,</span><br><span class="line">  &quot;borderTopLeftRadius&quot;,</span><br><span class="line">  &quot;borderTopRightRadius&quot;,</span><br><span class="line">  &quot;borderTopWidth&quot;,</span><br><span class="line">  &quot;borderWidth&quot;,</span><br><span class="line">  &quot;bottom&quot;,</span><br><span class="line">  &quot;color&quot;,</span><br><span class="line">  &quot;decomposedMatrix&quot;,</span><br><span class="line">  &quot;elevation&quot;,</span><br><span class="line">  &quot;flex&quot;,</span><br><span class="line">  &quot;flexDirection&quot;,</span><br><span class="line">  &quot;flexWrap&quot;,</span><br><span class="line">  &quot;fontFamily&quot;,</span><br><span class="line">  &quot;fontSize&quot;,</span><br><span class="line">  &quot;fontStyle&quot;,</span><br><span class="line">  &quot;fontVariant&quot;,</span><br><span class="line">  &quot;fontWeight&quot;,</span><br><span class="line">  &quot;height&quot;,</span><br><span class="line">  &quot;justifyContent&quot;,</span><br><span class="line">  &quot;left&quot;,</span><br><span class="line">  &quot;letterSpacing&quot;,</span><br><span class="line">  &quot;lineHeight&quot;,</span><br><span class="line">  &quot;margin&quot;,</span><br><span class="line">  &quot;marginBottom&quot;,</span><br><span class="line">  &quot;marginHorizontal&quot;,</span><br><span class="line">  &quot;marginLeft&quot;,</span><br><span class="line">  &quot;marginRight&quot;,</span><br><span class="line">  &quot;marginTop&quot;,</span><br><span class="line">  &quot;marginVertical&quot;,</span><br><span class="line">  &quot;maxHeight&quot;,</span><br><span class="line">  &quot;maxWidth&quot;,</span><br><span class="line">  &quot;minHeight&quot;,</span><br><span class="line">  &quot;minWidth&quot;,</span><br><span class="line">  &quot;opacity&quot;,</span><br><span class="line">  &quot;overflow&quot;,</span><br><span class="line">  &quot;overlayColor&quot;,</span><br><span class="line">  &quot;padding&quot;,</span><br><span class="line">  &quot;paddingBottom&quot;,</span><br><span class="line">  &quot;paddingHorizontal&quot;,</span><br><span class="line">  &quot;paddingLeft&quot;,</span><br><span class="line">  &quot;paddingRight&quot;,</span><br><span class="line">  &quot;paddingTop&quot;,</span><br><span class="line">  &quot;paddingVertical&quot;,</span><br><span class="line">  &quot;position&quot;,</span><br><span class="line">  &quot;resizeMode&quot;,</span><br><span class="line">  &quot;right&quot;,</span><br><span class="line">  &quot;rotation&quot;,</span><br><span class="line">  &quot;scaleX&quot;,</span><br><span class="line">  &quot;scaleY&quot;,</span><br><span class="line">  &quot;shadowColor&quot;,</span><br><span class="line">  &quot;shadowOffset&quot;,</span><br><span class="line">  &quot;shadowOpacity&quot;,</span><br><span class="line">  &quot;shadowRadius&quot;,</span><br><span class="line">  &quot;textAlign&quot;,</span><br><span class="line">  &quot;textAlignVertical&quot;,</span><br><span class="line">  &quot;textDecorationColor&quot;,</span><br><span class="line">  &quot;textDecorationLine&quot;,</span><br><span class="line">  &quot;textDecorationStyle&quot;,</span><br><span class="line">  &quot;textShadowColor&quot;,</span><br><span class="line">  &quot;textShadowOffset&quot;,</span><br><span class="line">  &quot;textShadowRadius&quot;,</span><br><span class="line">  &quot;tintColor&quot;,</span><br><span class="line">  &quot;top&quot;,</span><br><span class="line">  &quot;transform&quot;,</span><br><span class="line">  &quot;transformMatrix&quot;,</span><br><span class="line">  &quot;translateX&quot;,</span><br><span class="line">  &quot;translateY&quot;,</span><br><span class="line">  &quot;width&quot;,</span><br><span class="line">  &quot;writingDirection&quot;,</span><br><span class="line">  &quot;zIndex&quot;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<h3 id="node-服务错误"><a href="#node-服务错误" class="headerlink" title="node 服务错误"></a>node 服务错误</h3><p>目录错了<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">NYSpace npm start</span><br><span class="line">npm ERR! Darwin 15.6.0</span><br><span class="line">npm ERR! argv &quot;/usr/local/Cellar/node/5.11.0/bin/node&quot; &quot;/usr/local/bin/npm&quot; &quot;start&quot;</span><br><span class="line">npm ERR! node v5.11.0</span><br><span class="line">npm ERR! npm  v3.8.7</span><br><span class="line"></span><br><span class="line">npm ERR! missing script: start</span><br></pre></td></tr></table></figure></p>
+<p>端口占用<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&gt; SaboRN@0.0.1 start /Users/niyao/Company/Projects/YouCaiDriver/Sabo/SaboRN</span><br><span class="line">&gt; node node_modules/react-native/local-cli/cli.js start</span><br><span class="line"></span><br><span class="line">Scanning 681 folders for symlinks in /Users/niyao/Company/Projects/YouCaiDriver/Sabo/SaboRN/node_modules (17ms)</span><br><span class="line"> ┌────────────────────────────────────────────────────────────────────────────┐ </span><br><span class="line"> │  Running packager on port 8081.                                            │ </span><br><span class="line"> │                                                                            │ </span><br><span class="line"> │  Keep this packager running while developing on any JS projects. Feel      │ </span><br><span class="line"> │  free to close this tab and run your own packager instance if you          │ </span><br><span class="line"> │  prefer.                                                                   │ </span><br><span class="line"> │                                                                            │ </span><br><span class="line"> │  https://github.com/facebook/react-native                                  │ </span><br><span class="line"> │                                                                            │ </span><br><span class="line"> └────────────────────────────────────────────────────────────────────────────┘ </span><br><span class="line">Looking for JS files in</span><br><span class="line">   /Users/niyao/Company/Projects/YouCaiDriver/Sabo/SaboRN </span><br><span class="line"></span><br><span class="line">[11:33:01 AM] &lt;START&gt; Building Dependency Graph</span><br><span class="line">[11:33:01 AM] &lt;START&gt; Crawling File System</span><br><span class="line"> ERROR  Packager can&#x27;t listen on port 8081</span><br></pre></td></tr></table></figure></p>
+<h2 id="奇葩记录"><a href="#奇葩记录" class="headerlink" title="奇葩记录"></a>奇葩记录</h2><h3 id=""><a href="#" class="headerlink" title=" "></a> </h3><p>StatusBar 必须在 render() 方法返回才能生效<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>, &#123; <span class="title class_">Component</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  <span class="title class_">Dimensions</span>,</span><br><span class="line">  <span class="title class_">Platform</span>,</span><br><span class="line">  <span class="title class_">View</span>,</span><br><span class="line">  <span class="title class_">ListView</span>,</span><br><span class="line">  <span class="title class_">TextInput</span>,</span><br><span class="line">  <span class="title class_">StyleSheet</span>,</span><br><span class="line">  <span class="title class_">ScrollView</span>,</span><br><span class="line">  <span class="title class_">Text</span>,</span><br><span class="line">  <span class="title class_">RefreshControl</span>,</span><br><span class="line">  <span class="title class_">Image</span>,</span><br><span class="line">  <span class="title class_">ToolbarAndroid</span>,</span><br><span class="line">  <span class="title class_">InteractionManager</span>,</span><br><span class="line">  <span class="title class_">TouchableOpacity</span>,</span><br><span class="line">  <span class="title class_">TouchableHighlight</span>,</span><br><span class="line">  <span class="title class_">Linking</span>,</span><br><span class="line">  <span class="title class_">StatusBar</span>,</span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">&#x27;react-native&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">class</span> <span class="title class_">LoginScene</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">props</span>) &#123;</span><br><span class="line">    <span class="variable language_">super</span>(props);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;login constructor&#x27;</span>);</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">state</span> = &#123;</span><br><span class="line">      <span class="attr">animated</span>: <span class="literal">false</span>,</span><br><span class="line">      <span class="attr">hidden</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="attr">showHideTransition</span>: <span class="string">&#x27;slide&#x27;</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span>(</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">View</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">StatusBar</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">hidden</span>=<span class="string">&#123;true&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">showHideTransition</span>=<span class="string">&#123;</span>&#x27;<span class="attr">slide</span>&#x27;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">animated</span>=<span class="string">&#123;false&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">View</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">renderStatusBar</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span>(</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">StatusBar</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">hidden</span>=<span class="string">&#123;this.state.hidden&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">showHideTransition</span>=<span class="string">&#123;this.state.showHideTransition&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">animated</span>=<span class="string">&#123;this.state.animated&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        /&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> loginStyles = <span class="title class_">StyleSheet</span>.<span class="title function_">create</span>(&#123;</span><br><span class="line">  <span class="attr">container</span>: &#123;</span><br><span class="line">    <span class="attr">flex</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">alignItems</span>: <span class="string">&#x27;center&#x27;</span>,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h3 id="函数引用"><a href="#函数引用" class="headerlink" title="函数引用"></a>函数引用</h3><p>this.goToMain 相当于函数名的引用，this.goToMain() 则会在渲染之后直接执行<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;<span class="title class_">CommonButton</span> left=&#123;kMargin&#125; top=&#123;<span class="number">80</span>&#125; width=&#123;kLineWidth&#125; title=<span class="string">&#x27;登录&#x27;</span> buttonPressed=&#123;<span class="variable language_">this</span>.<span class="property">goToMain</span>&#125; /&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="方法绑定-this"><a href="#方法绑定-this" class="headerlink" title="方法绑定 this"></a>方法绑定 this</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>,&#123; <span class="title class_">Component</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  <span class="title class_">View</span>,</span><br><span class="line">  <span class="title class_">Text</span>,</span><br><span class="line">  <span class="title class_">StyleSheet</span>,</span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">&#x27;react-native&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">CommonButton</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./custom-component&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; addEvent &#125; <span class="keyword">from</span> <span class="string">&#x27;./app-native-module&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">class</span> <span class="title class_">MainScene</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">props</span>) &#123;</span><br><span class="line">    <span class="variable language_">super</span>(props);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span>(</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">View</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;this.renderContent()&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">View</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">renderContent</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span>(</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">View</span> <span class="attr">style</span>=<span class="string">&#123;mainStyles.container&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Text</span>&gt;</span>Main Scene<span class="tag">&lt;/<span class="name">Text</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">CommonButton</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">title</span>=<span class="string">&#x27;登出&#x27;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">buttonPressed</span>=<span class="string">&#123;this._logout.bind(this)&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        /&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">CommonButton</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">top</span>=<span class="string">&#123;30&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">title</span>=<span class="string">&#x27;Native 测试&#x27;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">buttonPressed</span>=<span class="string">&#123;this._addEvent.bind(this)&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">         /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">View</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">_logout</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">navigator</span>.<span class="title function_">pop</span>();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">_addEvent</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">addEvent</span>(<span class="string">&#x27;aaa&#x27;</span>, <span class="string">&#x27;bbb&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> mainStyles = <span class="title class_">StyleSheet</span>.<span class="title function_">create</span>(&#123;</span><br><span class="line">  <span class="attr">container</span>: &#123;</span><br><span class="line">    <span class="attr">flex</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">alignItems</span>: <span class="string">&#x27;center&#x27;</span>,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>不绑定就会报错，具体原因见报错整理。<br>ren<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">This might be related to https://github.com/facebook/react-native/issues/4968</span><br><span class="line">To resolve try the following:</span><br><span class="line">  1. Clear watchman watches: `watchman watch-del-all`.</span><br><span class="line">  2. Delete the `node_modules` folder: `rm -rf node_modules &amp;&amp; npm install`.</span><br><span class="line">  3. Reset packager cache: `rm -fr $TMPDIR/react-*` or `npm start -- --reset-cache`.</span><br><span class="line">2016-11-25 15:35:23.465 [fatal][tid:main] Unable to resolve module react/lib/ReactUpdates from /Users/niyao/N.Y./Project/react-native-redux-app/ny_react/node_modules/react-native/Libraries/react-native/react-native.js: Unable to find this module in its module map or any of the node_modules directories under /Users/node_modules/react/lib/ReactUpdates and its parent directories</span><br><span class="line"></span><br><span class="line">This might be related to https://github.com/facebook/react-native/issues/4968</span><br><span class="line">To resolve try the following:</span><br><span class="line">  1. Clear watchman watches: `watchman watch-del-all`.</span><br><span class="line">  2. Delete the `node_modules` folder: `rm -rf node_modules &amp;&amp; npm install`.</span><br><span class="line">  3. Reset packager cache: `rm -fr $TMPDIR/react-*` or `npm start -- --reset-cache`.</span><br></pre></td></tr></table></figure></p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>本篇文章主要总结了，笔者在学习中认为重要的概念，以及开发过程中遇到的很奇葩的问题。<br>文章会不定期修改完善，如果有问题，或者有需修改的地方，可以联系我 yao.ni@ele.me</p>
+<p>也非常欢迎关注我个人的微信公众号～</p>
+<p><img src="https://niyaoyao.github.io/images/qrcod_ny_1.jpg" alt=""></p>
+<p>并且自己也有</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="http://www.cnblogs.com/LuckyWinty/p/5309088.html">http://www.cnblogs.com/LuckyWinty/p/5309088.html</a><br><a target="_blank" rel="noopener" href="http://bbs.reactnative.cn/topic/15/react-react-native-%E7%9A%84es5-es6%E5%86%99%E6%B3%95%E5%AF%B9%E7%85%A7%E8%A1%A8">http://bbs.reactnative.cn/topic/15/react-react-native-%E7%9A%84es5-es6%E5%86%99%E6%B3%95%E5%AF%B9%E7%85%A7%E8%A1%A8</a></p>
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2016/09/29/Learning-React-From-Today-D1/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2016/10/16/Learning-Reverse-From-Today-D1/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: 'e929305d1df52067f223',
+  clientSecret: '465557188fddc6608846e97927bc2fe7a268f141',
+  repo: 'blog-comments',
+  owner: 'niyaoyao',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: md5(location.pathname),
+  admin: ['niyaoyao'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

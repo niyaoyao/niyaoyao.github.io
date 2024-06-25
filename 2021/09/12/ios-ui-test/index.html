@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>iOS UI 自动化测试原理以及在 Trip.com 的应用实践 | N.Y.</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="CI/CD,XCUITest,DevOps," />
+  
+
+  <meta name="description" content="前言笔者入职 Trip.com 已满一年，回顾这一年的工作历程，约一半的时间都在做 UI 自动化测试相关内容。从而，笔者更深入地研究了 iOS 平台下的自动化测试技术，目前也在负责部门 App 自动化测试平台的搭建和维护。故想借这篇文章一并将所踩过的坑以及学习到的技术，系统且全面地整理出分享给大家。 本文的内容大致如下：  iOS&#x2F;macOS UI 自动化测试框架 XCUITest 原理详解 基于">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS UI 自动化测试原理以及在 Trip.com 的应用实践">
+<meta property="og:url" content="http://niyaoyao.me/2021/09/12/ios-ui-test/index.html">
+<meta property="og:site_name" content="N.Y.">
+<meta property="og:description" content="前言笔者入职 Trip.com 已满一年，回顾这一年的工作历程，约一半的时间都在做 UI 自动化测试相关内容。从而，笔者更深入地研究了 iOS 平台下的自动化测试技术，目前也在负责部门 App 自动化测试平台的搭建和维护。故想借这篇文章一并将所踩过的坑以及学习到的技术，系统且全面地整理出分享给大家。 本文的内容大致如下：  iOS&#x2F;macOS UI 自动化测试框架 XCUITest 原理详解 基于">
+<meta property="og:locale">
+<meta property="og:image" content="https://niyaoyao.github.io/images/uitest/core-technology.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/uitest/uitest-api.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/uitest/integrate-tests.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/uitest/accessibility-inspector.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/uitest/accessibility-hierarchy.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/uitest/accessibility-hierarchy-visible.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/uitest/recording-tests.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/uitest/recording-tests-stop.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/uitest/execute-test.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/uitest/wd-architecture-common.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/uitest/jenkins-slave.png">
+<meta property="og:image" content="https://shanks.pro/assets/ios-explore-process.png">
+<meta property="article:published_time" content="2021-09-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-04-15T15:21:28.582Z">
+<meta property="article:author" content="Niyao">
+<meta property="article:tag" content="CI&#x2F;CD">
+<meta property="article:tag" content="XCUITest">
+<meta property="article:tag" content="DevOps">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://niyaoyao.github.io/images/uitest/core-technology.png">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico/images/avatar_ny.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    
+<link rel="stylesheet" href="/css/personal-style.css">
+
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38189205-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">Hi~</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">Hi~</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#iOS-macOS-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%9F%BA%E7%A1%80%E6%A1%86%E6%9E%B6-XCUITest"><span class="toc-text">iOS&#x2F;macOS 自动化测试基础框架 XCUITest</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#iOS-UI%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF"><span class="toc-text">iOS UI自动化测试核心技术</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XCUITest-%E6%A1%86%E6%9E%B6%E7%BB%93%E6%9E%84"><span class="toc-text">XCUITest 框架结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8-Xcode-UITests-Target-%E8%BF%9B%E8%A1%8C%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95"><span class="toc-text">利用 Xcode UITests Target 进行自动化测试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A9-App-%E6%94%AF%E6%8C%81%E8%BE%85%E5%8A%A9%E5%8A%9F%E8%83%BD"><span class="toc-text">让 App 支持辅助功能</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Accessibility-Inspector"><span class="toc-text">使用 Accessibility Inspector</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Accessibility-%E7%9B%B8%E5%85%B3%E5%B1%9E%E6%80%A7"><span class="toc-text">Accessibility 相关属性</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%8B%E5%8A%A8%E7%BC%96%E5%86%99%E6%B5%8B%E8%AF%95-case"><span class="toc-text">手动编写测试 case</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%95%E5%88%B6%E4%BA%A4%E4%BA%92%E8%A1%8C%E4%B8%BA%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E6%B5%8B%E8%AF%95-case"><span class="toc-text">录制交互行为自动生成测试 case</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#UITest-%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="toc-text">UITest 执行过程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#iOS-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E9%93%BE"><span class="toc-text">iOS 自动化测试工具链</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#xcodebuild"><span class="toc-text">xcodebuild</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xcrun-simctl"><span class="toc-text">xcrun simctl</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ideviceinstaller"><span class="toc-text">ideviceinstaller</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ios-deploy"><span class="toc-text">ios-deploy</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E-Web-Service-%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%B9%B3%E5%8F%B0%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-text">基于 Web Service 的自动化测试平台架构设计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#App-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%B9%B3%E5%8F%B0%E7%9A%84%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-text">App 自动化测试平台的架构设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Appium-%E5%B7%A5%E5%85%B7%E9%93%BE%E7%9F%A9%E9%98%B5"><span class="toc-text">Appium 工具链矩阵</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#WebDriverAgent"><span class="toc-text">WebDriverAgent</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85-WDA"><span class="toc-text">源码安装 WDA</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9C%9F%E6%9C%BA%E6%B5%8B%E8%AF%95%E4%BF%AE%E6%94%B9-Team-ID"><span class="toc-text">真机测试修改 Team ID</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Appium-Web-Service-Server"><span class="toc-text">Appium Web Service Server</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A9%E7%94%A8-Appium-Desktop-%E5%90%AF%E5%8A%A8-Server"><span class="toc-text">利用 Appium Desktop 启动 Server</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A9%E7%94%A8-Appium-Command-%E5%90%AF%E5%8A%A8-Server"><span class="toc-text">利用 Appium Command 启动 Server</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Nodejs-%E4%BE%9D%E8%B5%96"><span class="toc-text">安装 Nodejs 依赖</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8-Server"><span class="toc-text">启动 Server</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E6%98%A0%E5%B0%84"><span class="toc-text">端口映射</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB"><span class="toc-text">端口映射关系</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A9%B1%E5%8A%A8-Runner-%E5%AD%98%E5%82%A8%E4%BD%8D%E7%BD%AE"><span class="toc-text">驱动 Runner 存储位置</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-Service-Client-%E2%80%94%E2%80%94-Test-Case"><span class="toc-text">Web Service Client —— Test Case</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E9%A1%B9%E7%9B%AE"><span class="toc-text">测试项目</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#javascript-webdriverio"><span class="toc-text">javascript-webdriverio</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96"><span class="toc-text">安装依赖</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE"><span class="toc-text">修改配置</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C-Case"><span class="toc-text">运行 Case</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Macaca-%E5%B7%A5%E5%85%B7%E9%93%BE%E7%9F%A9%E9%98%B5"><span class="toc-text">Macaca 工具链矩阵</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Macaca-%E5%B7%A5%E5%85%B7%E9%93%BE"><span class="toc-text">安装 Macaca 工具链</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Appium-%E4%B8%8E-Macaca-%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-text">Appium 与 Macaca 的对比</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Trip-com-App-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E7%8E%B0%E7%8A%B6"><span class="toc-text">Trip.com App 自动化测试现状</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">应用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%92%E7%83%9F%E6%B5%8B%E8%AF%95"><span class="toc-text">冒烟测试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%86%B5"><span class="toc-text">基本概况</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BD%93%E7%8E%B0"><span class="toc-text">数据体现</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A2%E7%B4%A2%E6%B5%8B%E8%AF%95"><span class="toc-text">探索测试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%86%B5-1"><span class="toc-text">基本概况</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BD%93%E7%8E%B0-1"><span class="toc-text">数据体现</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#UI-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%B9%B3%E5%8F%B0"><span class="toc-text">UI 自动化测试平台</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%86%B5-2"><span class="toc-text">基本概况</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BD%93%E7%8E%B0-2"><span class="toc-text">数据体现</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%89%B9%E5%88%AB%E9%B8%A3%E8%B0%A2"><span class="toc-text">特别鸣谢</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-text">参考资料</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-ios-ui-test" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">iOS UI 自动化测试原理以及在 Trip.com 的应用实践</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2021.09.12</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Niyao</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>笔者入职 <a target="_blank" rel="noopener" href="https://hk.trip.com/">Trip.com</a> 已满一年，回顾这一年的工作历程，约一半的时间都在做 UI 自动化测试相关内容。从而，笔者更深入地研究了 iOS 平台下的自动化测试技术，目前也在负责部门 App 自动化测试平台的搭建和维护。故想借这篇文章一并将所踩过的坑以及学习到的技术，系统且全面地整理出分享给大家。</p>
+<p>本文的内容大致如下：</p>
+<ul>
+<li>iOS/macOS UI 自动化测试框架 XCUITest 原理详解</li>
+<li>基于 Web Service 的自动化测试平台架构设计</li>
+<li>Appium 与 Macaca 介绍与对比</li>
+<li>Trip.com App UI 自动化测试现状</li>
+</ul>
+<p>自动化测试可以分为白盒测试、黑盒测试以及灰盒测试，本文主要围绕 Apple 官方提供的 XCUITest 测试框架，逐步阐明 iOS 操作系统下的 UI 自动化测试原理、架构设计思想以及应用场景。</p>
+<h1 id="iOS-macOS-自动化测试基础框架-XCUITest"><a href="#iOS-macOS-自动化测试基础框架-XCUITest" class="headerlink" title="iOS/macOS 自动化测试基础框架 XCUITest"></a>iOS/macOS 自动化测试基础框架 XCUITest</h1><h2 id="iOS-UI自动化测试核心技术"><a href="#iOS-UI自动化测试核心技术" class="headerlink" title="iOS UI自动化测试核心技术"></a>iOS UI自动化测试核心技术</h2><p>2015 年，Apple 发布了 UI 自动化测试框架 XCUITest 并集成在 Xcode7 中，而 iOS/macOS UI 自动化测试依赖<strong>两个核心技术： XCUITest 和 Accessibility</strong>。</p>
+<p><img src="https://niyaoyao.github.io/images/uitest/core-technology.png" alt="core-technology"></p>
+<p>XCUITest 是集成在 Xcode 中的测试框架，若想使用 UI 测试功能功能，可以在创建 iOS 项目时勾选 Include Tests 选项，从而使项目具备自动化测试的能力。而 Accessibility 技术，则是 Apple 官方为视障用户提供的一整套 iOS/macOS App 的解决方案。</p>
+<p>Xcode 项目创建 UITests Target 并运行测试，其编译产物 <strong>Test App</strong> 本质上是一个 Deamon 守护进程，该进程有独立的应用程序生命周期，依靠 <strong>XCUIApplication</strong> 类型进行管理。 UITests 的 Test App 进程在运行时会驱动 <strong>Host App</strong>（项目的主 Target 产物），并且利用元素审查的相关 API 驱动 Host App 模拟用户行为交互，从而进行 UI 自动化测试。</p>
+<p>对于 Accessibility 技术，开发人员需要注意的是，XCUITest 框架默认并不能将所有视图元素审查到，只会审查到可以被 VoiceOver 功能读取文字的元素。比如，UIButton 和 UILabel，这些视图对于视障用户而言可以通过语音来获知其内容，而对于 UIImageView、 UIView 这种对于视障人士并不友好的 UIKit 视图元素默认是不会审查到的，所以编码时要另行配置 Accessibility 相关属性，以保证其支持 Accessibility 从而在 UI 自动化查询的元素层级中可见。</p>
+<p>基于 XCUITest 框架 和 Accessibility 技术的自动化测试，<strong>有利于 App 进行数据一致性校验，但 UI 一致性校验能力较弱</strong>。比如，App 可以针对某些数据请求结果或者某个元素是否存在进行校验，而视觉展示效果却仍需要人工介入。</p>
+<h2 id="XCUITest-框架结构"><a href="#XCUITest-框架结构" class="headerlink" title="XCUITest 框架结构"></a>XCUITest 框架结构</h2><p><img src="https://niyaoyao.github.io/images/uitest/uitest-api.png" alt="XCUITestAPI"></p>
+<p>XCUITest 测试框架 API 主要包含：元素查询（UI Element Queries）相关类型，如 <strong>XCUIElementQuery</strong>，UI 元素（UI Elements）相关类型，如 <strong>XCUIElement</strong>，以及测试 App 生命周期类型（Application Lifecycle）类型，如 <strong>XCUIApplication</strong>。</p>
+<p>接下来，我们创建一个简单 Demo 项目，来学习如何使用 XCUITest 框架编程，并进行 iOS UI 自动化测试。</p>
+<h2 id="利用-Xcode-UITests-Target-进行自动化测试"><a href="#利用-Xcode-UITests-Target-进行自动化测试" class="headerlink" title="利用 Xcode UITests Target 进行自动化测试"></a>利用 Xcode UITests Target 进行自动化测试</h2><p><img src="https://niyaoyao.github.io/images/uitest/integrate-tests.png" alt="integrate-tests"></p>
+<p>创建一个 Demo 工程，勾选 <strong>Include Tests</strong> 选项，在 ViewController 里编写如下代码。本文 Demo 工程可访问链接 <a target="_blank" rel="noopener" href="https://github.com/niyaoyao/UITestDemo">https://github.com/niyaoyao/UITestDemo</a> 。<br><figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ViewController</span>: <span class="title class_">UIViewController</span> &#123;</span><br><span class="line">    <span class="keyword">lazy</span> <span class="keyword">var</span> testImageView: <span class="type">UIImageView</span> <span class="operator">=</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> testImageView <span class="operator">=</span> <span class="type">UIImageView</span>(frame: <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, width: <span class="number">100</span>, height: <span class="number">100</span>))</span><br><span class="line">        testImageView.backgroundColor <span class="operator">=</span> .red</span><br><span class="line">        testImageView.accessibilityIdentifier <span class="operator">=</span> <span class="string">&quot;test imageview&quot;</span></span><br><span class="line">        <span class="keyword">return</span> testImageView</span><br><span class="line">    &#125;()</span><br><span class="line">    <span class="keyword">lazy</span> <span class="keyword">var</span> testLabel: <span class="type">UILabel</span> <span class="operator">=</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> testLabel <span class="operator">=</span> <span class="type">UILabel</span>(frame: <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">130</span>, width: <span class="number">100</span>, height: <span class="number">20</span>))</span><br><span class="line">        testLabel.backgroundColor <span class="operator">=</span> .green</span><br><span class="line">        testLabel.text <span class="operator">=</span> <span class="string">&quot;test label&quot;</span></span><br><span class="line">        <span class="keyword">return</span> testLabel</span><br><span class="line">    &#125;()</span><br><span class="line">    <span class="keyword">lazy</span> <span class="keyword">var</span> testView: <span class="type">UIView</span> <span class="operator">=</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> testView <span class="operator">=</span> <span class="type">UIView</span>(frame: <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">170</span>, width: <span class="number">100</span>, height: <span class="number">50</span>))</span><br><span class="line">        testView.backgroundColor <span class="operator">=</span> .blue</span><br><span class="line">        testView.accessibilityIdentifier <span class="operator">=</span> <span class="string">&quot;test view&quot;</span></span><br><span class="line">        <span class="keyword">return</span> testView</span><br><span class="line">    &#125;()</span><br><span class="line">    <span class="keyword">lazy</span> <span class="keyword">var</span> testButton: <span class="type">UIButton</span> <span class="operator">=</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> testButton <span class="operator">=</span> <span class="type">UIButton</span>(frame: <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">230</span>, width: <span class="number">100</span>, height: <span class="number">50</span>))</span><br><span class="line">        testButton.backgroundColor <span class="operator">=</span> .yellow</span><br><span class="line">        testButton.setTitle(<span class="string">&quot;测试按钮&quot;</span>, for: .normal)</span><br><span class="line">        <span class="keyword">return</span> testButton</span><br><span class="line">    &#125;()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="keyword">func</span> <span class="title function_">viewDidLoad</span>() &#123;</span><br><span class="line">        <span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">        view.addSubview(testImageView)</span><br><span class="line">        view.addSubview(testLabel)</span><br><span class="line">        view.addSubview(testView)</span><br><span class="line">        view.addSubview(testButton)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>源码解释，上面的这段代码创建了四个视图实例，分别为 UIImageView、UILabel、UIView 和 UIButton 类型，并将四个视图实例添加到当前页面中。其中，UILable 和 UIButton 仅设置了frame、字符串、背景颜色等属性，但是对于 UIImageView 和 UIView 视图除了一般的视图属性，还设置了 <strong>accessibilityIdentifier</strong> 个属性是为了让 UIImageView 和 UIView 支持 Accessibility 功能，但仅设置这个属性并不能使这两个视图在 Accessibility 的元素层级结构中可见。接下来就对 Accessibility 功能做简要介绍。</p>
+<h3 id="让-App-支持辅助功能"><a href="#让-App-支持辅助功能" class="headerlink" title="让 App 支持辅助功能"></a>让 App 支持辅助功能</h3><h4 id="使用-Accessibility-Inspector"><a href="#使用-Accessibility-Inspector" class="headerlink" title="使用 Accessibility Inspector"></a>使用 Accessibility Inspector</h4><p>前文中提到 Apple 对于视图元素会默认审查能够通过 VoiceOver 播放文字的视图元素，而对于 UIImageView、UIView 这种默认不支持 Accessibility 功能的需要配置相关特性，而开发人员在开发过程中可以通过 Accessibility Inspector 查看不同进程的 Accessibility 元素层级，该应用可以审查 iOS 和 macOS 的元素。<br><img src="https://niyaoyao.github.io/images/uitest/accessibility-inspector.png" alt="accessibility-inspector"></p>
+<p>选择 Xcode 的图标菜单并选择 Open Developer Tool 选项，点击 Accessibility Inspector 即可开始使用。</p>
+<p><img src="https://niyaoyao.github.io/images/uitest/accessibility-hierarchy.png" alt="accessibility-hierarchy"></p>
+<p>当我们没有设置 <strong>isAccessibilityElement</strong> 属性时，在 Accessibility 元素层级结构中就无法看到 UIImageView 和 UIView 元素，只能看到 “test label” 和“测试按钮”。而当我们将 UIImageView 和 UIView 的 <strong>isAccessibilityElement</strong> 属性设置为 true 时， UIImageView 和 UIView 元素才能在元素层级中可见。</p>
+<p><img src="https://niyaoyao.github.io/images/uitest/accessibility-hierarchy-visible.png" alt="accessibility-hierarchy"></p>
+<h4 id="Accessibility-相关属性"><a href="#Accessibility-相关属性" class="headerlink" title="Accessibility 相关属性"></a>Accessibility 相关属性</h4><figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="type">UIAccessibility</span>: <span class="keyword">var</span> accessibilityLabel: <span class="type">String</span>? &#123; <span class="keyword">get</span> <span class="keyword">set</span> &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>accessibilityLabel</strong> 属性可以解决绝大部分的 Accessibility 问题，当光标将焦点放在设置该属性的元素师时，它的内容可由 VoiceOver 读取的人类可读的字符串。但如果不是需要被视障用户获知的视图元素，仅用于自动化测试，就可以不用设置该属性。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="type">UIAccessibility</span>: <span class="keyword">var</span> accessibilityIdentifier: <span class="type">String</span>? &#123; <span class="keyword">get</span> <span class="keyword">set</span> &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>accessibilityIdentifier</strong> 属性不会被 VoiceOver 诵读，而是面向开发人员的字符串，可在不希望用户操作 <strong>accessibilityLabel</strong> 的情况下使用。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="type">UIAccessibility</span>: <span class="keyword">var</span> isAccessibilityElement: <span class="type">Bool</span> &#123; <span class="keyword">get</span> <span class="keyword">set</span> &#125;</span><br></pre></td></tr></table></figure>
+<p>如果 <strong>isAccessibilityElement</strong> 未设置为 true，那么这个视图将不会在 Accessibility 视图层次结构中可见。</p>
+<blockquote>
+<p>The default value for this property is false unless the element is a standard UIKit control, in which case, the value is true. —— Apple Documentation</p>
+</blockquote>
+<p>另外，根据 Apple 官方中的介绍 UIControl 的子类的 <strong>isAccessibilityElement</strong> 属性都默认设置为 true。更多关于 Accessibility 属性相关的内容可以参见 <a target="_blank" rel="noopener" href="https://developer.apple.com/documentation/objectivec/nsobject/uiaccessibility">UIAccessibility</a> 和 <a target="_blank" rel="noopener" href="https://developer.apple.com/documentation/objectivec/nsobject/uiaccessibilitycontainer">UIAccessibilityContainer</a>。</p>
+<h3 id="手动编写测试-case"><a href="#手动编写测试-case" class="headerlink" title="手动编写测试 case"></a>手动编写测试 case</h3><figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> XCTest</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">UITestDemoUITests</span>: <span class="title class_">XCTestCase</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="keyword">func</span> <span class="title function_">setUpWithError</span>() <span class="keyword">throws</span> &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="keyword">func</span> <span class="title function_">tearDownWithError</span>() <span class="keyword">throws</span> &#123;</span><br><span class="line">        <span class="comment">// Put teardown code here. This method is called after the invocation of each test method in the class.</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">testExample</span>() <span class="keyword">throws</span> &#123;</span><br><span class="line">        <span class="comment">// UI tests must launch the application that they test.</span></span><br><span class="line">        <span class="keyword">let</span> app <span class="operator">=</span> <span class="type">XCUIApplication</span>()</span><br><span class="line">        app.launch()</span><br><span class="line">        <span class="keyword">let</span> label <span class="operator">=</span> app.staticTexts[<span class="string">&quot;test label&quot;</span>]</span><br><span class="line">        <span class="type">XCTAssertTrue</span>(label.exists)</span><br><span class="line">        <span class="keyword">let</span> button <span class="operator">=</span> app.buttons[<span class="string">&quot;测试按钮&quot;</span>]</span><br><span class="line">        <span class="type">XCTAssertTrue</span>(button.exists)</span><br><span class="line">        <span class="keyword">let</span> imgview <span class="operator">=</span> app.images[<span class="string">&quot;test imageview&quot;</span>]</span><br><span class="line">        <span class="type">XCTAssertTrue</span>(imgview.exists)</span><br><span class="line">        <span class="keyword">let</span> view <span class="operator">=</span> app.otherElements[<span class="string">&quot;test view&quot;</span>]</span><br><span class="line">        <span class="type">XCTAssertTrue</span>(view.exists)  </span><br><span class="line">        <span class="comment">// Use recording to get started writing UI tests.</span></span><br><span class="line">        <span class="comment">// Use XCTAssert and related functions to verify your tests produce the correct results.</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">testLaunchPerformance</span>() <span class="keyword">throws</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">#available</span>(<span class="keyword">macOS</span> <span class="number">10.15</span>, <span class="keyword">iOS</span> <span class="number">13.0</span>, <span class="keyword">tvOS</span> <span class="number">13.0</span>, <span class="keyword">watchOS</span> <span class="number">7.0</span>, <span class="operator">*</span>) &#123;</span><br><span class="line">            <span class="comment">// This measures how long it takes to launch your application.</span></span><br><span class="line">            measure(metrics: [<span class="type">XCTApplicationLaunchMetric</span>()]) &#123;</span><br><span class="line">                <span class="type">XCUIApplication</span>().launch()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>源码解释，XCUIApplication 类型的实例，是管理 Test App 生命周期的实例对象，可以通过该对象获取 Accessibility 视图层级结构，通过 XCTAssertTrue 断言元素是否存在。</p>
+<h3 id="录制交互行为自动生成测试-case"><a href="#录制交互行为自动生成测试-case" class="headerlink" title="录制交互行为自动生成测试 case"></a>录制交互行为自动生成测试 case</h3><p>对于相对复杂的 Test Case，可以通过 Xcode 提供的测试行为录制功能进行自动代码生成。<br><img src="https://niyaoyao.github.io/images/uitest/recording-tests.png" alt="execute-test"><br><img src="https://niyaoyao.github.io/images/uitest/recording-tests-stop.png" alt="execute-test"></p>
+<h3 id="UITest-执行过程"><a href="#UITest-执行过程" class="headerlink" title="UITest 执行过程"></a>UITest 执行过程</h3><p><img src="https://niyaoyao.github.io/images/uitest/execute-test.png" alt="execute-test"><br>点击 Test 定义的 function 前方对应的播放按钮或者 Test Navigator 中对应 function 的播放按钮，就可以开始执行 UI 测试。而开始 UI 测试后，会先执行源码编译，将 Target 中的源码编译出产物，启动 Test App 进程，进入 Test 程序执行 <code>app.launch()</code> 则会启动 App，然后执行断言源码。</p>
+<h2 id="iOS-自动化测试工具链"><a href="#iOS-自动化测试工具链" class="headerlink" title="iOS 自动化测试工具链"></a>iOS 自动化测试工具链</h2><p>编写了基本的 UI 测试的 UITest Target 方法之后，我们可以利用相关命令行工具链，将 iOS UI 自动化测试脚本化，从而可以方便集成入 CI 流程。</p>
+<h3 id="xcodebuild"><a href="#xcodebuild" class="headerlink" title="xcodebuild"></a>xcodebuild</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">xcodebuild test -project UITestDemo.xcodeproj -scheme UITestDemoUITests -destination &#x27;platform=iOS,id=&lt;iPhoneUDID&gt;&#x27;</span><br></pre></td></tr></table></figure>
+<p>可以利用上述命令执行自动化测试，也可以将命令进行拆分，拆分为测试编译命令和测试执行命令，以便细化自动化测试过程。<br>测试编译命令：<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">xcodebuild build-for-testing -project ****.xcodeproj -scheme **** -configuration Debug -sdk iphonesimulator -destination &#x27;platform=iOS Simulator,id=XXXXX&#x27; -derivedDataPath ~/derived_path -quiet COMPILER_INDEX_STORE_ENABLE=NO GCC_WARN_INHIBIT_ALL_WARNINGS=YES | tee build.log</span><br></pre></td></tr></table></figure><br>测试执行命令：<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">xcodebuild test-without-building -xctestrun ****.xctestrun -configuration Debug -sdk iphonesimulator -destination &#x27;platform=iOS Simulator,id=XXXXXX&#x27; -derivedDataPath ~/derived_path -resultBundlePath ****.xcresult -only-testing:****-UITests/TargetTests</span><br></pre></td></tr></table></figure></p>
+<h3 id="xcrun-simctl"><a href="#xcrun-simctl" class="headerlink" title="xcrun simctl"></a>xcrun simctl</h3><p><code>simctl</code> 命令是 <code>xcrun</code> 的一套自命令，提供一系列用来控制 iOS 模拟器的命令。</p>
+<p>列举当前已经启动的模拟器 <code>xcrun simctl list devices | grep booted</code><br>启动模拟器 <code>xcrun simctl boot XXXXX</code><br>关闭模拟器 <code>xcrun simctl shutdown XXXXX</code><br>设置模拟器权限 <code>xcrun simctl privacy XXX grant location-always xx.xx.xxx</code><br>安装 App <code>xcrun simctl install &#123;&#125; &#123;&#125;&#39;.format(uuid, app_path)</code><br>运行指定 App  <code>xcrun simctl launch &#123;&#125; &#123;&#125;&#39;.format(uuid, bundle_id)</code><br>结束指定 App   <code>xcrun simctl terminate &#123;&#125; &#123;&#125;&#39;.format(uuid, bundle_id)</code><br>卸载指定 App <code>xcrun simctl uninstall &#123;&#125; &#123;&#125;&#39;.format(uuid, bundle_id)</code></p>
+<h3 id="ideviceinstaller"><a href="#ideviceinstaller" class="headerlink" title="ideviceinstaller"></a>ideviceinstaller</h3><p>与控制模拟器相似，iOS 真机也有相应的控制命令行工具链，例如 <code>ideviceinstaller</code>。</p>
+<p>安装 apppath 下的 app <code>ideviceinstaller -i apppath</code><br>安装 xxx.ipa 为应用在本地的路径<code>ideviceinstaller -u [udid] -i [xxx.ipa]</code><br>卸载应用 <code>ideviceinstaller -u [udid] -U [bundleId]</code><br>查看设备安装的第三方应用 <code>ideviceinstaller -u [udid] -l</code><br>同上，查看设备安装的第三方应用 <code>ideviceinstaller -u [udid] -l -o list_user</code><br>查看设备安装的系统应用 <code>ideviceinstaller -u [udid] -l -o list_system</code><br>查看设备安装的所有应用 <code>ideviceinstaller -u [udid] -l -o list_all</code><br>列出手机上所有的用户安装的app <code>ideviceinstaller -l</code></p>
+<h3 id="ios-deploy"><a href="#ios-deploy" class="headerlink" title="ios-deploy"></a>ios-deploy</h3><p>查看当前链接的设备 <code>ios-deploy -c</code><br>安装APP <code>ios-deploy --[xxx.app]</code><br>卸载应用 <code>ios-deploy --id [udid] --uninstall_only --bundle_id [bundleId]</code><br>查看所有应用 <code>ios-deploy --id [udid] --list_bundle_id</code><br>查看应用是否安装 <code>ios-deploy --id [udid] --exists --bundle_id</code></p>
+<p>利用以上命令行工具链，就可将 UI 自动化测试根据不同项目进行自定义的脚本接入 CI 流程，比如接入 GitLab Pipelines 中，对 code review、 merge request 等过程进行干预。</p>
+<h1 id="基于-Web-Service-的自动化测试平台架构设计"><a href="#基于-Web-Service-的自动化测试平台架构设计" class="headerlink" title="基于 Web Service 的自动化测试平台架构设计"></a>基于 Web Service 的自动化测试平台架构设计</h1><h2 id="App-自动化测试平台的架构设计"><a href="#App-自动化测试平台的架构设计" class="headerlink" title="App 自动化测试平台的架构设计"></a>App 自动化测试平台的架构设计</h2><p>从前文中我们了解到，我们可以利用 Xcode 创建 UITest Target，编写 UITest Case 测试脚本，辅以 xcodebuild 等相关命令工具链编写自动化脚本，就能接入 CI/CD 流程，实现 iOS App 的 UI 自动化测试，从而达到释放人力资源，降低人工测试的成本的目的。</p>
+<p>但与此同时，又有新的问题出现，那就是业务频繁的迭代的情况下，我们写的 Test Case 脚本，很容易因为业务的改变而导致废弃，测试脚本复用率低，又增加了开发成本。如果不同系统平台的 App，如，Android、iOS 甚至 Web App 能共用一套测试脚本，提高脚本复用率，会降低开发成本，更有利于业务回归。除此之外，对于复杂业务的回归测试，若希望提高大量测试 case 的业务回归效率，必然要提高并发性，缩减测试时间。故在这样的需求下， Facebook 团队就设计出了 Appium 这样的基于 Web Service 的自动化测试工具。类似 Appium 的测试工具还有阿里巴巴团队设计的 Macaca，这类测试工具的设计架构如下图可视。</p>
+<p><img src="https://niyaoyao.github.io/images/uitest/wd-architecture-common.png" alt="execute-test"></p>
+<p><strong>基于 Web Service 的自动化测试的架构主要可以分为命令分发服务 Web Service 模块和 UI 测试驱动模块。</strong></p>
+<p>对于<strong>命令分发服务模块，其任务是搭建通用测试 case 脚本与底层驱动之间的通信桥梁</strong>，而 HTTP <strong>RESTful API</strong> 恰能满足这样跨平台的需求。因此，Web Service 模块需要搭建 HTTP Web Service 进行命令转发，将自动化测试中的 Test Case 脚本作为 Web Service 的 Client 端，向 Web Service 的 Server 端发送请求。而 Web Service 的 Server 接收到请求后，再将请求转发到底层的 UI 测试的驱动进程，以便后续驱动 UI 测试。</p>
+<p>对于 UI 测试驱动模块，其主要任务是，<strong>接收 Web Service Server 端转发来的请求，并触发驱动进程进行 UI 自动化测试，最终收集测试结果，并生成测试报告</strong>。Android 操作系统的底层驱动一般是 UIAutomator 程序；而对于 iOS 系统， Appium 用的是 WebDriverAgent，Macaca 是 XCTestWD。而不论 WebDriverAgent 还是 XCTestWD 都是一个基于 XCUITest 的 Xcode project，其技术核心也就是我们前文介绍的以 XCUITest 和 Accessibility 为基础的 iOS UI 自动化测试技术。 </p>
+<p>App 自动化测试平台，需要先运行 Web Service Server，Server 作为测试指令的发出者，向测试驱动发出请求，从而驱动 Test App 进程操作 App。因此，需要先在 Jenkins Slave 机器启动运行 Web Service Server，例如，在本地 4722 端口创建 Web Service，并监听 Client 向该端口发送的请求，再转发给驱动层。驱动项目（WebDriverAgent 或 XCTestWD）编译成功后，都会在运行的设备上创建并运行一个 Runner 程序，该程序就是利用 XCUITest 编译成 Test App，但与前文 Demo 不同的是，这个程序会在设备上也会创建一个 Web Service，接收 Server 发来的请求，并根据 Test App 中程序处理请求，最后返回响应结果给 Server。</p>
+<p>例如，创建测试 Session 过程，WebDriverAgent 编译成功后会在测试设备的 8080 端口创建 Web Service，从而 Jenkins Slave 上运行的 Web Service Server 能够将 Client 的请求转发给 WebDriverAgent 创建的 Web Service，然后经过 WebDriverAgent 的内部路由<code>/wd/hub/session</code> 进行映射，找到对应创建 session 的具体代码，保存 Session ID 值，并将 Session ID 作为响应结果返回给 Jenkins 的 Web Server。其他测试操作如，查找 element、查找元素 value，滚动某个元素等操作，这些操作 Jenkins 的 Web Service C/S 和底层驱动间的通信过程，都与建立 Session 过程相类似。</p>
+<p>所以，有了基于 Web Service 的 UI 自动化测试工具，我们可以更加高效地进行自动化测试，复用性更高、可支持多平台，跨平台测试，甚至可以利用其 Web Service 搭建分布式的测试平台，基于 Jenkins 服务的架构设计如下图所示。</p>
+<p><img src="https://niyaoyao.github.io/images/uitest/jenkins-slave.png" alt="execute-test"></p>
+<p>根据上图架构设计，我们可以利用多台机器搭建 Jenkins 集群，根据我们 CI/CD 流程所需，向 Jenkins Server 发送请求，再由 Jenkins Server 分配不同 Jenkins Slave 执行 Job，每个 Jenkins Slave 都配置好 UI 自动化测试平台驱动多台设备进行自动化测试。从而实现分布式的自动化测试平台，提高并发性、提升测试效率，缩减回归测试的时间。</p>
+<p>接下来就分别介绍 Appium 和 Macaca 的简单使用。</p>
+<h2 id="Appium-工具链矩阵"><a href="#Appium-工具链矩阵" class="headerlink" title="Appium 工具链矩阵"></a>Appium 工具链矩阵</h2><h3 id="WebDriverAgent"><a href="#WebDriverAgent" class="headerlink" title="WebDriverAgent"></a>WebDriverAgent</h3><p>WDA 是 Facebook 基于 XCUITest 测试框架开发的 iOS UI 自动测试 Driver。类比 Macaca Runner。</p>
+<h4 id="源码安装-WDA"><a href="#源码安装-WDA" class="headerlink" title="源码安装 WDA"></a>源码安装 WDA</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/appium/WebDriverAgent.git</span><br></pre></td></tr></table></figure>
+<h4 id="真机测试修改-Team-ID"><a href="#真机测试修改-Team-ID" class="headerlink" title="真机测试修改 Team ID"></a>真机测试修改 Team ID</h4><p>选择 Apple 开发账号的 Team。</p>
+<h3 id="Appium-Web-Service-Server"><a href="#Appium-Web-Service-Server" class="headerlink" title="Appium Web Service Server"></a>Appium Web Service Server</h3><p>Appium Server 用于 HTTP 命令转发，驱动底层 Driver WDA。</p>
+<h4 id="利用-Appium-Desktop-启动-Server"><a href="#利用-Appium-Desktop-启动-Server" class="headerlink" title="利用 Appium Desktop 启动 Server"></a>利用 Appium Desktop 启动 Server</h4><p>下载链接 <a target="_blank" rel="noopener" href="https://github.com/appium/appium-desktop/releases/download/v1.21.0/Appium-mac-1.21.0.dmg">https://github.com/appium/appium-desktop/releases/download/v1.21.0/Appium-mac-1.21.0.dmg</a></p>
+<p>安装 Appium  App，并用 GUI App 启动 Server。</p>
+<h4 id="利用-Appium-Command-启动-Server"><a href="#利用-Appium-Command-启动-Server" class="headerlink" title="利用 Appium Command 启动 Server"></a>利用 Appium Command 启动 Server</h4><h5 id="安装-Nodejs-依赖"><a href="#安装-Nodejs-依赖" class="headerlink" title="安装 Nodejs 依赖"></a>安装 Nodejs 依赖</h5><p>执行命令行<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install -g appium</span><br></pre></td></tr></table></figure></p>
+<h5 id="启动-Server"><a href="#启动-Server" class="headerlink" title="启动 Server"></a>启动 Server</h5><p>执行命令行<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">appium -a 127.0.0.1 -p 4722</span><br></pre></td></tr></table></figure></p>
+<p>参数列表：<a target="_blank" rel="noopener" href="http://appium.io/docs/en/writing-running-appium/server-args/index.html">http://appium.io/docs/en/writing-running-appium/server-args/index.html</a></p>
+<h5 id="端口映射"><a href="#端口映射" class="headerlink" title="端口映射"></a>端口映射</h5><p>执行命令行<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">iproxy [LOCAL_TCP_PORT] [DEVICE_TCP_PORT]</span><br></pre></td></tr></table></figure></p>
+<p><a target="_blank" rel="noopener" href="http://manpages.ubuntu.com/manpages//trusty/man1/iproxy.1.html">http://manpages.ubuntu.com/manpages//trusty/man1/iproxy.1.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/libimobiledevice/libusbmuxd/blob/master/tools/iproxy.c">https://github.com/libimobiledevice/libusbmuxd/blob/master/tools/iproxy.c</a></p>
+<h4 id="端口映射关系"><a href="#端口映射关系" class="headerlink" title="端口映射关系"></a>端口映射关系</h4><p>执行命令行</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">appium -a 127.0.0.1 -p 4722 --webdriveragent-port 8123</span><br></pre></td></tr></table></figure>
+<p>如果启动 appium server 时设置了 WDA 的 Port 为 8123，则 iproxy 命令第一个入参须是本地监听端口可任意随机选择，第二个入参必须对应 appium 命令指定的 WDA 的端口，可如下执行</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">iproxy 8100 8123</span><br></pre></td></tr></table></figure>
+<h4 id="驱动-Runner-存储位置"><a href="#驱动-Runner-存储位置" class="headerlink" title="驱动 Runner 存储位置"></a>驱动 Runner 存储位置</h4><p>全局安装 appium server 到本地后，WebDriverAgent.xcodeproj 存储在以下路径中。<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/usr/local/lib/node_modules/appium/node_modules/appium-webdriveragent/WebDriverAgent.xcodeproj</span><br></pre></td></tr></table></figure></p>
+<h3 id="Web-Service-Client-——-Test-Case"><a href="#Web-Service-Client-——-Test-Case" class="headerlink" title="Web Service Client —— Test Case"></a>Web Service Client —— Test Case</h3><h4 id="测试项目"><a href="#测试项目" class="headerlink" title="测试项目"></a>测试项目</h4><p><a target="_blank" rel="noopener" href="https://github.com/appium/appium/tree/master/sample-code">https://github.com/appium/appium/tree/master/sample-code</a></p>
+<h4 id="javascript-webdriverio"><a href="#javascript-webdriverio" class="headerlink" title="javascript-webdriverio"></a>javascript-webdriverio</h4><h5 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h5><p>执行命令行<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd appium-master/sample-code/javascript-webdriverio</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure></p>
+<h5 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h5><p>修改测试脚本中 capabilities 配置。<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">const iosCaps = &#123;</span><br><span class="line">  platformName: &#x27;iOS&#x27;,</span><br><span class="line">  automationName: &#x27;XCUITest&#x27;,</span><br><span class="line">  deviceName: process.env.IOS_DEVICE_NAME || &#x27;iPhone&#x27;,</span><br><span class="line">  udid: &#x27;iphone udid&#x27;,</span><br><span class="line">  platformVersion: process.env.IOS_PLATFORM_VERSION || &#x27;13.6.1&#x27;,</span><br><span class="line">  noReset: true,</span><br><span class="line">  bundleId: &#x27;your app id&#x27;,</span><br><span class="line">  app: undefined // Will be added in tests</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><br>capabilities 文档<br><a target="_blank" rel="noopener" href="https://appium.io/docs/en/writing-running-appium/caps/">https://appium.io/docs/en/writing-running-appium/caps/</a></p>
+<p><a target="_blank" rel="noopener" href="https://appium.io/docs/en/writing-running-appium/default-capabilities-arg/">https://appium.io/docs/en/writing-running-appium/default-capabilities-arg/</a></p>
+<h5 id="运行-Case"><a href="#运行-Case" class="headerlink" title="运行 Case"></a>运行 Case</h5><p>执行命令行<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm test</span><br></pre></td></tr></table></figure></p>
+<h2 id="Macaca-工具链矩阵"><a href="#Macaca-工具链矩阵" class="headerlink" title="Macaca 工具链矩阵"></a>Macaca 工具链矩阵</h2><p>与 Appium 相类似，Macaca 的工具链矩阵也包含 Driver、Web Service Server 和 Web Service Client。</p>
+<h3 id="安装-Macaca-工具链"><a href="#安装-Macaca-工具链" class="headerlink" title="安装 Macaca 工具链"></a>安装 Macaca 工具链</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 本地安装</span><br><span class="line">$ npm i macaca-ios --save-dev</span><br><span class="line"># 全局安装</span><br><span class="line">$ npm i macaca-ios -g</span><br><span class="line"># 安装有 TEAM_ID 的 macaca-ios</span><br><span class="line">$ DEVELOPMENT_TEAM_ID=TEAM_ID npm i macaca-ios -g</span><br></pre></td></tr></table></figure>
+<p>更多详细安装过程可参阅官方文档 <a target="_blank" rel="noopener" href="https://macacajs.github.io/zh/guide/environment-setup.html#%E5%AE%89%E8%A3%85-node-js">https://macacajs.github.io/zh/guide/environment-setup.html#%E5%AE%89%E8%A3%85-node-js</a></p>
+<h2 id="Appium-与-Macaca-的对比"><a href="#Appium-与-Macaca-的对比" class="headerlink" title="Appium 与 Macaca 的对比"></a>Appium 与 Macaca 的对比</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>框架名称</th>
+<th>相同点</th>
+<th>不同点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Appium</td>
+<td>基于 XCUITest 和 Accessibility 设计的 iOS UI 自动化测试技术</td>
+<td>驱动项目利用 Objective-C 编写，社区更完善，项目更新迭代更活跃，用户数量更多。</td>
+</tr>
+<tr>
+<td>Macaca</td>
+<td>基于 XCUITest 和 Accessibility 设计的 iOS UI 自动化测试技术</td>
+<td>驱动项目利用 Swift 编写，社区生态相对不完善，维护较不活跃，用户量相对较少。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>我们的 UI 自动化测试平台最初仅接入 Macaca 框架，独立维护一份仓库以供内部平台使用。而维护过程中也会遇到各种问题并自行解决，验证无误后也会反馈给官方，并提供相应解决方案。目前也已开始逐步接入 Appium 框架对现有平台进行技术改造，以适应更多场景，以及保障框架长期稳定可持续地维护。</p>
+<h1 id="Trip-com-App-自动化测试现状"><a href="#Trip-com-App-自动化测试现状" class="headerlink" title="Trip.com App 自动化测试现状"></a>Trip.com App 自动化测试现状</h1><p>Trip.com App 在日常开发迭代过程中， UI 自动化测试的应用场景有很多，例如冒烟测试、探索测试，以及基于 Web Service 的 UI 自动化测试平台。接下来，向大家分别介绍不同测试在 CI/CD 中扮演的角色和作用。</p>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><h3 id="冒烟测试"><a href="#冒烟测试" class="headerlink" title="冒烟测试"></a>冒烟测试</h3><h4 id="基本概况"><a href="#基本概况" class="headerlink" title="基本概况"></a>基本概况</h4><blockquote>
+<p>在程序设计和软件测试领域 ， 冒烟测试 （也包括信心测试 、健全性测试、 [1] 构建验证测试 （ BVT ） [2] [3]、构建验收测试 ）是指初步地进行测试，并以此展示一些简单但足以影响发布软件版本的这一高级别的错误。 —— Wikipedia</p>
+</blockquote>
+<p>在 Trip.com 实际应用场景中，冒烟测试所担任的角色主要是 Merge Request 卡点检测，其主要作用是对 Trip.com App 的集成编译以及运行时闪退的预先校验。比如，对于多模块并行开发的情况下，不同团队的某些改动就会造成符号名找不到的问题，而冒烟测试就可以预先对此进行卡点，避免集成打包失败降低试错成本和时间成本。</p>
+<p>而对于 Trip.com iOS 的冒烟测试具体实践，就是在主项目中创建 UITest Target 编写简单的 UI 视图校验程序，并接入 GitLab Runner Pipeline，利用 xcodebuild 工具链对编译过程和运行时健壮性进行初步校验，以保证合入主分支的代码，不会使 App 出现明显的重大闪退等问题。</p>
+<h4 id="数据体现"><a href="#数据体现" class="headerlink" title="数据体现"></a>数据体现</h4><p>冒烟测试在 Trip.com 快速迭代开发的过程中，作为 Merge Request 的卡点任务，利用多台 GitLab Runner 实现并发执行六个冒烟测试任务，大大缩减了卡点校验的时间，<strong>单个冒烟测试时间控制在 6min 之内，不仅达到了验证集成包的编译构建和健壮性的目的，还大大节省了测试验证的时间成本。</strong></p>
+<h3 id="探索测试"><a href="#探索测试" class="headerlink" title="探索测试"></a>探索测试</h3><h4 id="基本概况-1"><a href="#基本概况-1" class="headerlink" title="基本概况"></a>基本概况</h4><blockquote>
+<p>探索性测试（Exploratory Testing）是软件测试方法的一种，它的特点为在进行测试时，同时探索开发更多不同型态的测试方式，以便改善测试流程。 —— Wikipedia</p>
+</blockquote>
+<p>探索测试在 Trip.com App 实际应用场景中，主要担任的角色是 App 页面随机测试，主要用于验证集成打包 App 的质量，随机点击页面，并收集和统计 Page View 以及 Crash 数据，最终整理成报告发给相关开发同学。</p>
+<p><img src="https://shanks.pro/assets/ios-explore-process.png" alt="exploretest"></p>
+<p>Trip.com iOS 探索测试是基于 Google <a target="_blank" rel="noopener" href="https://github.com/google/eDistantObject">eDistantObject</a> 和 <a target="_blank" rel="noopener" href="https://github.com/google/EarlGrey">EarlGrey</a> 开源项目开发的白盒/灰盒 UI 测试框架。区别于 XCUITest 编写 Test Case 并且必须结合 Accessibility 的测试方式，<strong>白盒/灰盒的探索测试框架，则是利用 Test App 和 Host App 进程间通信，使 Test App 驱动 Host App 进行 UI 自动化测试，而 App 的元素审查、用户交互以及数据收集则都是在 Host App 进程中完成。</strong> 没有了 Accessibility 的限制，白盒/灰盒的探索测试元素审查更全面，稳定性更高，测试数据也相应更全面。</p>
+<h4 id="数据体现-1"><a href="#数据体现-1" class="headerlink" title="数据体现"></a>数据体现</h4><p>Trip.com 探索测试是用于验证 App 集成包稳定性的日常 Jenkins 任务，收集全部触达页面，可有效预先发现 Crash 问题，并发送测试结果的报告邮件给研发组。iOS 的探索测试在<strong>并发数为 5 的情况下，2 小时测试有效触达非重复页面可达 180 个，场景涉及首页 Feed 流、玩乐旅拍、订单页面等场景</strong>。探索测试收集的 Crash 问题，会收集崩溃调用栈整理成表格，分配给相关研发同学，推动产线修改相关问题代码。</p>
+<h3 id="UI-自动化测试平台"><a href="#UI-自动化测试平台" class="headerlink" title="UI 自动化测试平台"></a>UI 自动化测试平台</h3><h4 id="基本概况-2"><a href="#基本概况-2" class="headerlink" title="基本概况"></a>基本概况</h4><p>Trip.com App UI 自动化测试平台，是由 IBU 公共测试团队和 IBU 公共无线共同设计搭建的可视化、数据统一管理的质量保证平台。在 App 快速迭代的开发过程中，为提高测试效率，利用多台机器，搭建 Jenkins 集群，实现用例并发执行 Case，进行 App 回归测试，减少人力测试成本，并将测试问题报告反馈给相关开发同学，推动开发同学完善功能，从而，保证 App 上线前的质量。而选用的测试框架主要是 Macaca，并且将逐步向 Appium 迁移改造。</p>
+<h4 id="数据体现-2"><a href="#数据体现-2" class="headerlink" title="数据体现"></a>数据体现</h4><p>UI 自动化平台目前处于开发的一阶段，日常回归测试中，对于复杂业务场景的测试，<strong>机器性能稳定且并发数目 6 的情况下，测试总耗时可控制在 40 分钟，测试总用例数可达 209 个，Step总数 3077 步，Feature 通过率达 97.14％ ，Case 通过率达 98.56％</strong>。</p>
+<p>以上不同的自动化测试应用实践，接入不同的 CI/CD 流程中，都为 Trip.com App 快速开发迭代过程中提供了质量保证。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>对于 iOS 平台下的 UI 自动化测试技术，<strong>Apple 官方提供的两个核心技术是 XCUITest 和 Accessibility</strong>。而为了能够增强复用性，更利于分布式进行自动化测试，不同厂商又在此基础上设计实现了<strong>基于 Web Service 的自动化测试平台，优点是具有易部署、跨平台等特性</strong>，可以更大程度上利用分布式增强并发性，提高测试效率，减少人力测试成本。</p>
+<p>当然，市面上 UI 自动化框架还有很多，例如 STF 和 Airtest，这类框架底层驱动利用图形图像识别进行 App 元素的定位。而对于目前 Trip.com iOS 的自动化测试应用实践，则更多是基于 XCUITest 框架实现的，所以本文暂不讨论此类测试框架。但不论何种驱动进行 App 的自动化测试，整体的架构设计都会以文中介绍的 Web Service 进行设计，以达到跨平台、易集成、高复用等目的。</p>
+<h1 id="特别鸣谢"><a href="#特别鸣谢" class="headerlink" title="特别鸣谢"></a>特别鸣谢</h1><p>感谢读到本文最后的你，当然除了感谢耐心读完文章的每一位读者，我还想感谢我们 Trip.com IBU 公共无线团队的每一位小伙伴，尤其感谢我的 leader <strong><a target="_blank" rel="noopener" href="https://shanks.pro/">郭耀家（Shanks）</a></strong> 同学 :D。</p>
+<p>在我加入 IBU 大家庭的这一年多的时间中，Shanks 对我足够的信任，放手让我尝试各种不同的项目。从入职到现在，我参与了诸如，编译打包时间优化、支持 Swift Coverage 增量覆盖率，CI/CD 流程自动化提升，以及 UI 自动化测试等一系列我之前从未接触过的技术，使我个人在这一年的时间里，技术水平有了迅猛提升，眼界也更开阔。在工作的过程中，我如果遇到很困难的问题，也可以和 Shanks 沟通交流，从而获得不同的解决思路。除此之外，Shanks 也没有给我施加过大的心理压力，只要最终结果能符合预期，即便过程并不顺畅也不会对我有过多苛责。所以，衷心感谢香克斯同学对我的帮助，也祝 Shanks 一切顺利、天天开心。</p>
+<p>在 IBU 工作的一年多时间是相当愉快的，而 IBU 公共无线团队也是是我从业至今感觉最喜欢、最欢乐的团队。所以，这篇文章也是我给团队的一份答卷，如果自己给这一年多的成长和成果打分，我感觉我能得 75 分吧。所以很感谢现在的团队给我尝试和挑战的机会，我也很珍惜和团队里每一位小伙伴共同协作的时光，希望今后继续扬帆远航，活到老学到老，归来依旧是少年，加油！</p>
+<p>当然，如果此时此刻的你，有意加入我们 IBU 公共无线团队，想和我们小伙伴一起参与质量保证、CI/CD 效率工具等研发工作，欢迎各位能人贤士发送简历到 y_ni@trip.com，期待大神带我飞 😁。</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li><strong>闲话iOS探索测试实现</strong> <a target="_blank" rel="noopener" href="https://shanks.pro/2020/05/16/ios-explore-test/">https://shanks.pro/2020/05/16/ios-explore-test/</a></li>
+<li><strong>Testing with Xcode - User Interface Testing</strong> <a target="_blank" rel="noopener" href="https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/09-ui_testing.html#//apple_ref/doc/uid/TP40014132-CH13-SW1">https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/09-ui_testing.html#//apple_ref/doc/uid/TP40014132-CH13-SW1</a></li>
+<li><strong>WWDC2015 UI Testing in Xcode</strong> <a target="_blank" rel="noopener" href="https://devstreaming-cdn.apple.com/videos/wwdc/2015/406o0doszwo8r15m/406/406_ui_testing_in_xcode.pdf?dl=1">https://devstreaming-cdn.apple.com/videos/wwdc/2015/406o0doszwo8r15m/406/406_ui_testing_in_xcode.pdf?dl=1</a></li>
+<li><strong>WWDC2019 Testing in Xcode</strong> <a target="_blank" rel="noopener" href="https://devstreaming-cdn.apple.com/videos/wwdc/2019/413kpguqjv5fqp9/413/413_testing_in_xcode.pdf?dl=1">https://devstreaming-cdn.apple.com/videos/wwdc/2019/413kpguqjv5fqp9/413/413_testing_in_xcode.pdf?dl=1</a></li>
+<li><strong>Accessibility and UI Testing in iOS</strong> <a target="_blank" rel="noopener" href="https://medium.com/@jchen_77520/accessibility-and-ui-testing-in-ios-3eb0822a17fb">https://medium.com/@jchen_77520/accessibility-and-ui-testing-in-ios-3eb0822a17fb</a></li>
+<li><strong>UIAccessibility</strong> <a target="_blank" rel="noopener" href="https://developer.apple.com/documentation/objectivec/nsobject/uiaccessibility">https://developer.apple.com/documentation/objectivec/nsobject/uiaccessibility</a></li>
+<li><strong>UIAccessibilityContainer</strong> <a target="_blank" rel="noopener" href="https://developer.apple.com/documentation/objectivec/nsobject/uiaccessibilitycontainer">https://developer.apple.com/documentation/objectivec/nsobject/uiaccessibilitycontainer</a></li>
+<li><strong>iOS真机命令（自动化测试）</strong> <a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiyuan2016/p/9929814.html">https://www.cnblogs.com/xiyuan2016/p/9929814.html</a></li>
+<li><strong>Black Box Testing</strong> <a target="_blank" rel="noopener" href="https://www.imperva.com/learn/application-security/black-box-testing/">https://www.imperva.com/learn/application-security/black-box-testing/</a></li>
+</ul>
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2020/06/09/opengl-es-practice/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2021/11/17/python-lang/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: 'e929305d1df52067f223',
+  clientSecret: '465557188fddc6608846e97927bc2fe7a268f141',
+  repo: 'blog-comments',
+  owner: 'niyaoyao',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: md5(location.pathname),
+  admin: ['niyaoyao'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

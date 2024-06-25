@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>今天开始学逆向：反汇编的利器 IDA 和 Hopper 的基本使用 | N.Y.</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="iOS,Jail Break," />
+  
+
+  <meta name="description" content="前言近期实战了一次 IDA + Hopper 逆向破解。讲真，第一次体验了一回把别人“衣服”扒光了的快感～简直 High 翻～所以，特此，利用 AlipayWallet 总结分享一下 IDA 和 Hopper 的基本使用。希望对大家有帮助。 先回顾一下，之前两篇文章已经学习的内容：  获得一台越狱设备 利用 SSH 连接访问越狱设备 利用 Clutch 解密砸壳 利用 class-dump 导出应">
+<meta property="og:type" content="article">
+<meta property="og:title" content="今天开始学逆向：反汇编的利器 IDA 和 Hopper 的基本使用">
+<meta property="og:url" content="http://niyaoyao.me/2017/01/18/reverse-d3/index.html">
+<meta property="og:site_name" content="N.Y.">
+<meta property="og:description" content="前言近期实战了一次 IDA + Hopper 逆向破解。讲真，第一次体验了一回把别人“衣服”扒光了的快感～简直 High 翻～所以，特此，利用 AlipayWallet 总结分享一下 IDA 和 Hopper 的基本使用。希望对大家有帮助。 先回顾一下，之前两篇文章已经学习的内容：  获得一台越狱设备 利用 SSH 连接访问越狱设备 利用 Clutch 解密砸壳 利用 class-dump 导出应">
+<meta property="og:locale">
+<meta property="og:image" content="https://niyaoyao.github.io/images/ida_quick_start.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/ida_window.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/ida_reverse_function.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/hopper_show_package_contents.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/hopper_window.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/hopper_search_function.png">
+<meta property="og:image" content="https://niyaoyao.github.io/images/qrcod_ny_1.jpg">
+<meta property="article:published_time" content="2017-01-17T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-04-15T15:21:28.587Z">
+<meta property="article:author" content="Niyao">
+<meta property="article:tag" content="iOS">
+<meta property="article:tag" content="Jail Break">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://niyaoyao.github.io/images/ida_quick_start.png">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico/images/avatar_ny.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    
+<link rel="stylesheet" href="/css/personal-style.css">
+
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38189205-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">Hi~</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">Hi~</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%88%86%E6%9E%90%E4%B8%8E%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90"><span class="toc-text">动态分析与静态分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%88%86%E6%9E%90"><span class="toc-text">动态分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90"><span class="toc-text">静态分析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#IDA-%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-text">IDA 的基本使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-IDA"><span class="toc-text">什么是 IDA</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-IDA"><span class="toc-text">安装 IDA</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IDA-Pro-%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-text">IDA Pro 的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%86%E5%A4%87-Mach-O"><span class="toc-text">准备 Mach-O</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%BC%E5%85%A5-IDA"><span class="toc-text">导入 IDA</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A4%E8%AF%86-IDA-%E5%B7%A5%E4%BD%9C%E5%8C%BA"><span class="toc-text">认识 IDA 工作区</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90%EF%BC%9A%E8%BF%98%E5%8E%9F%E6%BA%90%E4%BB%A3%E7%A0%81"><span class="toc-text">静态分析：还原源代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%B7%A5%E7%A8%8B"><span class="toc-text">创建工程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E5%90%8D%E5%92%8C%E5%8F%82%E6%95%B0"><span class="toc-text">方法名和参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E5%87%BD%E6%95%B0%E4%BD%93"><span class="toc-text">方法函数体</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Hopper-%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-text">Hopper 的基本使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Hopper"><span class="toc-text">什么是 Hopper</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Hopper"><span class="toc-text">安装 Hopper</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hopper-%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-text">Hopper 的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%BC%E5%85%A5-Hopper"><span class="toc-text">导入 Hopper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A4%E8%AF%86-Hopper-%E5%B7%A5%E4%BD%9C%E5%8C%BA"><span class="toc-text">认识 Hopper 工作区</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90%EF%BC%9AHopper-%E5%8F%8D%E6%B1%87%E7%BC%96%E7%9A%84%E4%BC%AA%E4%BB%A3%E7%A0%81"><span class="toc-text">静态分析：Hopper 反汇编的伪代码</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-text">小结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A2%98%E5%A4%96%E8%AF%9D"><span class="toc-text">题外话</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-reverse-d3" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">今天开始学逆向：反汇编的利器 IDA 和 Hopper 的基本使用</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.01.18</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Niyao</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/iOS-Reverse-Engineering/">iOS Reverse Engineering</a>
+  </span>
+
+
+
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>近期实战了一次 IDA + Hopper 逆向破解。讲真，第一次体验了一回把别人“衣服”扒光了的快感～简直 High 翻～所以，特此，利用 AlipayWallet 总结分享一下 IDA 和 Hopper 的基本使用。希望对大家有帮助。</p>
+<p>先回顾一下，之前两篇文章已经学习的内容：</p>
+<ul>
+<li>获得一台越狱设备</li>
+<li>利用 SSH 连接访问越狱设备</li>
+<li>利用 Clutch 解密砸壳</li>
+<li>利用 class-dump 导出应用头文件</li>
+<li>利用 Cycript 进行应用运行时的动态分析与修改</li>
+</ul>
+<p>这么一看确实学了不少技能，而接下来这篇文章，会简单介绍两个反编译的利器 IDA 和 Hopper 的使用。</p>
+<p><em>注，本次实验利用的并不是最新版本的支付宝 Mach-O 文件，因此可能本次实验中涉及的函数方法在最新版本中无法找到，但由于本文章只作为学习，所以，只提供具体的方法。如果有需要，可自行砸壳获得。</em></p>
+<h1 id="动态分析与静态分析"><a href="#动态分析与静态分析" class="headerlink" title="动态分析与静态分析"></a>动态分析与静态分析</h1><h2 id="动态分析"><a href="#动态分析" class="headerlink" title="动态分析"></a>动态分析</h2><p>我们前两篇学习的 Cycript ，就是典型的动态分析工具。Cycript 可以在应用进行运行时方法分析，视图层级分析等操作。而动态分析除了 Cycript 以外，常用的工具还有 lldb &amp; debugserver 远程断点调试，logify 追踪等，以后一起慢慢学习这些技能方法。</p>
+<h2 id="静态分析"><a href="#静态分析" class="headerlink" title="静态分析"></a>静态分析</h2><p><strong>Static program analysis is the analysis of computer software that is performed without actually executing programs (analysis performed on executing programs is known as dynamic analysis).[1] In most cases the analysis is performed on some version of the source code, and in the other cases, some form of the object code.</strong></p>
+<p>以上是 Wikipedia 对静态分析的英文介绍，中文翻译如下。</p>
+<p>静态程序分析是指，没有实际执行程序的电脑软件分析方法（与之相对的是，被人们所知的实际执行软件的动态分析）。在绝大部分的例子中，分析是运行在源代码的某些版本，而其余则是运行在<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Object_code">目标代码</a>中。</p>
+<p>之前学习的 class-dump 工具导出 Mach-O 头文件，就是对软件应用进行静态分析。而今天我们要学习的两个工具，IDA 和 Hopper 反汇编二进制文件同样也是静态分析的方法。</p>
+<h1 id="IDA-的基本使用"><a href="#IDA-的基本使用" class="headerlink" title="IDA 的基本使用"></a>IDA 的基本使用</h1><h2 id="什么是-IDA"><a href="#什么是-IDA" class="headerlink" title="什么是 IDA"></a>什么是 IDA</h2><p><strong>IDA is the Interactive DisAssembler: the world’s smartest and most feature-full disassembler, which many software security specialists are familiar with.</strong></p>
+<p>IDA 是世界上最敏捷和多功能的反编译工具，被众多软件安全专家所熟知的交互的反汇编工具。</p>
+<h2 id="安装-IDA"><a href="#安装-IDA" class="headerlink" title="安装 IDA"></a>安装 IDA</h2><p>IDA 的官方网站是 <a target="_blank" rel="noopener" href="https://www.hex-rays.com/">https://www.hex-rays.com/</a> 。在网页上可以看到 IDA 的插件、SDK 等内容。IDA 会在官网提供 Demo 版的下载 <a target="_blank" rel="noopener" href="https://www.hex-rays.com/products/ida/support/download_demo.shtml">https://www.hex-rays.com/products/ida/support/download_demo.shtml</a> 。然而， Demo 版没有 IDA 最强大的反汇编功能，神器 F5～！如果自己学习使用正版，很难承担巨额的证书费用，所以一般情况是在网上找破解版（囧。。并不推荐，土豪还是建议买证书）。很不幸的是 IDA Pro 的 Mac 版非常难找（我是没找到）。所以，本文是在 Windows 下找破解 IDA Pro 来学习。</p>
+<h2 id="IDA-Pro-的使用"><a href="#IDA-Pro-的使用" class="headerlink" title="IDA Pro 的使用"></a>IDA Pro 的使用</h2><p>打开 IDA 会出现 <strong>About</strong> 和 <strong>Support message</strong> 等提示对话框，点击 <strong>OK</strong> 继续后弹出 <strong>Quick Start</strong> 对话框，在这个对话框里可以看到之前打开过的 IDA 反汇编二进制文件，也可以新建一个新的反汇编文件。这里我们点击 <strong>New</strong> 新建一个反汇编，这次以支付宝为例。</p>
+<p><img src="https://niyaoyao.github.io/images/ida_quick_start.png" alt=""></p>
+<h3 id="准备-Mach-O"><a href="#准备-Mach-O" class="headerlink" title="准备 Mach-O"></a>准备 Mach-O</h3><p>回顾之前的内容，先进行 Clutch 砸壳，然后 scp AlipayWallet 到 Mac 目录下，再利用 class-dump 导出头文件。</p>
+<h3 id="导入-IDA"><a href="#导入-IDA" class="headerlink" title="导入 IDA"></a>导入 IDA</h3><p>这里可以直接将 Mach-O 文件拖拽进 IDA 的工作区，也可以点击打开文件夹的图标将 Mach-O 导入。检测到 Objective-C 2.0 代码时会提示，点击 <strong>OK</strong> 继续即可。<br>之后就是漫长的等待～～～（Hopper 相对于 IDA 等待的时间会短一些，但是反编译结果没有 IDA 更接近真实的 C 语言代码，会包含很多寄存器变量）</p>
+<h3 id="认识-IDA-工作区"><a href="#认识-IDA-工作区" class="headerlink" title="认识 IDA 工作区"></a>认识 IDA 工作区</h3><p>当 IDA 对 Mach-O 解析完成后，会默认出现 6 个选项卡视图，分别是<strong>汇编视图，16 进制字节视图，结构体视图，枚举类型视图，导入的函数视图，导出的函数视图</strong>。<br>另外，红框标注的是工具栏，蓝框标注的是二进制文件解析的进度，在蓝框下面，用不同颜色区分库函数、数据、常规函数等不同类型的解析数据。</p>
+<p><img src="https://niyaoyao.github.io/images/ida_window.png" alt=""></p>
+<h2 id="静态分析：还原源代码"><a href="#静态分析：还原源代码" class="headerlink" title="静态分析：还原源代码"></a>静态分析：还原源代码</h2><p>使用 IDA 反汇编二进制文件的目的是，利用工具得到反汇编之后的伪代码，还原出真正的程序源码。比如，我们如果要看一下登录方法是如何写的，可以在已经导出的 AlipayWallet.h 中查询 <strong>login</strong> 关键字，并查找相关代码，我们发现会有 <strong>LoginProtocol</strong> 协议和 <strong>LoginAdapter</strong> 类的相关代码，那我们不妨就拿 <strong>LoginAdapter</strong> 这个类作为实战研究对象。</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">LoginProtocol</span> &lt;<span class="title">NSObject</span>&gt;</span></span><br><span class="line">+ (<span class="type">id</span>)sharedInstantce;</span><br><span class="line">- (<span class="built_in">NSDictionary</span> *)currentSession;</span><br><span class="line">- (<span class="type">void</span>)loginWithLoginOption:(<span class="type">int</span>)arg1 extraInfo:(<span class="built_in">NSDictionary</span> *)arg2 completionHandler:(<span class="type">void</span> (^)(<span class="type">BOOL</span>, <span class="built_in">NSDictionary</span> *))arg3 cancelationHandler:(<span class="type">void</span> (^)(<span class="type">void</span>))arg4;</span><br><span class="line">- (<span class="type">void</span>)loginWithLoginOption:(<span class="type">int</span>)arg1 completionHandler:(<span class="type">void</span> (^)(<span class="type">BOOL</span>, <span class="built_in">NSDictionary</span> *))arg2 cancelationHandler:(<span class="type">void</span> (^)(<span class="type">void</span>))arg3;</span><br><span class="line">- (<span class="type">BOOL</span>)isValidLogin;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@optional</span></span><br><span class="line">- (<span class="type">void</span>)logout;</span><br><span class="line">- (<span class="type">void</span>)markInvalidLogin;</span><br><span class="line">- (<span class="type">BOOL</span>)isProcessingLogin;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">LoginAdapter</span> : <span class="title">NSObject</span> &lt;<span class="title">LoginProtocol</span>&gt;</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> _is_login_doing;</span><br><span class="line">    <span class="type">int</span> _is_processing_pending;</span><br><span class="line">    <span class="type">id</span> &lt;LoginProtocol&gt; _network_config;</span><br><span class="line">    <span class="type">id</span> &lt;LoginProtocol&gt; _login_service;</span><br><span class="line">    <span class="built_in">NSMutableArray</span> *_loginPendingRequests;</span><br><span class="line">    <span class="built_in">NSRecursiveLock</span> *_pending_lock;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (<span class="type">id</span>)sharedInstantce;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">retain</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSRecursiveLock</span> *pending_lock; <span class="comment">// @synthesize pending_lock=_pending_lock;</span></span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">retain</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSMutableArray</span> *loginPendingRequests; <span class="comment">// @synthesize loginPendingRequests=_loginPendingRequests;</span></span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">retain</span>, <span class="keyword">nonatomic</span>) <span class="type">id</span> &lt;LoginProtocol&gt; login_service; <span class="comment">// @synthesize login_service=_login_service;</span></span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">retain</span>, <span class="keyword">nonatomic</span>) <span class="type">id</span> &lt;LoginProtocol&gt; network_config; <span class="comment">// @synthesize network_config=_network_config;</span></span><br><span class="line">- (<span class="type">void</span>).cxx_destruct;</span><br><span class="line">- (<span class="type">void</span>)storeSessionWithLoginResult:(<span class="type">id</span>)arg1;</span><br><span class="line">- (<span class="type">id</span>)currentUserId;</span><br><span class="line">- (<span class="type">void</span>)notifyNetworkSDK:(<span class="type">id</span>)arg1;</span><br><span class="line">- (<span class="type">void</span>)logout:(<span class="type">id</span>)arg1;</span><br><span class="line">- (<span class="type">void</span>)logined:(<span class="type">id</span>)arg1;</span><br><span class="line">- (<span class="type">void</span>)loadAlu:(Class)arg1;</span><br><span class="line">- (<span class="type">void</span>)loadLoginModule;</span><br><span class="line">- (<span class="type">void</span>)loadNetworSDKConfig;</span><br><span class="line">- (<span class="type">void</span>)failedPendingLoginRequests;</span><br><span class="line">- (<span class="type">void</span>)redoPendingLoginRequests;</span><br><span class="line">- (<span class="type">void</span>)pendingLoginRequest:(<span class="type">id</span>)arg1;</span><br><span class="line">- (<span class="type">void</span>)releasePendingLock;</span><br><span class="line">- (<span class="type">void</span>)accquirePendingLock;</span><br><span class="line">- (<span class="type">void</span>)releaseLoginLock;</span><br><span class="line">- (<span class="type">BOOL</span>)accquireLoginLock;</span><br><span class="line">- (<span class="type">int</span>)tryLogin:(<span class="type">id</span>)arg1 isForce:(<span class="type">BOOL</span>)arg2;</span><br><span class="line">- (<span class="type">int</span>)tryLogin:(<span class="type">id</span>)arg1;</span><br><span class="line">- (<span class="type">void</span>)logout;</span><br><span class="line">- (<span class="type">id</span>)currentSession;</span><br><span class="line">- (<span class="type">int</span>)loginWithLoginOption:(<span class="type">int</span>)arg1 isForce:(<span class="type">BOOL</span>)arg2 extraInfo:(<span class="type">id</span>)arg3 completionHandler:(CDUnknownBlockType)arg4 cancelationHandler:(CDUnknownBlockType)arg5 request:(<span class="type">id</span>)arg6;</span><br><span class="line">- (<span class="type">void</span>)loginWithLoginOption:(<span class="type">int</span>)arg1 extraInfo:(<span class="type">id</span>)arg2 completionHandler:(CDUnknownBlockType)arg3 cancelationHandler:(CDUnknownBlockType)arg4;</span><br><span class="line">- (<span class="type">void</span>)loginWithLoginOption:(<span class="type">int</span>)arg1 completionHandler:(CDUnknownBlockType)arg2 cancelationHandler:(CDUnknownBlockType)arg3;</span><br><span class="line">- (<span class="type">BOOL</span>)isValidLogin;</span><br><span class="line">- (<span class="type">BOOL</span>)isProcessingLogin;</span><br><span class="line">- (<span class="type">void</span>)markInvalidLogin;</span><br><span class="line">- (<span class="type">id</span>)setCustomLoginModule:(<span class="type">id</span>)arg1;</span><br><span class="line">- (<span class="type">void</span>)dealloc;</span><br><span class="line">- (<span class="type">id</span>)init;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Remaining properties</span></span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">readonly</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *debugDescription;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">readonly</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *description;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">readonly</span>) <span class="type">unsigned</span> <span class="type">int</span> hash;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">readonly</span>) Class superclass;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>在头文件里查找可以得到上面结果，以 <strong>LoginAdapter</strong> 为例。我们可以在 function 窗口中按住 Ctrl+F 键查找 <strong>LoginAdapter</strong> 的相关函数。</p>
+<p><img src="https://niyaoyao.github.io/images/ida_reverse_function.png" alt=""></p>
+<p>双击 <strong>[LoginAdapter sharedInstan]</strong> 到达这个函数在二进制文件中的内存地址，按 <strong>F5</strong> 可以就查看这个反编译的伪码。<br>这里可以看一下登录方法 Alipay 是如何写的，双击 <strong>[LoginAdapter loginWithLoginOption:isForce:extraInfo:completionHandler:cancelationHandler:request:]</strong> ，按 <strong>F5</strong> 键查看这个方法的反编译伪代码。伪代码如下。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// LoginAdapter - (int)loginWithLoginOption:(int) isForce:(char) extraInfo:(id) completionHandler:(id) cancelationHandler:(id) request:(id) </span></span><br><span class="line"><span class="type">int</span> __cdecl -[LoginAdapter loginWithLoginOption:isForce:extraInfo:completionHandler:cancelationHandler:request:](<span class="keyword">struct</span> LoginAdapter *self, SEL a2, <span class="type">int</span> a3, <span class="type">char</span> a4, id a5, id a6, id a7, id a8)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">LoginAdapter</span> *<span class="title">v8</span>;</span> <span class="comment">// r8@1</span></span><br><span class="line">  <span class="comment">// some variarble</span></span><br><span class="line"></span><br><span class="line">  v8 = self;</span><br><span class="line">  v9 = a4;</span><br><span class="line">  v37 = a3;</span><br><span class="line">  v39 = objc_retain(a5, a2);</span><br><span class="line">  v11 = objc_retain(a6, v10);</span><br><span class="line">  v13 = objc_retain(a7, v12);</span><br><span class="line">  v15 = (<span class="type">void</span> *)objc_retain(a8, v14);</span><br><span class="line">  <span class="keyword">if</span> ( !v8-&gt;_login_service )</span><br><span class="line">  &#123;</span><br><span class="line">    v18 = <span class="number">0</span>;</span><br><span class="line">    v19 = v39;</span><br><span class="line">    <span class="keyword">goto</span> LABEL_27;</span><br><span class="line">  &#125;</span><br><span class="line">  v40 = v11;</span><br><span class="line">  <span class="keyword">if</span> ( v15 )</span><br><span class="line">    objc_msgSend(v8, <span class="string">&quot;accquirePendingLock&quot;</span>);</span><br><span class="line">  <span class="keyword">if</span> ( (<span class="type">unsigned</span> <span class="type">int</span>)objc_msgSend(v8, <span class="string">&quot;accquireLoginLock&quot;</span>) &amp; <span class="number">0xFF</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( v9 || !((<span class="type">unsigned</span> <span class="type">int</span>)objc_msgSend(v8, <span class="string">&quot;isValidLogin&quot;</span>) &amp; <span class="number">0xFF</span>) )</span><br><span class="line">    &#123;</span><br><span class="line">      v36 = v13;</span><br><span class="line">      <span class="keyword">if</span> ( v15 )</span><br><span class="line">        objc_msgSend(v8, <span class="string">&quot;pendingLoginRequest:&quot;</span>, v15);</span><br><span class="line">      v20 = objc_msgSend(&amp;OBJC_CLASS___LogAdapter, <span class="string">&quot;getInstance&quot;</span>);</span><br><span class="line">      v21 = (<span class="type">void</span> *)objc_retainAutoreleasedReturnValue(v20);</span><br><span class="line">      v38 = v8;</span><br><span class="line">      v22 = objc_msgSend(v15, <span class="string">&quot;getApiName&quot;</span>);</span><br><span class="line">      v23 = objc_retainAutoreleasedReturnValue(v22);</span><br><span class="line">      v24 = objc_msgSend(v15, <span class="string">&quot;getApiVersion&quot;</span>);</span><br><span class="line">      v25 = objc_retainAutoreleasedReturnValue(v24);</span><br><span class="line">      v26 = v25;</span><br><span class="line">      v27 = objc_msgSend(</span><br><span class="line">              &amp;OBJC_CLASS___NSString,</span><br><span class="line">              <span class="string">&quot;stringWithFormat:&quot;</span>,</span><br><span class="line">              CFSTR(<span class="string">&quot;[LoginAdapter] apiName: %@, apiVersion: %@ pull login module&quot;</span>),</span><br><span class="line">              v23,</span><br><span class="line">              v25);</span><br><span class="line">      v28 = objc_retainAutoreleasedReturnValue(v27);</span><br><span class="line">      objc_msgSend(v21, <span class="string">&quot;warn:&quot;</span>, v28);</span><br><span class="line">      objc_release(v28);</span><br><span class="line">      objc_release(v26);</span><br><span class="line">      objc_release(v23);</span><br><span class="line">      objc_release(v21);</span><br><span class="line">      v29 = v38-&gt;_login_service;</span><br><span class="line">      v48 = &amp;_NSConcreteStackBlock;</span><br><span class="line">      v49 = <span class="number">-1040187392</span>;</span><br><span class="line">      v50 = <span class="number">0</span>;</span><br><span class="line">      v51 = sub_2AAF082;</span><br><span class="line">      v52 = &amp;unk_3164640;</span><br><span class="line">      v30 = objc_retain(v38, sub_2AAF082);</span><br><span class="line">      v53 = v30;</span><br><span class="line">      v54 = objc_retain(v40, v31);</span><br><span class="line">      v41 = &amp;_NSConcreteStackBlock;</span><br><span class="line">      v42 = <span class="number">-1040187392</span>;</span><br><span class="line">      v43 = <span class="number">0</span>;</span><br><span class="line">      v44 = sub_2AAF1AC;</span><br><span class="line">      v45 = &amp;unk_3164660;</span><br><span class="line">      v13 = v36;</span><br><span class="line">      v46 = objc_retain(v30, &amp;unk_3164660);</span><br><span class="line">      v19 = v39;</span><br><span class="line">      v47 = objc_retain(v36, v32);</span><br><span class="line">      objc_msgSend(v29, <span class="string">&quot;loginWithLoginOption:extraInfo:completionHandler:cancelationHandler:&quot;</span>, v37, v39, &amp;v48, &amp;v41);</span><br><span class="line">      objc_release(v47);</span><br><span class="line">      objc_release(v46);</span><br><span class="line">      objc_release(v54);</span><br><span class="line">      objc_release(v53);</span><br><span class="line">      v18 = <span class="number">2</span>;</span><br><span class="line">      <span class="keyword">goto</span> LABEL_24;</span><br><span class="line">    &#125;</span><br><span class="line">    objc_msgSend(v8, <span class="string">&quot;releaseLoginLock&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> ( v11 )</span><br><span class="line">    &#123;</span><br><span class="line">      v38 = v8;</span><br><span class="line">      v16 = objc_msgSend(v8-&gt;_login_service, <span class="string">&quot;currentSession&quot;</span>);</span><br><span class="line">      v17 = objc_retainAutoreleasedReturnValue(v16);</span><br><span class="line">      (*(<span class="type">void</span> (__fastcall **)(<span class="type">int</span>, <span class="type">signed</span> <span class="type">int</span>, <span class="type">int</span>))(v11 + <span class="number">12</span>))(v11, <span class="number">1</span>, v17);</span><br><span class="line">      objc_release(v17);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      v38 = v8;</span><br><span class="line">    &#125;</span><br><span class="line">    v18 = <span class="number">3</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( v15 )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> ( (<span class="type">unsigned</span> <span class="type">int</span>)objc_msgSend((<span class="type">void</span> *)v8-&gt;_loginPendingRequests, <span class="string">&quot;count&quot;</span>) &gt; <span class="number">0xFF</span> )</span><br><span class="line">      &#123;</span><br><span class="line">        v38 = v8;</span><br><span class="line">        v18 = <span class="number">0</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">      &#123;</span><br><span class="line">        v38 = v8;</span><br><span class="line">        objc_msgSend(v8, <span class="string">&quot;pendingLoginRequest:&quot;</span>, v15);</span><br><span class="line">        v18 = <span class="number">1</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      v38 = v8;</span><br><span class="line">      v18 = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ( v11 )</span><br><span class="line">    &#123;</span><br><span class="line">      v33 = objc_msgSend(&amp;OBJC_CLASS___NSDictionary, <span class="string">&quot;dictionary&quot;</span>);</span><br><span class="line">      v34 = objc_retainAutoreleasedReturnValue(v33);</span><br><span class="line">      v40 = v11;</span><br><span class="line">      (*(<span class="type">void</span> (__fastcall **)(<span class="type">int</span>, _DWORD, <span class="type">int</span>))(v11 + <span class="number">12</span>))(v11, <span class="number">0</span>, v34);</span><br><span class="line">      objc_release(v34);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      v40 = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  v19 = v39;</span><br><span class="line">LABEL_24:</span><br><span class="line">  <span class="keyword">if</span> ( v15 )</span><br><span class="line">    objc_msgSend(v38, <span class="string">&quot;releasePendingLock&quot;</span>);</span><br><span class="line">  v11 = v40;</span><br><span class="line">LABEL_27:</span><br><span class="line">  objc_release(v15);</span><br><span class="line">  objc_release(v13);</span><br><span class="line">  objc_release(v11);</span><br><span class="line">  objc_release(v19);</span><br><span class="line">  <span class="keyword">return</span> v18;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>反编译后的伪代码会保持原有函数的逻辑和函数的符号名，接下来，我们就可以尝试还原这段代码的 Objective-C 源代码。</p>
+<h3 id="创建工程"><a href="#创建工程" class="headerlink" title="创建工程"></a>创建工程</h3><p>创建一个空项目，并创建 <strong>LoginAdapter</strong> 类的头文件和实现文件，然后把 class-dump 导出的头文件的 property 和共有的方法复制在新创建的头文件中，然后根据反汇编码还原原代码。</p>
+<p>注意，在这个例子中， <strong>CDUnknownBlockType</strong> 是一个 block 类型，但是具体的 block 类型，class-dump 不能导出，如果想得到这个 block 可参考 </p>
+<ul>
+<li>Hook <a target="_blank" rel="noopener" href="https://github.com/iosre/SMSNinja/blob/master/libsmsninja/Hook.xm#L754">https://github.com/iosre/SMSNinja/blob/master/libsmsninja/Hook.xm#L754</a></li>
+<li>Deprecated <a target="_blank" rel="noopener" href="https://github.com/iosre/SMSNinja/blob/master/libsmsninja/Deprecated.xm#L139">https://github.com/iosre/SMSNinja/blob/master/libsmsninja/Deprecated.xm#L139</a></li>
+</ul>
+<h3 id="方法名和参数"><a href="#方法名和参数" class="headerlink" title="方法名和参数"></a>方法名和参数</h3><p>我们知道， Objective-C 中的 <strong>objc_msgSend</strong> 方法是向消息接受者（实例对象）发送一条消息，苹果文档如下。</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">**objc_msgSend**</span><br><span class="line">Sends a message with a simple <span class="keyword">return</span> value to an instance of a <span class="keyword">class</span>.</span><br><span class="line"></span><br><span class="line"><span class="type">id</span> objc_msgSend(<span class="type">id</span> <span class="keyword">self</span>, SEL op, ...);</span><br><span class="line"></span><br><span class="line">Parameters</span><br><span class="line"><span class="keyword">self</span></span><br><span class="line">A pointer that points to the instance of the <span class="keyword">class</span> that is to receive the message.</span><br><span class="line"></span><br><span class="line">op</span><br><span class="line">The selector of the method that handles the message.</span><br><span class="line"></span><br><span class="line">... </span><br><span class="line">A variable argument list containing the arguments to the method.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>从文档可以得出，第一个参数是该接受消息类型实例的指针，第二个参数是方法选择器（selector），之后是实例方法传递的参数。</p>
+<p>而在反编译得到的伪码中，第一行就是 Objective-C 方法和实际 C 函数的参数对应，如下所示。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> __cdecl -[LoginAdapter loginWithLoginOption:isForce:extraInfo:completionHandler:cancelationHandler:request:](<span class="keyword">struct</span> LoginAdapter *self, SEL a2, <span class="type">int</span> a3, <span class="type">char</span> a4, id a5, id a6, id a7, id a8)</span><br></pre></td></tr></table></figure>
+<p>因此，我们可以得出：<br><strong> self 是当前实例指针，a2 对应方法选择器，a3 对应方法参数 option; a4 对应方法参数 isForce; a5 对应方法参数 extraInfo; a6 对应方法参数 completionHandler; a7 对应方法参数 cancelationHandler; a8 对应方法参数 request </strong>。明确方法名和参数对应关系之后，我们接下来就开始还原函数体。</p>
+<h3 id="方法函数体"><a href="#方法函数体" class="headerlink" title="方法函数体"></a>方法函数体</h3><p>还原函数体的基本思路很简单，就是利用伪代码的方法名和变量，根据应用正向开发的经验方法，还原函数体的具体逻辑。</p>
+<p>对于函数体中涉及的其他类及相关协议协议，如，<strong>MtopExtRequest</strong> <strong>TBSDKRequest</strong> <strong>LogAdapter</strong> 等也可以利用 IDA 和头文件获得，具体还原过程这里就不再赘述，还原函数体代码如下。</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&quot;LoginAdapter.h&quot;</span></span></span><br><span class="line"><span class="meta">#import <span class="string">&quot;LogAdapter.h&quot;</span></span></span><br><span class="line"><span class="meta">#import <span class="string">&quot;MtopExtRequest.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">LoginAdapter</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSInteger</span>)loginWithLoginOption:(<span class="type">int</span>)option</span><br><span class="line">                    isForce:(<span class="type">BOOL</span>)isForce</span><br><span class="line">                  extraInfo:(<span class="built_in">NSDictionary</span> *)extraInfo</span><br><span class="line">           completionHandler:(AlipayCompletionHandler)completionHandler</span><br><span class="line">          cancelationHandler:(AlipayCancelationHandler)cancelationHandler</span><br><span class="line">                     request:(MtopExtRequest *)request &#123;</span><br><span class="line">    <span class="comment">// self 是当前实例指针，a2 对应方法选择器，a3 对应方法参数 option; a4 对应方法参数 isForce; a5 对应方法参数 extraInfo;</span></span><br><span class="line">    <span class="comment">// a6 对应方法参数 completionHandler; a7 对应方法参数 cancelationHandler; a8 对应方法参数 request</span></span><br><span class="line">    <span class="built_in">NSInteger</span> returnValue = <span class="number">0</span>; <span class="comment">// v18</span></span><br><span class="line">   </span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">self</span>.login_service) &#123;</span><br><span class="line">        returnValue = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (request) &#123;</span><br><span class="line">        [<span class="keyword">self</span> accquirePendingLock];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span> accquireLoginLock]) &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (extraInfo || ![<span class="keyword">self</span> isValidLogin]) &#123;</span><br><span class="line">            <span class="keyword">if</span> (request) &#123;</span><br><span class="line">                [<span class="keyword">self</span> pendingLoginRequest:request];</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            LogAdapter *logAdapter = [LogAdapter getInstance];</span><br><span class="line">            <span class="built_in">NSString</span> *apiName = [request getApiName];</span><br><span class="line">            <span class="built_in">NSString</span> *apiVersion = [request getApiVersion];</span><br><span class="line">            <span class="built_in">NSString</span> *logString = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;[LoginAdapter] apiName: %@, apiVersion: %@ pull login module&quot;</span>, apiName, apiVersion];</span><br><span class="line">            [logAdapter warn:logString];</span><br><span class="line">            </span><br><span class="line">            [<span class="keyword">self</span>.login_service loginWithLoginOption:option</span><br><span class="line">                                           extraInfo:extraInfo</span><br><span class="line">                                   completionHandler:completionHandler</span><br><span class="line">                                  cancelationHandler:cancelationHandler];</span><br><span class="line">            </span><br><span class="line">        &#125; <span class="comment">// extraInfo || ![self isValidLogin] end</span></span><br><span class="line">        </span><br><span class="line">        [<span class="keyword">self</span> releaseLoginLock];</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (completionHandler) &#123;</span><br><span class="line">            <span class="built_in">NSDictionary</span> *currentSession = [<span class="keyword">self</span>.login_service currentSession];</span><br><span class="line">            completionHandler(<span class="number">1</span>, currentSession);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// v38 = v8 即，对 self 进行 retain 操作，无需翻译成 oc 代码</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        returnValue = <span class="number">3</span>;</span><br><span class="line">        </span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (request) &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">self</span>.loginPendingRequests.count) &#123;</span><br><span class="line">                returnValue = <span class="number">0</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                [<span class="keyword">self</span> pendingLoginRequest:request];</span><br><span class="line">                returnValue = <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            returnValue = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (completionHandler) &#123;</span><br><span class="line">            completionHandler(<span class="number">0</span>, [<span class="built_in">NSDictionary</span> dictionary]);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            completionHandler = <span class="literal">nil</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (request) &#123;</span><br><span class="line">        [<span class="keyword">self</span> releaseLoginLock];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> returnValue;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>如果想查看具体代码，可到 GitHub 查看：<br><strong> 仓库地址 <a target="_blank" rel="noopener" href="https://github.com/niyaoyao/reverse-learning">https://github.com/niyaoyao/reverse-learning</a> </strong></p>
+<h1 id="Hopper-的基本使用"><a href="#Hopper-的基本使用" class="headerlink" title="Hopper 的基本使用"></a>Hopper 的基本使用</h1><p>对于 Hopper 的学习，依然使用 AlipayWallet 这个文件进行分析，与 IDA 做比较，类比进行。</p>
+<h2 id="什么是-Hopper"><a href="#什么是-Hopper" class="headerlink" title="什么是 Hopper"></a>什么是 Hopper</h2><p><strong>Hopper Disassembler, the reverse engineering tool that lets you disassemble, decompile and debug your applications. </strong><br>Hopper 反汇编工具，是逆向工程的工具，能够让你进行反汇编、反编译并且调试你的应用。</p>
+<h2 id="安装-Hopper"><a href="#安装-Hopper" class="headerlink" title="安装 Hopper"></a>安装 Hopper</h2><p>Hopper 的官网是 <a target="_blank" rel="noopener" href="https://www.hopperapp.com/">https://www.hopperapp.com/</a> ，与 IDA 相同，官网也提供了 Demo 的试用版。试用版也可以进行反汇编，但是不能保存 *.hop 文件。所以，用于学习的话 Hopper 的 Demo 版就足够了。</p>
+<h2 id="Hopper-的使用"><a href="#Hopper-的使用" class="headerlink" title="Hopper 的使用"></a>Hopper 的使用</h2><h3 id="导入-Hopper"><a href="#导入-Hopper" class="headerlink" title="导入 Hopper"></a>导入 Hopper</h3><p>与 IDA 不同， Hopper 不能直接将 Mach-O 文件导入工作区，需要下载应用的 *.ipa 文件，并将文件后缀改为 *.zip，解压该 zip 文件后就可看到 Payload 文件目录，在该目录下就存有对应应用的 package 包文件。右击该 package 出现菜单，选择 <strong>Show Package Contents</strong> 选项，就可看到包内容。</p>
+<p><img src="https://niyaoyao.github.io/images/hopper_show_package_contents.png" alt=""></p>
+<h3 id="认识-Hopper-工作区"><a href="#认识-Hopper-工作区" class="headerlink" title="认识 Hopper 工作区"></a>认识 Hopper 工作区</h3><p>与 IDA 类似， Hopper 也有二进制文件的解析进度条，左边是符号 Label 等区域，中间是 ARM 的汇编代码，右边是相关信息栏。</p>
+<p><img src="https://niyaoyao.github.io/images/hopper_window.png" alt=""></p>
+<h2 id="静态分析：Hopper-反汇编的伪代码"><a href="#静态分析：Hopper-反汇编的伪代码" class="headerlink" title="静态分析：Hopper 反汇编的伪代码"></a>静态分析：Hopper 反汇编的伪代码</h2><p>如图，在最左列的搜索栏中输入 <strong>loginWithLoginOption</strong> 关键字，双击选择 <strong>[LoginAdapter loginWithLoginOption:isForce:extraInfo:completionHandler:cancelationHandler:request:]</strong> 方法，在中间的汇编代码区域，光标就会跳到该方法的内存地址处。</p>
+<p><img src="https://niyaoyao.github.io/images/hopper_search_function.png" alt=""></p>
+<p>当 Hopper 分析完全部二进制后，按住  <strong>Option + Enter</strong> 键，就可看到 Hopper 反编译后的伪代码，如下所示。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int -[LoginAdapter loginWithLoginOption:isForce:extraInfo:completionHandler:cancelationHandler:request:](void * self, void * _cmd, int arg2, char arg3, void * arg4, void * arg5, void * arg6, void * arg7) &#123;</span><br><span class="line">    stack[2048] = arg4;</span><br><span class="line">    r7 = (sp - 0x14) + 0xc;</span><br><span class="line">    sp = sp - 0x74;</span><br><span class="line">    r8 = self;</span><br><span class="line">    r5 = arg3;</span><br><span class="line">    stack[2051] = arg2;</span><br><span class="line">    stack[2053] = [arg4 retain];</span><br><span class="line">    r6 = [arg5 retain];</span><br><span class="line">    r11 = [arg6 retain];</span><br><span class="line">    r10 = [arg7 retain];</span><br><span class="line">    if (r8-&gt;_login_service == 0x0) goto loc_2aaee0a;</span><br><span class="line"></span><br><span class="line">loc_2aaed6c:</span><br><span class="line">    stack[2054] = r6;</span><br><span class="line">    if (r10 != 0x0) &#123;</span><br><span class="line">            [r8 accquirePendingLock];</span><br><span class="line">    &#125;</span><br><span class="line">    if (([r8 accquireLoginLock] &amp; 0xff) == 0x0) goto loc_2aaefa8;</span><br><span class="line"></span><br><span class="line">loc_2aaeda0:</span><br><span class="line">    if (((r5 &amp; 0xff) != 0x0) || (([r8 isValidLogin] &amp; 0xff) == 0x0)) goto loc_2aaee10;</span><br><span class="line"></span><br><span class="line">loc_2aaedbe:</span><br><span class="line">    [r8 releaseLoginLock];</span><br><span class="line">    r6 = stack[2054];</span><br><span class="line">    if (r6 != 0x0) &#123;</span><br><span class="line">            stack[2052] = r8;</span><br><span class="line">            r5 = [[r8-&gt;_login_service currentSession] retain];</span><br><span class="line">            (*(r6 + 0xc))(r6, 0x1, r5, *(r6 + 0xc));</span><br><span class="line">            [r5 release];</span><br><span class="line">    &#125;</span><br><span class="line">    else &#123;</span><br><span class="line">            stack[2052] = r8;</span><br><span class="line">    &#125;</span><br><span class="line">    r5 = 0x3;</span><br><span class="line">    goto loc_2aaf044;</span><br><span class="line"></span><br><span class="line">loc_2aaf044:</span><br><span class="line">    r4 = stack[2053];</span><br><span class="line">    goto loc_2aaf046;</span><br><span class="line"></span><br><span class="line">loc_2aaf046:</span><br><span class="line">    if (r10 != 0x0) &#123;</span><br><span class="line">            [stack[2052] releasePendingLock];</span><br><span class="line">    &#125;</span><br><span class="line">    r6 = stack[2054];</span><br><span class="line">    goto loc_2aaf060;</span><br><span class="line"></span><br><span class="line">loc_2aaf060:</span><br><span class="line">    [r10 release];</span><br><span class="line">    [r11 release];</span><br><span class="line">    [r6 release];</span><br><span class="line">    [r4 release];</span><br><span class="line">    r0 = r5;</span><br><span class="line">    return r0;</span><br><span class="line"></span><br><span class="line">loc_2aaee10:</span><br><span class="line">    stack[2050] = r11;</span><br><span class="line">    if (r10 != 0x0) &#123;</span><br><span class="line">            [r8 pendingLoginRequest:r10];</span><br><span class="line">    &#125;</span><br><span class="line">    r6 = [[LogAdapter getInstance] retain];</span><br><span class="line">    stack[2052] = r8;</span><br><span class="line">    r8 = [[r10 getApiName] retain];</span><br><span class="line">    r11 = [[r10 getApiVersion] retain];</span><br><span class="line">    r5 = [[NSString stringWithFormat:@&quot;[LoginAdapter] apiName: %@, apiVersion: %@ pull login module&quot;, r8, r11] retain];</span><br><span class="line">    [r6 warn:r5];</span><br><span class="line">    [r5 release];</span><br><span class="line">    [r11 release];</span><br><span class="line">    [r8 release];</span><br><span class="line">    [r6 release];</span><br><span class="line">    r5 = [stack[2052] retain];</span><br><span class="line">    stack[2068] = [stack[2054] retain];</span><br><span class="line">    r11 = stack[2050];</span><br><span class="line">    stack[2060] = [r5 retain];</span><br><span class="line">    r4 = stack[2053];</span><br><span class="line">    stack[2061] = [r11 retain];</span><br><span class="line">    [stack[2052]-&gt;_login_service loginWithLoginOption:stack[2051] extraInfo:r4 completionHandler:sp + 0x38 cancelationHandler:sp + 0x1c, stack[2050], stack[2051], stack[2052], stack[2053], stack[2054], __NSConcreteStackBlock, 0xc2000000, 0x0];</span><br><span class="line">    [stack[2061] release];</span><br><span class="line">    [stack[2060] release];</span><br><span class="line">    [stack[2068] release];</span><br><span class="line">    [r5 release];</span><br><span class="line">    r5 = 0x2;</span><br><span class="line">    goto loc_2aaf046;</span><br><span class="line"></span><br><span class="line">loc_2aaefa8:</span><br><span class="line">    if (r10 != 0x0) &#123;</span><br><span class="line">            r6 = stack[2054];</span><br><span class="line">            if ([r8-&gt;_loginPendingRequests count] &lt;= 0xff) &#123;</span><br><span class="line">                    stack[2052] = r8;</span><br><span class="line">                    [r8 pendingLoginRequest:r10];</span><br><span class="line">                    r5 = 0x1;</span><br><span class="line">            &#125;</span><br><span class="line">            else &#123;</span><br><span class="line">                    stack[2052] = r8;</span><br><span class="line">                    r5 = 0x0;</span><br><span class="line">            &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    else &#123;</span><br><span class="line">            stack[2052] = r8;</span><br><span class="line">            r5 = 0x0;</span><br><span class="line">            r6 = stack[2054];</span><br><span class="line">    &#125;</span><br><span class="line">    if (r6 != 0x0) &#123;</span><br><span class="line">            r4 = [[NSDictionary dictionary] retain];</span><br><span class="line">            stack[2054] = r6;</span><br><span class="line">            (*(r6 + 0xc))(r6, 0x0, r4, *(r6 + 0xc), stack[2048]);</span><br><span class="line">            [r4 release];</span><br><span class="line">    &#125;</span><br><span class="line">    else &#123;</span><br><span class="line">            stack[2054] = r6;</span><br><span class="line">    &#125;</span><br><span class="line">    goto loc_2aaf044;</span><br><span class="line"></span><br><span class="line">loc_2aaee0a:</span><br><span class="line">    r5 = 0x0;</span><br><span class="line">    r4 = stack[2053];</span><br><span class="line">    goto loc_2aaf060;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>与 IDA 相比， Hopper 反编译后的伪代码的逻辑与 IDA 反编译得到的伪代码<strong>逻辑类似</strong>，但多了 r0~r8 等寄存器，阅读性相较而言差一些，但是，仍然可以根据伪代码还原出源代码。</p>
+<p>其实我们可以用这个伪代码来检查我们之前还原的源代码，保证还原代码的正确性。</p>
+<p>以上，便是 Hopper 的简单使用。 Hopper 除了可以查看汇编代码以外，还可以直接对 Mach-O 文件进行修改，然后重新生成二进制文件（Demo 版没有这个功能）。</p>
+<p>感兴趣的同学可以阅读这篇文章学习， 《如何让 Mac 版微信客户端防撤回》<a target="_blank" rel="noopener" href="http://t.cn/RxzeMIx">http://t.cn/RxzeMIx</a></p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>本文主要学习了一下内容：</p>
+<ul>
+<li>IDA 的安装及使用</li>
+<li>Hopper 的安装及使用</li>
+<li>静态分析，根据伪码还原源代码</li>
+</ul>
+<p>关于 iOS 安全领域还有很多技能要学习，以后还会继续学习研究。比如，TheOS、 tweak、加密解密、越狱应用开发等，但是不着急慢慢学～<br><strong>Where there’s a will, there’s a way!</strong><br><strong>Never forget your dream! </strong><br><strong>Fighting!</strong></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li>如何让 Mac 版微信客户端防撤回 <a target="_blank" rel="noopener" href="http://t.cn/RxzeMIx">http://t.cn/RxzeMIx</a></li>
+<li>iOS 安全攻防 (十五) 使用 Hopper 修改字符串 <a target="_blank" rel="noopener" href="http://www.cnblogs.com/jailbreaker/p/4183954.html">http://www.cnblogs.com/jailbreaker/p/4183954.html</a></li>
+<li>iOS 逆向工程之 Hopper 中的 ARM 指令 <a target="_blank" rel="noopener" href="http://www.cnblogs.com/ludashi/p/5740696.html">http://www.cnblogs.com/ludashi/p/5740696.html</a></li>
+<li>IDA 反汇编/反编译静态分析 iOS 模拟器程序 <a target="_blank" rel="noopener" href="http://blog.csdn.net/column/details/ios-ida.html">http://blog.csdn.net/column/details/ios-ida.html</a></li>
+<li>今天开始学逆向：用 Cycript 进行运行时分析及应用操作 <a target="_blank" rel="noopener" href="https://niyaoyao.github.io/2016/11/01/Learning-Reverse-From-Today-D2/">https://niyaoyao.github.io/2016/11/01/Learning-Reverse-From-Today-D2/</a></li>
+<li>今天开始学逆向：SSH 访问越狱机与导出二进制文件的头文件 <a target="_blank" rel="noopener" href="https://niyaoyao.github.io/2016/11/01/Learning-Reverse-From-Today-D1/">https://niyaoyao.github.io/2016/11/01/Learning-Reverse-From-Today-D1/</a></li>
+</ul>
+<h1 id="题外话"><a href="#题外话" class="headerlink" title="题外话"></a>题外话</h1><p>这篇文章，主要讲了 IDA 和 Hopper 的基本使用，反汇编工具可以方便我们分析应用的二进制文件，但工具的使用是其次，最关键的是思想。任何方法假以时日都是可以被人学会的，记得念茜大神在微博上说过一句话，<strong>「密码只是道锁，而安全是个系统」</strong>（大意是这样）。</p>
+<p>之前爆出的支付宝的漏洞，也充分验证了这一点。用户朋友可以通过忘记密码，进入手机不在身边入口。之后，选择联系人、收货地址、购买的商品等信息，就能绕过密码登录，修改密码，从而登录账户拿到用户权限。密码只是一道锁，系统的整体安全才是核心关键。或者说，任何安全攻防要解决的问题都是，提权拿到 root 权限，从而进行各种操作。而现在学到的方法，也仅是略窥一斑。所以，要更加全面的学习，不光是 iOS 攻防技术，操作系统内核原理、Android 攻防、 Web 前端攻防相关技术也应有所涉猎。</p>
+<p>另外，互联网发展越来越发达，信息资源也随之变得廉价。技术不是最难的，一项技术，你会，别人也可以学会。因而，会一门技术、一个编程语言，都不能成为一个人的核心竞争力。真正的竞争力是人的思想，是解决问题的能力。所以，我们不应执念于技术或工具。（讲真，看到之前某厂争论应该使用 Vue 还是 React 技术栈的时候，真心觉得是本末倒置。）</p>
+<p>最后，安利一下我的公众号，欢迎大家关注（害羞～ 🙈😁）<br><img src="https://niyaoyao.github.io/images/qrcod_ny_1.jpg" alt=""></p>
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2016/11/01/Learning-Reverse-From-Today-D2/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2017/05/06/fly-away-day1.1/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: 'e929305d1df52067f223',
+  clientSecret: '465557188fddc6608846e97927bc2fe7a268f141',
+  repo: 'blog-comments',
+  owner: 'niyaoyao',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: md5(location.pathname),
+  admin: ['niyaoyao'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
