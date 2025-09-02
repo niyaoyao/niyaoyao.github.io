@@ -25,7 +25,7 @@
 <meta property="og:image" content="https://niyaoyao.github.io/images/golang-02.png">
 <meta property="og:image" content="https://niyaoyao.github.io/images/qrcod_ny_1.jpg">
 <meta property="article:published_time" content="2017-05-05T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-04-15T15:21:28.580Z">
+<meta property="article:modified_time" content="2024-09-26T12:15:55.261Z">
 <meta property="article:author" content="Niyao">
 <meta property="article:tag" content="Golang">
 <meta name="twitter:card" content="summary">
@@ -255,11 +255,11 @@ ga('send', 'pageview');
 <p><strong>本文主要以 CentOS 7.2 作为操作环境，macOS 可能有些许不同。</strong></p>
 <h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>到具有写权限的目录下下载最新版本的安装包，并对安装包进行校验。</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /tmp</span><br><span class="line">curl -LO https://storage.googleapis.com/golang/go1.8.1.linux-amd64.tar.gz</span><br><span class="line">shasum -a 256 go1.8*.tar.gz</span><br></pre></td></tr></table></figure>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo tar -C /usr/local -xvzf go1.8.1.linux-amd64.tar.gz</span><br></pre></td></tr></table></figure>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> tar -C /usr/local -xvzf go1.8.1.linux-amd64.tar.gz</span><br></pre></td></tr></table></figure>
 <h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p>查看 Go 的版本号，即可验证 Golang 是否安装成功。</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">go version</span><br><span class="line">go version go1.8.1 linux/amd64</span><br></pre></td></tr></table></figure>
 <h2 id="设置-Go-的环境变量"><a href="#设置-Go-的环境变量" class="headerlink" title="设置 Go 的环境变量"></a>设置 Go 的环境变量</h2><h3 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h3><p>设置 Go 语言环境变量，便于执行 Go 的命令。</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo vi /etc/profile.d/path.sh</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> vi /etc/profile.d/path.sh</span><br></pre></td></tr></table></figure>
 <p>追加输入以下内容。<strong>如果，你的 Go 所安装的路径不是 /usr/local 那就替换为你实际的安装路径。</strong></p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/usr/local/go/bin</span><br></pre></td></tr></table></figure>
 <p>vi(vim) 打开 <strong>~/.bash_profile</strong></p>
@@ -288,7 +288,7 @@ ga('send', 'pageview');
 <h3 id="Supervisor-管理进程"><a href="#Supervisor-管理进程" class="headerlink" title="Supervisor 管理进程"></a>Supervisor 管理进程</h3><p><strong>Supervisor is a client/server system that allows its users to control a number of processes on UNIX-like operating systems.</strong></p>
 <p>Supervisor 是一款类 UNIX 操作系统上，用来管理多个进程的客户端／服务端的系统。<br>项目的开源仓库在 <a target="_blank" rel="noopener" href="https://github.com/Supervisor/supervisor">https://github.com/Supervisor/supervisor</a> ，使用配置也比较简单，接下来就开始学习 Supervisor 来管理我们 hello.go 的进程。</p>
 <h4 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h4><p>在 CentOS 上利用 <strong>yum</strong> 安装 python 的工具，用 <strong>easy_install</strong> 安装 <strong>supervisor</strong>。</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo yum install python-setuptools</span><br><span class="line">sudo easy_install supervisor</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> yum install python-setuptools</span><br><span class="line"><span class="built_in">sudo</span> easy_install supervisor</span><br></pre></td></tr></table></figure>
 <h4 id="配置-supervisord-conf"><a href="#配置-supervisord-conf" class="headerlink" title="配置 supervisord.conf"></a>配置 supervisord.conf</h4><p>输入以下命令，生成配置文件。</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo echo_supervisord_conf &gt; /etc/supervisord.conf</span><br></pre></td></tr></table></figure>
 <p>修改配置文件，配置 Go 应用。</p>

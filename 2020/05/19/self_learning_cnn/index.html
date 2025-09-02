@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>QuickDraw 模型训练 &amp; CNN 卷积自学记录 | N.Y.</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="AI," />
+  
+
+  <meta name="description" content="好问题 👍。我帮你把 QuickDraw 数据处理 → CNN 卷积提取特征 → Loss 计算 → Forward &amp; Backward（反向传播） 全流程讲清楚，并配一张图解。  1. QuickDraw 数据处理流程QuickDraw 原始数据是用户手绘的线条（stroke sequence），通常存储为 .npy 或 .npz 格式，里面是 28×28 灰度图。在训练 CNN 前">
+<meta property="og:type" content="article">
+<meta property="og:title" content="QuickDraw 模型训练 &amp; CNN 卷积自学记录">
+<meta property="og:url" content="http://niyaoyao.me/2020/05/19/self_learning_cnn/index.html">
+<meta property="og:site_name" content="N.Y.">
+<meta property="og:description" content="好问题 👍。我帮你把 QuickDraw 数据处理 → CNN 卷积提取特征 → Loss 计算 → Forward &amp; Backward（反向传播） 全流程讲清楚，并配一张图解。  1. QuickDraw 数据处理流程QuickDraw 原始数据是用户手绘的线条（stroke sequence），通常存储为 .npy 或 .npz 格式，里面是 28×28 灰度图。在训练 CNN 前">
+<meta property="og:locale">
+<meta property="article:published_time" content="2020-05-18T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-09-02T07:23:19.387Z">
+<meta property="article:author" content="Niyao">
+<meta property="article:tag" content="AI">
+<meta name="twitter:card" content="summary">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico/images/avatar_ny.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    
+<link rel="stylesheet" href="/css/personal-style.css">
+
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38189205-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">Hi~</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">Hi~</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-QuickDraw-%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B"><span class="toc-text">1. QuickDraw 数据处理流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-CNN-%E5%8D%B7%E7%A7%AF%E5%B1%82%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-text">2. CNN 卷积层工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Loss-%E5%87%BD%E6%95%B0%EF%BC%88%E4%BA%A4%E5%8F%89%E7%86%B5%EF%BC%89"><span class="toc-text">3. Loss 函数（交叉熵）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Forward-Propagation%EF%BC%88%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD%EF%BC%89"><span class="toc-text">4. Forward Propagation（前向传播）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Backward-Propagation%EF%BC%88%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%EF%BC%89"><span class="toc-text">5. Backward Propagation（反向传播）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%9B%BE%E8%A7%A3%EF%BC%88%E6%B5%81%E7%A8%8B%E7%A4%BA%E6%84%8F%EF%BC%89"><span class="toc-text">6. 图解（流程示意）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AF%E5%BD%92%E4%B8%80%E5%8C%96%EF%BC%9F"><span class="toc-text">1. 什么是归一化？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%81%9A%E5%BD%92%E4%B8%80%E5%8C%96%EF%BC%9F"><span class="toc-text">2. 为什么要做归一化？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%81%BF%E5%85%8D%E6%95%B0%E5%80%BC%E8%BF%87%E5%A4%A7%EF%BC%8C%E6%A2%AF%E5%BA%A6%E7%88%86%E7%82%B8-%E6%A2%AF%E5%BA%A6%E6%B6%88%E5%A4%B1"><span class="toc-text">(1) 避免数值过大，梯度爆炸 &#x2F; 梯度消失</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%8F%90%E9%AB%98%E8%AE%AD%E7%BB%83%E9%80%9F%E5%BA%A6%EF%BC%8C%E5%8A%A0%E5%BF%AB%E6%94%B6%E6%95%9B"><span class="toc-text">(2) 提高训练速度，加快收敛</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%8F%90%E9%AB%98%E5%87%86%E7%A1%AE%E7%8E%87%EF%BC%8C%E9%81%BF%E5%85%8D%E6%A8%A1%E5%9E%8B%E5%81%8F%E5%90%91"><span class="toc-text">(3) 提高准确率，避免模型偏向</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%9C%A8-QuickDraw-%E4%B8%AD%E7%9A%84%E5%BD%92%E4%B8%80%E5%8C%96"><span class="toc-text">3. 在 QuickDraw 中的归一化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Min-Max-%E5%BD%92%E4%B8%80%E5%8C%96%E5%85%AC%E5%BC%8F%E5%9B%9E%E9%A1%BE"><span class="toc-text">1. Min-Max 归一化公式回顾</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-QuickDraw-%E5%83%8F%E7%B4%A0%E7%9A%84%E8%8C%83%E5%9B%B4"><span class="toc-text">2. QuickDraw 像素的范围</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%A5%97%E5%85%AC%E5%BC%8F"><span class="toc-text">3. 套公式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E4%B8%BA%E4%BB%80%E4%B9%88%E7%BA%BF%E6%80%A7%E6%98%A0%E5%B0%84%E6%9C%89%E6%95%88%EF%BC%9F"><span class="toc-text">4. 为什么线性映射有效？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A3-%E5%8D%95%E4%B8%80%E6%A8%A1%E5%9E%8B-vs-%E5%A4%9A%E6%A8%A1%E5%9E%8B"><span class="toc-text">1️⃣ 单一模型 vs 多模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#QuickDraw-%E6%A8%A1%E5%9E%8B"><span class="toc-text">QuickDraw 模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GPT-Gemini-%E7%B1%BB%E5%A4%9A%E6%A8%A1%E6%80%81%E6%A8%A1%E5%9E%8B"><span class="toc-text">GPT&#x2F;Gemini 类多模态模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%EF%B8%8F%E2%83%A3-%E6%A8%A1%E5%9E%8B%E7%B1%BB%E6%AF%94%E4%BA%BA%E8%84%91"><span class="toc-text">2️⃣ 模型类比人脑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%EF%B8%8F%E2%83%A3-%E7%AE%97%E5%8A%9B%E5%AF%B9%E6%AF%94%E4%BA%BA%E8%84%91"><span class="toc-text">3️⃣ 算力对比人脑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%EF%B8%8F%E2%83%A3-%E6%80%BB%E7%BB%93%E5%AF%B9%E6%AF%94"><span class="toc-text">4️⃣ 总结对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A3-CNN-%E5%8D%B7%E7%A7%AF%E6%93%8D%E4%BD%9C%E7%9A%84%E7%9B%B4%E8%A7%82%E7%90%86%E8%A7%A3"><span class="toc-text">1️⃣ CNN 卷积操作的直观理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%EF%B8%8F%E2%83%A3-%E5%8D%B7%E7%A7%AF%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E6%8E%A8%E5%AF%BC"><span class="toc-text">2️⃣ 卷积数学公式推导</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%EF%B8%8F%E2%83%A3-%E5%8A%A0%E5%85%A5%E5%81%8F%E7%BD%AE%E5%92%8C%E9%9D%9E%E7%BA%BF%E6%80%A7"><span class="toc-text">3️⃣ 加入偏置和非线性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%EF%B8%8F%E2%83%A3-%E5%A4%9A%E9%80%9A%E9%81%93%E5%8D%B7%E7%A7%AF%EF%BC%88RGB-%E5%9B%BE%E5%83%8F%EF%BC%89"><span class="toc-text">4️⃣ 多通道卷积（RGB 图像）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5%EF%B8%8F%E2%83%A3-%E5%8D%B7%E7%A7%AF%E5%8E%9F%E7%90%86%E7%9A%84%E6%8E%A8%E7%90%86%E4%B8%8E%E8%AF%81%E6%98%8E"><span class="toc-text">5️⃣ 卷积原理的推理与证明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6%EF%B8%8F%E2%83%A3-%E5%8D%B7%E7%A7%AF%E5%85%AC%E5%BC%8F%E6%80%BB%E7%BB%93"><span class="toc-text">6️⃣ 卷积公式总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E9%80%9A%E9%81%93%E4%BA%8C%E7%BB%B4%E5%8D%B7%E7%A7%AF%EF%BC%9A"><span class="toc-text">单通道二维卷积：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E9%80%9A%E9%81%93%E5%8D%B7%E7%A7%AF%EF%BC%9A"><span class="toc-text">多通道卷积：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%BF%80%E6%B4%BB%EF%BC%9A"><span class="toc-text">加非线性激活：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7%EF%B8%8F%E2%83%A3-%E5%8D%B7%E7%A7%AF%E7%9A%84%E6%9C%AC%E8%B4%A8%E7%90%86%E8%A7%A3"><span class="toc-text">7️⃣ 卷积的本质理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A3-%E5%8D%B7%E7%A7%AF%E4%B8%8E%E7%A7%AF%E5%88%86%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%88%E8%BF%9E%E7%BB%AD%E6%83%85%E5%86%B5%EF%BC%89"><span class="toc-text">1️⃣ 卷积与积分的关系（连续情况）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E4%BA%8C%E7%BB%B4%E5%8D%B7%E7%A7%AF%EF%BC%88%E5%9B%BE%E5%83%8F%E7%9A%84%E7%A7%AF%E5%88%86%E5%BD%A2%E5%BC%8F%EF%BC%89"><span class="toc-text">1.1 二维卷积（图像的积分形式）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%EF%B8%8F%E2%83%A3-%E7%A6%BB%E6%95%A3%E5%8D%B7%E7%A7%AF%E4%B8%8E%E7%BA%A7%E6%95%B0%EF%BC%88%E6%B1%82%E5%92%8C%EF%BC%89%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-text">2️⃣ 离散卷积与级数（求和）的关系</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E4%BA%8C%E7%BB%B4%E7%A6%BB%E6%95%A3%E5%8D%B7%E7%A7%AF"><span class="toc-text">2.1 二维离散卷积</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%EF%B8%8F%E2%83%A3-%E6%80%BB%E7%BB%93%E5%8D%B7%E7%A7%AF%E3%80%81%E7%A7%AF%E5%88%86%E3%80%81%E7%BA%A7%E6%95%B0%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-text">3️⃣ 总结卷积、积分、级数的关系</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4%EF%B8%8F%E2%83%A3-%E5%B0%8F%E7%BB%93"><span class="toc-text">4️⃣ 小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A3-f-tau-%E7%9A%84%E6%84%8F%E4%B9%89"><span class="toc-text">1️⃣ $f(\tau)$ 的意义</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%8B%E5%AD%90%EF%BC%9A"><span class="toc-text">例子：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%EF%B8%8F%E2%83%A3-%E5%8D%B7%E7%A7%AF%E5%85%AC%E5%BC%8F%E4%B8%AD%E7%9A%84%E8%A7%92%E8%89%B2"><span class="toc-text">2️⃣ 卷积公式中的角色</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%EF%B8%8F%E2%83%A3-%E5%B0%8F%E7%BB%93"><span class="toc-text">3️⃣ 小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A3-g-t-tau-%E7%9A%84%E6%9C%AC%E8%B4%A8"><span class="toc-text">1️⃣ $g(t-\tau)$ 的本质</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E8%BF%9E%E7%BB%AD%E4%BF%A1%E5%8F%B7%E4%B8%AD%E7%9A%84%E6%BB%A4%E6%B3%A2%E5%99%A8"><span class="toc-text">1.1 连续信号中的滤波器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E7%A6%BB%E6%95%A3%E6%83%85%E5%86%B5%EF%BC%88CNN-%E5%8D%B7%E7%A7%AF%E6%A0%B8%EF%BC%89"><span class="toc-text">1.2 离散情况（CNN 卷积核）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B4%E8%A7%89%EF%BC%9A"><span class="toc-text">直觉：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%EF%B8%8F%E2%83%A3-f-tau-%E5%92%8C-g-t-tau-%E7%9A%84%E8%A7%A3%E6%9E%90%E5%BC%8F%E9%97%AE%E9%A2%98"><span class="toc-text">2️⃣ $f(\tau)$ 和 $g(t-\tau)$ 的解析式问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E4%BC%A0%E7%BB%9F%E6%BB%A4%E6%B3%A2%EF%BC%89"><span class="toc-text">2.1 信号处理（传统滤波）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%EF%BC%88CNN%EF%BC%89"><span class="toc-text">2.2 神经网络（CNN）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%9A%A0-%E9%87%8D%E7%82%B9%EF%BC%9A"><span class="toc-text">⚠ 重点：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%EF%B8%8F%E2%83%A3-%E5%8D%B7%E7%A7%AF%E6%A0%B8%E6%98%AF%E6%80%8E%E4%B9%88%E8%8E%B7%E5%BE%97%E7%9A%84%EF%BC%9F"><span class="toc-text">3️⃣ 卷积核是怎么获得的？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%E6%BB%A4%E6%B3%A2%E5%99%A8%EF%BC%88%E4%BA%BA%E5%B7%A5%E8%AE%BE%E8%AE%A1%EF%BC%89"><span class="toc-text">3.1 信号处理滤波器（人工设计）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-CNN-%E5%8D%B7%E7%A7%AF%E6%A0%B8%EF%BC%88%E8%AE%AD%E7%BB%83%E5%AD%A6%E4%B9%A0%EF%BC%89"><span class="toc-text">3.2 CNN 卷积核（训练学习）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%EF%B8%8F%E2%83%A3-%E6%80%BB%E7%BB%93"><span class="toc-text">4️⃣ 总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A3-%E5%8D%B7%E7%A7%AF%E6%A0%B8%E4%B8%8D%E6%98%AF%E6%89%8B%E5%B7%A5%E8%AE%BE%E8%AE%A1%E7%9A%84"><span class="toc-text">1️⃣ 卷积核不是手工设计的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%EF%B8%8F%E2%83%A3-%E5%8D%B7%E7%A7%AF%E6%A0%B8%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-text">2️⃣ 卷积核的初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%EF%B8%8F%E2%83%A3-%E5%8D%B7%E7%A7%AF%E6%A0%B8%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%BF%87%E7%A8%8B"><span class="toc-text">3️⃣ 卷积核的学习过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD"><span class="toc-text">3.1 前向传播</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E8%AE%A1%E7%AE%97%E6%8D%9F%E5%A4%B1"><span class="toc-text">3.2 计算损失</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%EF%BC%88Backpropagation%EF%BC%89"><span class="toc-text">3.3 反向传播（Backpropagation）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E5%8F%82%E6%95%B0%E6%9B%B4%E6%96%B0%EF%BC%88%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D-Adam%EF%BC%89"><span class="toc-text">3.4 参数更新（梯度下降&#x2F;Adam）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%EF%B8%8F%E2%83%A3-%E4%B8%BE%E4%BE%8B%E7%9B%B4%E8%A7%82%E7%90%86%E8%A7%A3"><span class="toc-text">4️⃣ 举例直观理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5%EF%B8%8F%E2%83%A3-%E6%80%BB%E7%BB%93"><span class="toc-text">5️⃣ 总结</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-self_learning_cnn" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">QuickDraw 模型训练 &amp; CNN 卷积自学记录</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2020.05.19</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Niyao</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>好问题 👍。我帮你把 <strong>QuickDraw 数据处理 → CNN 卷积提取特征 → Loss 计算 → Forward &amp; Backward（反向传播）</strong> 全流程讲清楚，并配一张图解。</p>
+<hr>
+<h2 id="1-QuickDraw-数据处理流程"><a href="#1-QuickDraw-数据处理流程" class="headerlink" title="1. QuickDraw 数据处理流程"></a>1. QuickDraw 数据处理流程</h2><p>QuickDraw 原始数据是用户手绘的线条（stroke sequence），通常存储为 <strong>.npy 或 .npz</strong> 格式，里面是 <strong>28×28 灰度图</strong>。在训练 CNN 前，需要：</p>
+<ol>
+<li><strong>读取</strong>：加载 <code>.npy</code> 文件，得到 (N, 28, 28) 图像数组。</li>
+<li><strong>归一化</strong>：像素值从 <code>[0,255]</code> → <code>[0,1]</code>，方便梯度下降。</li>
+<li><strong>标签 one-hot</strong>：345 类别 → 转成 (345,) 的 one-hot 向量。</li>
+<li><strong>划分数据集</strong>：train / validation / test。</li>
+</ol>
+<p>最终输入网络的就是：<br><code>(batch_size, 28, 28, 1)</code> 的张量。</p>
+<hr>
+<h2 id="2-CNN-卷积层工作原理"><a href="#2-CNN-卷积层工作原理" class="headerlink" title="2. CNN 卷积层工作原理"></a>2. CNN 卷积层工作原理</h2><p>CNN 主要做两件事：</p>
+<ul>
+<li><strong>卷积 (Convolution)</strong>：小卷积核（比如 3×3×输入通道）在图像上滑动，提取边缘/形状特征。</li>
+<li><strong>池化 (Pooling)</strong>：缩小空间尺寸（比如 max pooling），保留主要特征。</li>
+</ul>
+<p>例子：</p>
+<ul>
+<li>输入：28×28×1（灰度图）</li>
+<li>卷积核：3×3×1 → 输出 26×26×32（32 个特征图）</li>
+<li>再池化：13×13×32</li>
+<li>重复卷积 → 提取更抽象的形状特征（比如圆、直线）。</li>
+</ul>
+<hr>
+<h2 id="3-Loss-函数（交叉熵）"><a href="#3-Loss-函数（交叉熵）" class="headerlink" title="3. Loss 函数（交叉熵）"></a>3. Loss 函数（交叉熵）</h2><p>QuickDraw 是 <strong>多分类问题</strong>（345 类）。常用 Loss：</p>
+<script type="math/tex; mode=display">
+L = -\sum_{i=1}^{345} y_i \cdot \log(\hat{y}_i)</script><ul>
+<li>$y_i$：真实标签（one-hot，只有一个 1）</li>
+<li>$\hat{y}_i$：softmax 输出的概率<br>目标：最大化正确类别的概率。</li>
+</ul>
+<hr>
+<h2 id="4-Forward-Propagation（前向传播）"><a href="#4-Forward-Propagation（前向传播）" class="headerlink" title="4. Forward Propagation（前向传播）"></a>4. Forward Propagation（前向传播）</h2><ol>
+<li>输入图像 → 卷积层（提取边缘特征）</li>
+<li>→ 池化层（降维）</li>
+<li>→ 更深卷积（提取复杂形状）</li>
+<li>→ Flatten → 全连接层</li>
+<li>→ Softmax 输出 345 维概率</li>
+</ol>
+<hr>
+<h2 id="5-Backward-Propagation（反向传播）"><a href="#5-Backward-Propagation（反向传播）" class="headerlink" title="5. Backward Propagation（反向传播）"></a>5. Backward Propagation（反向传播）</h2><p>训练时，模型计算 Loss，再进行梯度更新：</p>
+<ol>
+<li><strong>计算 Loss 对输出的梯度</strong><br>$\frac{\partial L}{\partial \hat{y}}$</li>
+<li><strong>反向传播到全连接层</strong>：更新权重 W, b</li>
+<li><strong>传播到卷积层</strong>：通过卷积核的梯度公式更新 filter 参数</li>
+<li><strong>传播到输入层</strong>（理论上，但一般不更新输入）</li>
+<li><p><strong>优化器（如 Adam / SGD）</strong> 用学习率 η 更新参数：</p>
+<script type="math/tex; mode=display">
+W = W - \eta \cdot \frac{\partial L}{\partial W}</script></li>
+</ol>
+<hr>
+<h2 id="6-图解（流程示意）"><a href="#6-图解（流程示意）" class="headerlink" title="6. 图解（流程示意）"></a>6. 图解（流程示意）</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">QuickDraw 数据 (28x28) ──► [归一化] ──► CNN 卷积提取边缘特征 ──► 池化</span><br><span class="line">                                                     │</span><br><span class="line">                                                     ▼</span><br><span class="line">                                  更深卷积（形状特征，如圆/直线）</span><br><span class="line">                                                     │</span><br><span class="line">                                                     ▼</span><br><span class="line">                                        Flatten → Dense (256)</span><br><span class="line">                                                     │</span><br><span class="line">                                                     ▼</span><br><span class="line">                                        Softmax (345 类)</span><br><span class="line">                                                     │</span><br><span class="line">                                                     ▼</span><br><span class="line">                             交叉熵 Loss (真实标签 vs 预测标签)</span><br><span class="line">                                                     │</span><br><span class="line">                                                     ▼</span><br><span class="line">                                  Backpropagation (梯度反传)</span><br><span class="line">                                                     │</span><br><span class="line">                                                     ▼</span><br><span class="line">                                 更新 CNN 卷积核 &amp; Dense 权重</span><br></pre></td></tr></table></figure>
+<hr>
+<p>这样一轮就是 <strong>一次 forward + backward</strong>，不断迭代直到 Loss 收敛。</p>
+<hr>
+<p>这个问题问得好 ✅，我帮你从 <strong>定义 → 为什么要做 → 在 QuickDraw 中的作用</strong> 来解释「归一化」。</p>
+<hr>
+<h2 id="1-什么是归一化？"><a href="#1-什么是归一化？" class="headerlink" title="1. 什么是归一化？"></a>1. 什么是归一化？</h2><p>在深度学习里，<strong>归一化（Normalization）</strong> 指的是把数据调整到一个合适的数值范围。</p>
+<p>最常见的几种：</p>
+<ul>
+<li><p><strong>Min-Max 归一化</strong></p>
+<script type="math/tex; mode=display">
+x' = \frac{x - \min(x)}{\max(x) - \min(x)}</script><p>把数值缩放到 <code>[0,1]</code>。</p>
+</li>
+<li><p><strong>标准化 (Z-score Normalization)</strong></p>
+<script type="math/tex; mode=display">
+x' = \frac{x - \mu}{\sigma}</script><p>把数据调整到均值 0，方差 1。</p>
+</li>
+</ul>
+<p>在图像任务里，通常是：</p>
+<ul>
+<li>灰度像素 <code>[0, 255]</code> → <code>[0, 1]</code></li>
+<li>或者 <code>[0, 255]</code> → <code>[-1, 1]</code></li>
+</ul>
+<hr>
+<h2 id="2-为什么要做归一化？"><a href="#2-为什么要做归一化？" class="headerlink" title="2. 为什么要做归一化？"></a>2. 为什么要做归一化？</h2><p>原因主要有 3 个：</p>
+<h3 id="1-避免数值过大，梯度爆炸-梯度消失"><a href="#1-避免数值过大，梯度爆炸-梯度消失" class="headerlink" title="(1) 避免数值过大，梯度爆炸 / 梯度消失"></a>(1) 避免数值过大，梯度爆炸 / 梯度消失</h3><p>如果输入是 <code>0~255</code>，那么卷积时输出值会很大，softmax 里的 <code>exp()</code> 可能会溢出，导致 <strong>训练不稳定</strong>。<br>归一化后，数值变小，梯度更平稳。</p>
+<hr>
+<h3 id="2-提高训练速度，加快收敛"><a href="#2-提高训练速度，加快收敛" class="headerlink" title="(2) 提高训练速度，加快收敛"></a>(2) 提高训练速度，加快收敛</h3><p>深度学习优化依赖梯度下降。<br>如果数据在同一量级（比如都在 <code>[0,1]</code>），网络更容易找到合适的更新方向，收敛更快。<br>否则，有些维度梯度很大，有些很小，优化会「抖动」。</p>
+<hr>
+<h3 id="3-提高准确率，避免模型偏向"><a href="#3-提高准确率，避免模型偏向" class="headerlink" title="(3) 提高准确率，避免模型偏向"></a>(3) 提高准确率，避免模型偏向</h3><p>例如 QuickDraw 的黑白画，有些人画得深（像素值大），有些人画得浅（像素值小）。<br>如果不归一化，模型会更关注「画深的人」，忽视「画浅的人」，导致泛化差。<br>归一化后，把不同画法映射到统一范围，模型更公平地学习特征。</p>
+<hr>
+<h2 id="3-在-QuickDraw-中的归一化"><a href="#3-在-QuickDraw-中的归一化" class="headerlink" title="3. 在 QuickDraw 中的归一化"></a>3. 在 QuickDraw 中的归一化</h2><p>QuickDraw 输入是 <strong>28×28 灰度图</strong>，像素范围 <code>0~255</code>。<br>常见做法：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x = x.astype(<span class="string">&quot;float32&quot;</span>) / <span class="number">255.0</span></span><br></pre></td></tr></table></figure>
+<p>这样图像就变成 <code>0~1</code>，利于 CNN 训练。</p>
+<hr>
+<p>✅ 总结：<br><strong>归一化就是把输入数据缩放/调整到更合适的数值范围，避免数值问题，提升收敛速度和模型准确率。</strong></p>
+<hr>
+<p>完全可以用这个公式来做像素归一化，我们仔细分析一下：</p>
+<hr>
+<h2 id="1-Min-Max-归一化公式回顾"><a href="#1-Min-Max-归一化公式回顾" class="headerlink" title="1. Min-Max 归一化公式回顾"></a>1. Min-Max 归一化公式回顾</h2><script type="math/tex; mode=display">
+x' = \frac{x - \min(x)}{\max(x) - \min(x)}</script><ul>
+<li>$x$ 是原始数值（例如像素值）</li>
+<li>$\min(x)$ 是该数据集或该维度的最小值</li>
+<li>$\max(x)$ 是该数据集或该维度的最大值</li>
+<li>$x’$ 是归一化后的结果，范围一定在 $[0,1]$</li>
+</ul>
+<hr>
+<h2 id="2-QuickDraw-像素的范围"><a href="#2-QuickDraw-像素的范围" class="headerlink" title="2. QuickDraw 像素的范围"></a>2. QuickDraw 像素的范围</h2><p>灰度图像每个像素的取值范围是：</p>
+<script type="math/tex; mode=display">
+x \in [0, 255]</script><p>所以：</p>
+<script type="math/tex; mode=display">
+\min(x) = 0, \quad \max(x) = 255</script><hr>
+<h2 id="3-套公式"><a href="#3-套公式" class="headerlink" title="3. 套公式"></a>3. 套公式</h2><p>把 $\min(x) = 0$ 和 $\max(x) = 255$ 代入公式：</p>
+<script type="math/tex; mode=display">
+x' = \frac{x - 0}{255 - 0} = \frac{x}{255}</script><p>✅ 这样就把原本 <code>0~255</code> 的像素值，线性映射到了 <code>[0,1]</code>。</p>
+<ul>
+<li>原本 0 → 0</li>
+<li>原本 255 → 1</li>
+<li>中间值线性缩放，例如 128 → 128/255 ≈ 0.502</li>
+</ul>
+<hr>
+<h2 id="4-为什么线性映射有效？"><a href="#4-为什么线性映射有效？" class="headerlink" title="4. 为什么线性映射有效？"></a>4. 为什么线性映射有效？</h2><ol>
+<li><strong>保留相对亮度</strong>：像素越亮，归一化后数值越大，卷积依然能感知明暗差异</li>
+<li><strong>便于梯度计算</strong>：CNN 处理小数值更稳定，避免梯度爆炸</li>
+<li><strong>统一尺度</strong>：不同手绘图像亮度不同，通过归一化映射到相同尺度，提高模型泛化</li>
+</ol>
+<hr>
+<p>总结：</p>
+<p>Min-Max 归一化公式是 <strong>线性映射</strong>，可以把任意数值范围 <code>[min, max]</code> 转换到 <code>[0,1]</code>，在 QuickDraw 中就是把灰度像素 <code>[0,255]</code> 缩放到 <code>[0,1]</code>，训练 CNN 更稳定、高效。</p>
+<hr>
+<blockquote>
+<p>其实我现在很好奇，就是比如我现在训练 quickdraw 的模型，这个就是单一的图像识别模型，而且只能识别出预定好的数据，那如果是像现在 GPT、Gemini 这样的，他们的模型应该除了能分析文字、语法语义、词法以外，还能识别图像，生成图像，生成视频，那他们的模型是单一模型，还是也是多模型，最后根据输入去分门别类找对应模型输出产物？如果模型可以理解是深的大脑，对于人来说，理解外在事物的器官只有一个，如果模型可以理解是深的大脑，对于人来说，理解外在事物的器官只有一个。那目前的 AI 模型是否已经到达人类大脑的运算能力</p>
+</blockquote>
+<p>你问的这个问题其实触及了<strong>现代 AI 模型架构、认知类比和算力极限</strong>几个层面，我帮你分层解析一下。</p>
+<hr>
+<h2 id="1️⃣-单一模型-vs-多模型"><a href="#1️⃣-单一模型-vs-多模型" class="headerlink" title="1️⃣ 单一模型 vs 多模型"></a>1️⃣ 单一模型 vs 多模型</h2><h3 id="QuickDraw-模型"><a href="#QuickDraw-模型" class="headerlink" title="QuickDraw 模型"></a>QuickDraw 模型</h3><ul>
+<li><p>你现在训练的 QuickDraw CNN 模型：</p>
+<ul>
+<li>输入：28×28 灰度图</li>
+<li>输出：345 个类别的概率</li>
+<li><strong>单一任务单一模型</strong>，只做图像分类</li>
+</ul>
+</li>
+<li>这个模型是 <strong>窄人工智能（Narrow AI）</strong>：只能做训练时定义好的任务，无法做其他类型任务。</li>
+</ul>
+<h3 id="GPT-Gemini-类多模态模型"><a href="#GPT-Gemini-类多模态模型" class="headerlink" title="GPT/Gemini 类多模态模型"></a>GPT/Gemini 类多模态模型</h3><ul>
+<li><p>现代大模型，比如 GPT-4、Gemini、LLaMA-Adapter：</p>
+<ul>
+<li><strong>输入可以是文本，也可以是图像</strong>，甚至一些模型在研究阶段支持视频、音频</li>
+<li>输出可以是文本生成、图像生成、回答问题、文本总结等</li>
+</ul>
+</li>
+<li><p>架构上：</p>
+<ul>
+<li><p><strong>通常是一个核心模型</strong>（一个 Transformer/大语言模型），但：</p>
+<ul>
+<li>对不同模态输入有 <strong>专门的嵌入层或编码器</strong>（image encoder、text tokenizer）</li>
+<li>这些编码器把不同模态的数据映射到同一个 <strong>通用向量空间</strong></li>
+</ul>
+</li>
+<li><p>输出阶段：</p>
+<ul>
+<li>再用 task-specific head（例如文本生成 head、图像生成 head）生成对应输出</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>本质上是“一体多能”</strong>：底层是同一套大脑网络，只是不同类型输入经过不同的前置处理，然后共享底层理解能力。</li>
+</ul>
+<hr>
+<h2 id="2️⃣-模型类比人脑"><a href="#2️⃣-模型类比人脑" class="headerlink" title="2️⃣ 模型类比人脑"></a>2️⃣ 模型类比人脑</h2><p>你说得很形象：</p>
+<blockquote>
+<p>如果模型可以理解是深的大脑，对于人来说，理解外在事物的器官只有一个</p>
+</blockquote>
+<ul>
+<li>人脑有视觉皮层、听觉皮层、语言中枢等不同的“输入器官”，但<strong>底层计算和认知处理共享大脑神经网络</strong></li>
+<li><p>类似地，AI 模型：</p>
+<ul>
+<li>图像、文本、语音输入各自经过不同的前置编码器（感官）</li>
+<li>编码后的向量进入共享 Transformer 或神经网络（认知核心）</li>
+<li>输出再分发到不同任务头（动作/表达）</li>
+</ul>
+</li>
+</ul>
+<p>所以<strong>现代多模态模型在架构上正在模拟人脑“单大脑多输入感官”的机制</strong>。</p>
+<hr>
+<h2 id="3️⃣-算力对比人脑"><a href="#3️⃣-算力对比人脑" class="headerlink" title="3️⃣ 算力对比人脑"></a>3️⃣ 算力对比人脑</h2><ul>
+<li>人脑大约有 <strong>860 亿个神经元</strong>、每个神经元平均连接 7000 个突触</li>
+<li><p>现代 AI 模型：</p>
+<ul>
+<li>GPT-4（2023 年估计）参数在 <strong>数百亿到万亿级</strong></li>
+<li><p>单纯参数量大，但：</p>
+<ul>
+<li><strong>没有人脑的稀疏、高度并行动态调节能力</strong></li>
+<li>记忆、即时学习能力远不如人脑（还要训练好几周才学完）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>结论</strong>：算力上接近人脑特定功能，但整体认知能力、常识推理、跨模态灵活性仍远落后于人类大脑。</li>
+</ul>
+<hr>
+<h2 id="4️⃣-总结对比"><a href="#4️⃣-总结对比" class="headerlink" title="4️⃣ 总结对比"></a>4️⃣ 总结对比</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>方面</th>
+<th>Narrow AI (QuickDraw)</th>
+<th>Multi-modal LLM (GPT/Gemini)</th>
+<th>人脑</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>输入</td>
+<td>单一图像</td>
+<td>文本/图像/视频/音频</td>
+<td>视觉/听觉/触觉/味觉/嗅觉</td>
+</tr>
+<tr>
+<td>输出</td>
+<td>分类</td>
+<td>文本/图像/视频生成</td>
+<td>行为、语言、思维、创造</td>
+</tr>
+<tr>
+<td>模型结构</td>
+<td>单 CNN</td>
+<td>核心 Transformer + 模态编码器 + 任务头</td>
+<td>神经元网络，分区处理 + 整合</td>
+</tr>
+<tr>
+<td>学习方式</td>
+<td>训练集学习</td>
+<td>大规模预训练 + 少量微调</td>
+<td>终身学习</td>
+</tr>
+<tr>
+<td>算力</td>
+<td>小</td>
+<td>百亿/万亿参数</td>
+<td>约 860 亿神经元，极高并行</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>✅ <strong>核心思想</strong>：现代大模型越来越像“单大脑多感官”，但算力和灵活性还远不及人类。</p>
+<hr>
+<p>如果你愿意，我可以帮你画一张 <strong>QuickDraw CNN vs GPT-4 多模态 vs 人脑类比图</strong>，把“输入-处理-输出”的流程直观画出来，非常直观理解。</p>
+<p>你想让我画吗？</p>
+<p>好的，我们来系统、深入地讲解 <strong>卷积神经网络（CNN）中的卷积操作</strong>，包括数学公式的推导、原理以及直觉理解。我会从基础到推导，逐步解释。我们尽量做到既数学严谨又易于理解。</p>
+<hr>
+<h2 id="1️⃣-CNN-卷积操作的直观理解"><a href="#1️⃣-CNN-卷积操作的直观理解" class="headerlink" title="1️⃣ CNN 卷积操作的直观理解"></a>1️⃣ CNN 卷积操作的直观理解</h2><p>卷积在 CNN 中的作用本质是 <strong>提取局部特征</strong>。</p>
+<p>假设输入是一个二维图像 $X$（大小 $H \times W$），卷积核 $K$（大小 $k_h \times k_w$）在图像上滑动，每次计算局部加权和，从而生成输出特征图 $Y$。</p>
+<p>直观公式：</p>
+<script type="math/tex; mode=display">
+Y(i, j) = \sum_{m=0}^{k_h-1} \sum_{n=0}^{k_w-1} K(m, n) \cdot X(i+m, j+n)</script><ul>
+<li>$i, j$ 是输出特征图 $Y$ 的索引。</li>
+<li>$m, n$ 是卷积核内部索引。</li>
+<li>这就是 <strong>二维离散卷积（cross-correlation 形式）</strong>。</li>
+</ul>
+<hr>
+<h2 id="2️⃣-卷积数学公式推导"><a href="#2️⃣-卷积数学公式推导" class="headerlink" title="2️⃣ 卷积数学公式推导"></a>2️⃣ 卷积数学公式推导</h2><p>卷积的连续定义（信号处理中的卷积）为：</p>
+<script type="math/tex; mode=display">
+(f * g)(t) = \int_{-\infty}^{+\infty} f(\tau) g(t - \tau) d\tau</script><ul>
+<li>$f$ 是输入信号，$g$ 是卷积核（滤波器）。</li>
+<li>离散图像中，积分变成求和：</li>
+</ul>
+<script type="math/tex; mode=display">
+(f * g)[i,j] = \sum_m \sum_n f[m,n] \cdot g[i-m, j-n]</script><p>在深度学习中，我们通常不做“翻转”，而直接用 cross-correlation：</p>
+<script type="math/tex; mode=display">
+Y[i,j] = \sum_m \sum_n K[m,n] \cdot X[i+m, j+n]</script><blockquote>
+<p>⚠ 注意：在数学上严格的卷积会翻转卷积核，但 CNN 框架（TensorFlow、PyTorch）直接用滑动窗口做加权和，更直观。</p>
+</blockquote>
+<hr>
+<h2 id="3️⃣-加入偏置和非线性"><a href="#3️⃣-加入偏置和非线性" class="headerlink" title="3️⃣ 加入偏置和非线性"></a>3️⃣ 加入偏置和非线性</h2><p>CNN 不仅卷积，还会加上偏置 $b$ 并经过激活函数 $\sigma$：</p>
+<script type="math/tex; mode=display">
+Y(i,j) = \sigma \Bigg( \sum_{m=0}^{k_h-1} \sum_{n=0}^{k_w-1} K(m,n) \cdot X(i+m,j+n) + b \Bigg)</script><ul>
+<li>$\sigma$ 常用 ReLU、Sigmoid 或 Tanh。</li>
+<li>$b$ 允许模型学习偏移，增加表示能力。</li>
+</ul>
+<hr>
+<h2 id="4️⃣-多通道卷积（RGB-图像）"><a href="#4️⃣-多通道卷积（RGB-图像）" class="headerlink" title="4️⃣ 多通道卷积（RGB 图像）"></a>4️⃣ 多通道卷积（RGB 图像）</h2><p>对于多通道输入（如 RGB 图像 $C=3$），卷积公式扩展为：</p>
+<script type="math/tex; mode=display">
+Y(i,j) = \sum_{c=0}^{C-1} \sum_{m=0}^{k_h-1} \sum_{n=0}^{k_w-1} K_c(m,n) \cdot X_c(i+m, j+n) + b</script><ul>
+<li>每个卷积核对应输入的所有通道。</li>
+<li>可以学习组合不同通道的特征。</li>
+<li>输出通道数量 $C_{out}$ 决定卷积核数量。</li>
+</ul>
+<hr>
+<h2 id="5️⃣-卷积原理的推理与证明"><a href="#5️⃣-卷积原理的推理与证明" class="headerlink" title="5️⃣ 卷积原理的推理与证明"></a>5️⃣ 卷积原理的推理与证明</h2><p>卷积之所以能提取特征，可以从 <strong>线性代数和信号处理角度</strong>理解：</p>
+<ol>
+<li><p><strong>局部感受野</strong><br>卷积核只关注局部像素，捕捉局部模式（如边缘、角点）。</p>
+</li>
+<li><p><strong>平移不变性</strong><br>卷积核在整个图像滑动，相同模式无论出现在图像哪个位置都能被检测到。</p>
+</li>
+<li><p><strong>线性组合 + 非线性映射</strong></p>
+<ul>
+<li>卷积 = 局部加权求和 → 相当于对输入空间做线性投影。</li>
+<li>激活函数引入非线性 → 可以表示复杂函数。</li>
+</ul>
+</li>
+<li><p><strong>卷积的矩阵表示（向量化推理）</strong><br>可以把卷积写成矩阵乘法：</p>
+<script type="math/tex; mode=display">
+\text{vec}(Y) = W \cdot \text{vec}(X)</script><ul>
+<li>其中 $W$ 是稀疏矩阵，由卷积核重复填充构成。</li>
+<li>这样可以证明卷积是对输入做线性变换，但参数数量远少于全连接层 → 提升计算效率和泛化能力。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="6️⃣-卷积公式总结"><a href="#6️⃣-卷积公式总结" class="headerlink" title="6️⃣ 卷积公式总结"></a>6️⃣ 卷积公式总结</h2><h3 id="单通道二维卷积："><a href="#单通道二维卷积：" class="headerlink" title="单通道二维卷积："></a>单通道二维卷积：</h3><script type="math/tex; mode=display">
+Y(i,j) = \sum_{m=0}^{k_h-1} \sum_{n=0}^{k_w-1} K(m,n) \cdot X(i+m,j+n)</script><h3 id="多通道卷积："><a href="#多通道卷积：" class="headerlink" title="多通道卷积："></a>多通道卷积：</h3><script type="math/tex; mode=display">
+Y(i,j) = \sum_{c=0}^{C-1} \sum_{m=0}^{k_h-1} \sum_{n=0}^{k_w-1} K_c(m,n) \cdot X_c(i+m, j+n) + b</script><h3 id="加非线性激活："><a href="#加非线性激活：" class="headerlink" title="加非线性激活："></a>加非线性激活：</h3><script type="math/tex; mode=display">
+Y(i,j) = \sigma \Big( \sum_{c=0}^{C-1} \sum_{m=0}^{k_h-1} \sum_{n=0}^{k_w-1} K_c(m,n) \cdot X_c(i+m, j+n) + b \Big)</script><hr>
+<h2 id="7️⃣-卷积的本质理解"><a href="#7️⃣-卷积的本质理解" class="headerlink" title="7️⃣ 卷积的本质理解"></a>7️⃣ 卷积的本质理解</h2><ul>
+<li><strong>特征提取器</strong>：卷积核自动学习边缘、纹理、形状等模式。</li>
+<li><strong>参数共享</strong>：同一个卷积核滑动全图 → 节省参数、提高泛化。</li>
+<li><strong>稀疏连接</strong>：每个输出只依赖局部输入 → 控制计算量。</li>
+</ul>
+<p>换句话说，CNN 的卷积层通过这种 <strong>局部加权求和 + 非线性映射</strong>，实现了对图像特征的高效编码。</p>
+<hr>
+<p>如果你愿意，我可以帮你画一张 <strong>卷积数学公式和滑动窗口对应图示</strong>，直观展示每个像素和卷积核的关系，并标注公式中的每一项对应图像位置。这样理解卷积公式就更直观了。</p>
+<p>你希望我画吗？</p>
+<blockquote>
+<p>卷积、积分、二重/多重级数的关系是什么</p>
+</blockquote>
+<p>好的，我们来系统梳理 <strong>卷积、积分、二重/多重级数（求和）的关系</strong>，从连续到离散，再到高维，理清它们的数学联系。</p>
+<hr>
+<h2 id="1️⃣-卷积与积分的关系（连续情况）"><a href="#1️⃣-卷积与积分的关系（连续情况）" class="headerlink" title="1️⃣ 卷积与积分的关系（连续情况）"></a>1️⃣ 卷积与积分的关系（连续情况）</h2><p>连续信号 $f(t)$ 和 $g(t)$ 的卷积定义是：</p>
+<script type="math/tex; mode=display">
+(f * g)(t) = \int_{-\infty}^{+\infty} f(\tau) g(t - \tau) \, d\tau</script><ul>
+<li><strong>积分</strong>本质上是连续求和。</li>
+<li>卷积可以看作对输入信号 $f(\tau)$ 进行 <strong>滑动加权平均</strong>，权重由 $g$ 决定。</li>
+<li>积分起到“累加局部贡献”的作用。</li>
+</ul>
+<blockquote>
+<p>🔹 直觉：把卷积理解为“把一个函数翻转、平移，然后做积分求和”，就是连续情况下的“滑动窗口加权求和”。</p>
+</blockquote>
+<hr>
+<h3 id="1-1-二维卷积（图像的积分形式）"><a href="#1-1-二维卷积（图像的积分形式）" class="headerlink" title="1.1 二维卷积（图像的积分形式）"></a>1.1 二维卷积（图像的积分形式）</h3><p>对于二维连续信号 $f(x, y), g(x, y)$：</p>
+<script type="math/tex; mode=display">
+(f * g)(x, y) = \int_{-\infty}^{+\infty} \int_{-\infty}^{+\infty} f(\xi, \eta) \, g(x-\xi, y-\eta) \, d\xi \, d\eta</script><ul>
+<li>这是 <strong>二重积分</strong>，相当于把二维卷积核 $g$ 在输入图像上滑动，每个位置做加权累积。</li>
+<li>如果再扩展到三维（例如视频或体数据），就变成 <strong>三重积分</strong>。</li>
+</ul>
+<blockquote>
+<p>🔹 结论：<strong>卷积是积分的一种特殊形式，用于计算一个函数在另一个函数上的加权累积。</strong></p>
+</blockquote>
+<hr>
+<h2 id="2️⃣-离散卷积与级数（求和）的关系"><a href="#2️⃣-离散卷积与级数（求和）的关系" class="headerlink" title="2️⃣ 离散卷积与级数（求和）的关系"></a>2️⃣ 离散卷积与级数（求和）的关系</h2><p>离散信号 $x[n], h[n]$ 的卷积定义：</p>
+<script type="math/tex; mode=display">
+y[n] = (x * h)[n] = \sum_{k=-\infty}^{\infty} x[k] \, h[n - k]</script><ul>
+<li>这里的求和就是 <strong>级数（series）</strong>。</li>
+<li>可以看作积分的离散化：积分 → 连续求和，求和 → 离散积分。</li>
+</ul>
+<h3 id="2-1-二维离散卷积"><a href="#2-1-二维离散卷积" class="headerlink" title="2.1 二维离散卷积"></a>2.1 二维离散卷积</h3><p>对于图像 $X[i,j]$ 和卷积核 $K[m,n]$：</p>
+<script type="math/tex; mode=display">
+Y[i,j] = \sum_m \sum_n X[i+m, j+n] \, K[m,n]</script><ul>
+<li><strong>二重级数（double sum）</strong>：相当于二维积分的离散化。</li>
+<li>多通道或三维卷积则对应 <strong>三重或更高重级数</strong>。</li>
+</ul>
+<hr>
+<h2 id="3️⃣-总结卷积、积分、级数的关系"><a href="#3️⃣-总结卷积、积分、级数的关系" class="headerlink" title="3️⃣ 总结卷积、积分、级数的关系"></a>3️⃣ 总结卷积、积分、级数的关系</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>表达式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>连续一维</td>
+<td>$(f*g)(t)=\int f(\tau) g(t-\tau)d\tau$</td>
+<td>积分形式卷积，累加连续贡献</td>
+</tr>
+<tr>
+<td>连续二维</td>
+<td>$(f*g)(x,y)=\int\int f(\xi,\eta) g(x-\xi,y-\eta)d\xi d\eta$</td>
+<td>二重积分，图像卷积的理论基础</td>
+</tr>
+<tr>
+<td>离散一维</td>
+<td>$y[n] = \sum_k x[k] h[n-k]$</td>
+<td>积分离散化 → 级数求和</td>
+</tr>
+<tr>
+<td>离散二维</td>
+<td>$Y[i,j] = \sum_m \sum_n X[i+m,j+n] K[m,n]$</td>
+<td>二重级数求和，对应图像卷积</td>
+</tr>
+<tr>
+<td>离散多维</td>
+<td>$Y[i,j,k,…] = \sum_{m,n,…} X[…] K[…]$</td>
+<td>多重级数，卷积推广到高维</td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<p>🔹 核心思想：</p>
+<ul>
+<li><strong>积分 ↔ 连续卷积</strong></li>
+<li><strong>求和（级数） ↔ 离散卷积</strong></li>
+<li><strong>单重 ↔ 一维卷积，二重 ↔ 二维卷积，多重 ↔ 高维卷积</strong></li>
+</ul>
+</blockquote>
+<hr>
+<h3 id="4️⃣-小结"><a href="#4️⃣-小结" class="headerlink" title="4️⃣ 小结"></a>4️⃣ 小结</h3><ol>
+<li>卷积就是<strong>加权累积</strong>，连续情况用积分，离散情况用求和。</li>
+<li>二维或高维卷积只是积分/求和维度增加。</li>
+<li>离散卷积可以看作连续卷积的采样版。</li>
+<li>CNN 中卷积本质就是离散多重级数 + 非线性激活的组合。</li>
+</ol>
+<hr>
+<p>如果你想，我可以画一张 <strong>卷积 ↔ 积分 ↔ 二重/多重求和</strong>的对照图，直观显示从连续到离散、从一维到二维的对应关系，非常适合理解 CNN 卷积的本质。</p>
+<p>你希望我画吗？</p>
+<blockquote>
+<p>$$<br>(f * g)(t) = \int_{-\infty}^{+\infty} f(\tau) g(t - \tau) \, d\tau</p>
+<p>$$ 中输入信号 𝑓(𝜏) 这个函数具体代表什么</p>
+</blockquote>
+<p>好的，我们来仔细分析这个公式中的 $f(\tau)$ 究竟代表什么。</p>
+<hr>
+<p>公式回顾：</p>
+<script type="math/tex; mode=display">
+(f * g)(t) = \int_{-\infty}^{+\infty} f(\tau) \, g(t - \tau) \, d\tau</script><ul>
+<li>$f$ 和 $g$ 都是函数，$\tau$ 是积分变量，$t$ 是卷积结果的自变量。</li>
+</ul>
+<hr>
+<h2 id="1️⃣-f-tau-的意义"><a href="#1️⃣-f-tau-的意义" class="headerlink" title="1️⃣ $f(\tau)$ 的意义"></a>1️⃣ $f(\tau)$ 的意义</h2><p>在卷积的语境下，通常我们把 $f(\tau)$ 称为 <strong>输入信号（input signal）</strong>：</p>
+<ul>
+<li>它是我们希望处理、分析或者提取特征的信号。</li>
+<li>可以是 <strong>时间信号</strong>、<strong>空间信号</strong>、甚至更高维信号。</li>
+<li>$\tau$ 是信号的“自变量”，例如时间、空间坐标等。</li>
+</ul>
+<h3 id="例子："><a href="#例子：" class="headerlink" title="例子："></a>例子：</h3><ol>
+<li><p><strong>音频信号</strong></p>
+<ul>
+<li>$f(\tau)$ 是声音的振幅随时间变化的函数。</li>
+<li>$\tau$ 表示时间（秒或毫秒）。</li>
+<li>卷积可以实现滤波器效果，比如低通、高通、回声等。</li>
+</ul>
+</li>
+<li><p><strong>图像信号（二维）</strong></p>
+<ul>
+<li>将二维图像表示为 $f(x, y)$ 或在一维展开为 $f(\tau)$。</li>
+<li>$\tau$ 可以理解为像素索引或者像素位置。</li>
+<li>卷积核 $g$ 用来提取边缘、纹理、形状等局部特征。</li>
+</ul>
+</li>
+<li><p><strong>概率密度函数（统计卷积）</strong></p>
+<ul>
+<li>$f(\tau)$ 也可以是随机变量的概率密度函数。</li>
+<li>卷积对应两个随机变量的和的分布。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="2️⃣-卷积公式中的角色"><a href="#2️⃣-卷积公式中的角色" class="headerlink" title="2️⃣ 卷积公式中的角色"></a>2️⃣ 卷积公式中的角色</h2><script type="math/tex; mode=display">
+(f * g)(t) = \int f(\tau) \, g(t-\tau) \, d\tau</script><ul>
+<li>$f(\tau)$ → <strong>原始信号</strong>，提供“被加权的数值”。</li>
+<li>$g(t-\tau)$ → <strong>滤波器 / 卷积核</strong>，提供“权重”或“响应”。</li>
+<li>积分 → 对所有位置 $\tau$ 的累积，得到在 $t$ 时刻的输出值。</li>
+</ul>
+<blockquote>
+<p>🔹 直觉：卷积就是“在每个输出时刻 $t$ 把整个输入信号 $f$ 和一个翻转平移后的卷积核 $g$ 做加权累加”。</p>
+</blockquote>
+<hr>
+<h2 id="3️⃣-小结"><a href="#3️⃣-小结" class="headerlink" title="3️⃣ 小结"></a>3️⃣ 小结</h2><ul>
+<li>$f(\tau)$ 是<strong>待处理的输入信号</strong>，它决定了卷积输出的基本形状。</li>
+<li>$\tau$ 是积分变量，用于在整个输入信号上“滑动”卷积核。</li>
+<li>$g(t-\tau)$ 是“响应函数”或卷积核，起到选择性放大或抑制 $f(\tau)$ 的作用。</li>
+<li>卷积的输出 $(f*g)(t)$ 是在每个 $t$ 时刻对整个信号的加权累积。</li>
+</ul>
+<hr>
+<p>如果你需要，我可以画一张 <strong>$f(\tau)$、$g(t-\tau)$ 和卷积输出 $(f*g)(t)$</strong> 的示意图，把公式中每一部分对应的信号形态画出来，这样理解会直观很多。</p>
+<p>你希望我画吗？</p>
+<blockquote>
+<p>𝑔(𝑡−𝜏) 滤波器 / 卷积核，又是怎么得来的，不同模型是不一样的吗？不同模型中 𝑓(𝜏) 和 𝑔(𝑡−𝜏) 函数的解析式是不一样的吗？怎么获得对应的解析式</p>
+</blockquote>
+<p>明白，我们来仔细分析卷积公式中 <strong>$g(t-\tau)$ 的来源</strong>，以及不同模型中 $f(\tau)$ 和 $g(t-\tau)$ 的差异与解析式问题。</p>
+<hr>
+<h2 id="1️⃣-g-t-tau-的本质"><a href="#1️⃣-g-t-tau-的本质" class="headerlink" title="1️⃣ $g(t-\tau)$ 的本质"></a>1️⃣ $g(t-\tau)$ 的本质</h2><p>公式回顾：</p>
+<script type="math/tex; mode=display">
+(f * g)(t) = \int_{-\infty}^{+\infty} f(\tau) \, g(t-\tau) \, d\tau</script><ul>
+<li>$f(\tau)$ → 输入信号（已知数据或者待分析信号）。</li>
+<li>$g(t-\tau)$ → 卷积核（滤波器），提供 <strong>加权响应</strong>。</li>
+</ul>
+<h3 id="1-1-连续信号中的滤波器"><a href="#1-1-连续信号中的滤波器" class="headerlink" title="1.1 连续信号中的滤波器"></a>1.1 连续信号中的滤波器</h3><p>在信号处理领域，卷积核 $g$ 通常是人为设计的滤波器，例如：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>卷积核类型</th>
+<th>数学解析式</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>低通滤波器</td>
+<td>$g(t) = \frac{1}{\sqrt{2\pi}\sigma} e^{-t^2/(2\sigma^2)}$</td>
+<td>平滑信号，去噪</td>
+</tr>
+<tr>
+<td>高通滤波器</td>
+<td>$g(t) = -\delta(t) + \text{平滑核}$</td>
+<td>强调高频边缘</td>
+</tr>
+<tr>
+<td>均值滤波器</td>
+<td>$g(t) = \frac{1}{2a} \text{rect}(t/2a)$</td>
+<td>平滑信号</td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<p>⚠ 这里的 $g(t)$ 是<strong>已知解析式</strong>，人为设计的。</p>
+</blockquote>
+<h3 id="1-2-离散情况（CNN-卷积核）"><a href="#1-2-离散情况（CNN-卷积核）" class="headerlink" title="1.2 离散情况（CNN 卷积核）"></a>1.2 离散情况（CNN 卷积核）</h3><p>在 CNN 中：</p>
+<ul>
+<li>$f(\tau)$ → 输入图像或特征图。</li>
+<li>$g$ → 卷积核参数，需要 <strong>学习得到</strong>，通常是随机初始化后通过梯度下降优化得到。</li>
+<li><strong>没有固定解析式</strong>，解析式是模型训练结果：每个卷积核 $g[m,n]$ 是一组数值（权重矩阵）。</li>
+</ul>
+<h4 id="直觉："><a href="#直觉：" class="headerlink" title="直觉："></a>直觉：</h4><ul>
+<li>CNN 卷积核是“自适应滤波器”，自动学习哪些模式重要（边缘、纹理、形状）。</li>
+<li>不同模型、不同卷积层得到的卷积核是不同的，所以 $g$ 在不同模型中不一样。</li>
+<li>训练后，卷积核就是 <strong>离散权值矩阵</strong>，不一定有简单闭式解析式。</li>
+</ul>
+<hr>
+<h2 id="2️⃣-f-tau-和-g-t-tau-的解析式问题"><a href="#2️⃣-f-tau-和-g-t-tau-的解析式问题" class="headerlink" title="2️⃣ $f(\tau)$ 和 $g(t-\tau)$ 的解析式问题"></a>2️⃣ $f(\tau)$ 和 $g(t-\tau)$ 的解析式问题</h2><h3 id="2-1-信号处理（传统滤波）"><a href="#2-1-信号处理（传统滤波）" class="headerlink" title="2.1 信号处理（传统滤波）"></a>2.1 信号处理（传统滤波）</h3><ul>
+<li>$f(\tau)$ → 原始信号，通常有解析式（例如正弦、指数函数）。</li>
+<li>$g(t-\tau)$ → 滤波器核，有设计公式。</li>
+<li>卷积结果可以通过积分算出闭式表达（如果解析式简单）。</li>
+</ul>
+<h3 id="2-2-神经网络（CNN）"><a href="#2-2-神经网络（CNN）" class="headerlink" title="2.2 神经网络（CNN）"></a>2.2 神经网络（CNN）</h3><ul>
+<li>$f(\tau)$ → 离散输入数据（图像像素），没有简单解析式，只是一组离散数值。</li>
+<li>$g$ → 卷积核参数矩阵，通过训练学习得到，也没有固定解析式。</li>
+<li>输出 $f*g$ → 离散加权和，通常是数值计算得到，不是闭式公式。</li>
+</ul>
+<h4 id="⚠-重点："><a href="#⚠-重点：" class="headerlink" title="⚠ 重点："></a>⚠ 重点：</h4><ul>
+<li><strong>信号处理卷积</strong> → 解析式可能存在（依赖输入信号和滤波器公式）。</li>
+<li><strong>深度学习卷积</strong> → 卷积核参数和输入都是离散的数值，解析式通常不存在，只能数值计算。</li>
+</ul>
+<hr>
+<h2 id="3️⃣-卷积核是怎么获得的？"><a href="#3️⃣-卷积核是怎么获得的？" class="headerlink" title="3️⃣ 卷积核是怎么获得的？"></a>3️⃣ 卷积核是怎么获得的？</h2><h3 id="3-1-信号处理滤波器（人工设计）"><a href="#3-1-信号处理滤波器（人工设计）" class="headerlink" title="3.1 信号处理滤波器（人工设计）"></a>3.1 信号处理滤波器（人工设计）</h3><ul>
+<li>根据需求选择低通、高通、带通等滤波器。</li>
+<li>公式直接写出来，例如高斯核、Sobel 算子等。</li>
+</ul>
+<h3 id="3-2-CNN-卷积核（训练学习）"><a href="#3-2-CNN-卷积核（训练学习）" class="headerlink" title="3.2 CNN 卷积核（训练学习）"></a>3.2 CNN 卷积核（训练学习）</h3><p>训练过程：</p>
+<ol>
+<li>初始化卷积核 $g$（通常随机或 Xavier/He 初始化）。</li>
+<li>输入 $f$ 经过卷积 + 激活 → 输出预测。</li>
+<li>与真实标签计算损失函数 $L$。</li>
+<li>反向传播梯度 $\frac{\partial L}{\partial g}$ 更新卷积核权重。</li>
+<li>训练多轮迭代后，卷积核 $g$ 收敛 → 自动学会特征提取。</li>
+</ol>
+<blockquote>
+<p>🔹 所以 CNN 中卷积核 <strong>不是人工公式，而是学习得到的数值矩阵</strong>。</p>
+</blockquote>
+<hr>
+<h2 id="4️⃣-总结"><a href="#4️⃣-总结" class="headerlink" title="4️⃣ 总结"></a>4️⃣ 总结</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>信号处理卷积</th>
+<th>CNN 卷积</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$f(\tau)$</td>
+<td>连续或离散信号，可能有解析式</td>
+<td>离散数据（图像/特征），通常无解析式</td>
+</tr>
+<tr>
+<td>$g(t-\tau)$</td>
+<td>人工设计滤波器，解析式已知</td>
+<td>卷积核参数矩阵，训练学习得到，无解析式</td>
+</tr>
+<tr>
+<td>获得方式</td>
+<td>根据设计公式</td>
+<td>通过梯度下降训练得到</td>
+</tr>
+<tr>
+<td>输出 $f*g$</td>
+<td>积分或求和，可求解析式</td>
+<td>离散卷积，数值计算得到</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+<p>如果你愿意，我可以画一张 <strong>卷积核从设计到学习的对比图</strong>，清晰展示 $g$ 在信号处理和 CNN 中的差异，以及训练是如何得到卷积核的。</p>
+<p>你希望我画吗？</p>
+<blockquote>
+<p>“𝑔 → 卷积核参数，需要 学习得到，通常是随机初始化后通过梯度下降优化得到” 这个是通过实验图像设计的吗，还是怎么设计的，具体怎么得到呢</p>
+</blockquote>
+<p>明白，我来详细讲清楚 CNN 中卷积核 $g$ <strong>具体是怎么得到的</strong>，以及为什么说是“学习得到”，而不是人工设计。我们分步骤仔细分析。</p>
+<hr>
+<h2 id="1️⃣-卷积核不是手工设计的"><a href="#1️⃣-卷积核不是手工设计的" class="headerlink" title="1️⃣ 卷积核不是手工设计的"></a>1️⃣ 卷积核不是手工设计的</h2><p>在 CNN 里，卷积核 $g$ 并不是你根据图像人工设计的（不像传统滤波器，例如 Sobel 边缘算子或高斯平滑）。</p>
+<p>原因：</p>
+<ul>
+<li>手工设计需要先知道要提取的特征类型（边缘、纹理、角点），这是先验知识。</li>
+<li>CNN 的优势是<strong>自动发现有用特征</strong>，无需人工指定。</li>
+<li>不同任务、不同数据集的卷积核可能完全不同。</li>
+</ul>
+<p>换句话说，卷积核是<strong>数据驱动的</strong>，由训练过程自动优化。</p>
+<hr>
+<h2 id="2️⃣-卷积核的初始化"><a href="#2️⃣-卷积核的初始化" class="headerlink" title="2️⃣ 卷积核的初始化"></a>2️⃣ 卷积核的初始化</h2><p>训练前，卷积核 $g$ 需要初始化：</p>
+<ul>
+<li><strong>随机初始化</strong>：常用高斯或均匀分布生成初始权重。</li>
+<li><strong>Xavier/He 初始化</strong>：根据前后层神经元数量调整初始值，避免梯度消失或爆炸。</li>
+</ul>
+<blockquote>
+<p>这个阶段，卷积核只是<strong>随机数矩阵</strong>，并没有特定含义。</p>
+</blockquote>
+<p>例如一个 3×3 卷积核初始化：</p>
+<script type="math/tex; mode=display">
+g = \begin{bmatrix}
+0.02 & -0.01 & 0.05 \\
+-0.03 & 0.10 & 0.01 \\
+0.04 & -0.02 & 0.03
+\end{bmatrix}</script><hr>
+<h2 id="3️⃣-卷积核的学习过程"><a href="#3️⃣-卷积核的学习过程" class="headerlink" title="3️⃣ 卷积核的学习过程"></a>3️⃣ 卷积核的学习过程</h2><p>卷积核真正有意义，是在 <strong>训练过程中通过梯度下降学习得到</strong>：</p>
+<h3 id="3-1-前向传播"><a href="#3-1-前向传播" class="headerlink" title="3.1 前向传播"></a>3.1 前向传播</h3><ol>
+<li>输入图像 $f$ 与卷积核 $g$ 卷积 → 输出特征图 $Y = f*g$。</li>
+<li>特征图经过激活函数、池化等处理 → 最终得到预测值 $\hat{y}$。</li>
+</ol>
+<h3 id="3-2-计算损失"><a href="#3-2-计算损失" class="headerlink" title="3.2 计算损失"></a>3.2 计算损失</h3><ul>
+<li>预测值 $\hat{y}$ 与真实标签 $y$ 计算损失函数 $L(\hat{y}, y)$。</li>
+<li>例如分类任务用交叉熵损失，回归任务用均方误差。</li>
+</ul>
+<h3 id="3-3-反向传播（Backpropagation）"><a href="#3-3-反向传播（Backpropagation）" class="headerlink" title="3.3 反向传播（Backpropagation）"></a>3.3 反向传播（Backpropagation）</h3><ul>
+<li>对卷积核 $g$ 计算梯度：</li>
+</ul>
+<script type="math/tex; mode=display">
+\frac{\partial L}{\partial g} = \text{链式法则传播损失到卷积核}</script><ul>
+<li>梯度表示卷积核中每个元素应该如何调整才能让预测更准确。</li>
+</ul>
+<h3 id="3-4-参数更新（梯度下降-Adam）"><a href="#3-4-参数更新（梯度下降-Adam）" class="headerlink" title="3.4 参数更新（梯度下降/Adam）"></a>3.4 参数更新（梯度下降/Adam）</h3><ul>
+<li>更新卷积核：</li>
+</ul>
+<script type="math/tex; mode=display">
+g \gets g - \eta \frac{\partial L}{\partial g}</script><ul>
+<li>$\eta$ 是学习率。</li>
+<li>多轮迭代后，卷积核自动学会提取“对任务最有用的特征”。</li>
+</ul>
+<hr>
+<h2 id="4️⃣-举例直观理解"><a href="#4️⃣-举例直观理解" class="headerlink" title="4️⃣ 举例直观理解"></a>4️⃣ 举例直观理解</h2><p>假设你训练 CNN 做猫狗分类：</p>
+<ul>
+<li>第一层卷积核可能学会检测<strong>边缘、方向线条</strong>，类似 Sobel 滤波器。</li>
+<li>第二层卷积核可能学会检测<strong>局部纹理、耳朵或毛发模式</strong>。</li>
+<li>第三层卷积核可能学会组合前面特征，识别<strong>猫耳朵+眼睛+鼻子</strong>模式。</li>
+</ul>
+<blockquote>
+<p>这里的卷积核不是实验设计的，而是通过大量图像训练得到的数值矩阵。</p>
+</blockquote>
+<hr>
+<h2 id="5️⃣-总结"><a href="#5️⃣-总结" class="headerlink" title="5️⃣ 总结"></a>5️⃣ 总结</h2><ol>
+<li>卷积核 $g$ 初始阶段是随机数（或特殊初始化）。</li>
+<li><strong>训练过程中通过梯度下降优化</strong>，逐渐变成能提取任务相关特征的权重矩阵。</li>
+<li>CNN 卷积核不需要人工设计，完全依赖<strong>数据和损失函数</strong>来学习。</li>
+<li>训练结束后，卷积核就是模型的“特征提取器”，数值上可以看作滤波器，但没有固定解析公式。</li>
+</ol>
+<hr>
+<p>如果你想，我可以画一张 <strong>卷积核从随机初始化 → 梯度更新 → 学会边缘/纹理特征</strong> 的图，直观展示 CNN 是怎么“自己设计卷积核”的。</p>
+<p>你希望我画吗？</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/10/22/lc-02/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2020/05/19/runloop/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: 'e929305d1df52067f223',
+  clientSecret: '465557188fddc6608846e97927bc2fe7a268f141',
+  repo: 'blog-comments',
+  owner: 'niyaoyao',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: md5(location.pathname),
+  admin: ['niyaoyao'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

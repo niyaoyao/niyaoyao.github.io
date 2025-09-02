@@ -25,7 +25,7 @@
 <meta property="og:image" content="https://niyaoyao.github.io/images/cycript_install.png">
 <meta property="og:image" content="https://niyaoyao.github.io/images/mach_o_segments.gif">
 <meta property="article:published_time" content="2016-10-31T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-04-15T15:21:28.579Z">
+<meta property="article:modified_time" content="2024-09-26T12:15:55.261Z">
 <meta property="article:author" content="Niyao">
 <meta property="article:tag" content="iOS">
 <meta property="article:tag" content="Jail Break">
@@ -261,7 +261,7 @@ ga('send', 'pageview');
 <li>照片存储目录 /private/var/mobile/Media/DCIM</li>
 <li>命令存储目录 /usr/bin</li>
 </ul>
-<p>进入 <strong>/var/mobile/Containers/Bundle/Application</strong> 目录，ls 子目录，找到美图秀秀的存储位置。<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">NY:/var/mobile/Containers/Bundle/Application root<span class="comment"># ls 8D71E631-48D6-4FE6-A8BE-5394AD898DD7/</span></span><br><span class="line">MTXX.app/  iTunesMetadata.plist</span><br></pre></td></tr></table></figure></p>
+<p>进入 <strong>/var/mobile/Containers/Bundle/Application</strong> 目录，ls 子目录，找到美图秀秀的存储位置。<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">NY:/var/mobile/Containers/Bundle/Application root# <span class="built_in">ls</span> 8D71E631-48D6-4FE6-A8BE-5394AD898DD7/</span><br><span class="line">MTXX.app/  iTunesMetadata.plist</span><br></pre></td></tr></table></figure></p>
 <h4 id="Mach-O-文件"><a href="#Mach-O-文件" class="headerlink" title="Mach-O 文件"></a>Mach-O 文件</h4><p><img src="https://niyaoyao.github.io/images/mach_o_segments.gif" alt=""></p>
 <p>直接进入 MTXX.app 目录下，将二进制可执行文件 <strong>MTXX</strong> 直接 scp 推到 Mac 上。<br>在 OS X 和 iOS 操作系统下的二进制可执行文件为 Mach-O 文件，可以利用 otool 命令查看。</p>
 <ul>
@@ -290,12 +290,12 @@ ga('send', 'pageview');
 <li>获得进程 PID</li>
 </ul>
 <p>在越狱设备中开启美图秀秀，并切回到越狱设备的终端，找到美图秀秀的进程编号 PID。</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">NY:~ root<span class="comment"># ps aux | grep &quot;MTXX&quot;</span></span><br><span class="line">mobile     949   3.9  3.3   737672  34540   ??  Ss    6:28PM   0:03.82 /var/mobile/Containers/Bundle/Application/8D71E631-48D6-4FE6-A8BE-5394AD898DD7/MTXX.app/MTXX</span><br><span class="line">root       956   3.3  0.0   536256    456 s000  R+    6:28PM   0:00.01 grep MTXX</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">NY:~ root# ps aux | grep <span class="string">&quot;MTXX&quot;</span></span><br><span class="line">mobile     949   3.9  3.3   737672  34540   ??  Ss    6:28PM   0:03.82 /var/mobile/Containers/Bundle/Application/8D71E631-48D6-4FE6-A8BE-5394AD898DD7/MTXX.app/MTXX</span><br><span class="line">root       956   3.3  0.0   536256    456 s000  R+    6:28PM   0:00.01 grep MTXX</span><br></pre></td></tr></table></figure>
 <p>找到 mobile 对应的 PID 949，之后利用 Cycript 进行运行时分析</p>
 <ul>
 <li>使用 Cycript </li>
 </ul>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">NY:~ root<span class="comment"># cycript -help</span></span><br><span class="line">cycript: invalid option -- h</span><br><span class="line">usage: cycript [-c] [-p &lt;pid|name&gt;] [-r &lt;host:port&gt;] [&lt;script&gt; [&lt;arg&gt;...]]</span><br><span class="line">NY:~ root<span class="comment"># cycript -p 949</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">NY:~ root# cycript -<span class="built_in">help</span></span><br><span class="line">cycript: invalid option -- h</span><br><span class="line">usage: cycript [-c] [-p &lt;pid|name&gt;] [-r &lt;host:port&gt;] [&lt;script&gt; [&lt;arg&gt;...]]</span><br><span class="line">NY:~ root# cycript -p 949</span><br></pre></td></tr></table></figure>
 <p>可以知道只要加上 -p 选项即可进入 Cycript 的运行状态。<br>Cycript 换行不太方便，直接输入回车键会立即执行脚本。所以，我采用多个空格来实现换行。</p>
 <ul>
 <li>美图秀秀运行时分析</li>
