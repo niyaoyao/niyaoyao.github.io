@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>Swift 中属性 Getter、Setter 和观察者的生命周期 | N.Y.</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="interview," />
+  
+
+  <meta name="description" content="Swift 中属性 Getter、Setter 和观察者的生命周期 一、属性 Getter 和 Setter 的基础 Swift 中的属性分为存储属性（stored properties）和计算属性（computed properties）。getter 和 setter 是属性的核心机制，用于控制属性值的读取和设置。 1.1 存储属性  定义：存储属性直接存储值，常见于 struct 和 cla">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Swift 中属性 Getter、Setter 和观察者的生命周期">
+<meta property="og:url" content="http://niyaoyao.me/2015/06/09/interview-Swift%20Property%20Getter%20and%20Setter%20Lifecycle/index.html">
+<meta property="og:site_name" content="N.Y.">
+<meta property="og:description" content="Swift 中属性 Getter、Setter 和观察者的生命周期 一、属性 Getter 和 Setter 的基础 Swift 中的属性分为存储属性（stored properties）和计算属性（computed properties）。getter 和 setter 是属性的核心机制，用于控制属性值的读取和设置。 1.1 存储属性  定义：存储属性直接存储值，常见于 struct 和 cla">
+<meta property="og:locale">
+<meta property="article:published_time" content="2015-06-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-09-26T10:44:15.763Z">
+<meta property="article:author" content="Niyao">
+<meta property="article:tag" content="interview">
+<meta name="twitter:card" content="summary">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico/images/avatar_ny.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    
+<link rel="stylesheet" href="/css/personal-style.css">
+
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38189205-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">Hi~</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">Hi~</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text">Swift 中属性 Getter、Setter 和观察者的生命周期</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%B1%9E%E6%80%A7-Getter-%E5%92%8C-Setter-%E7%9A%84%E5%9F%BA%E7%A1%80"><span class="toc-text">一、属性 Getter 和 Setter 的基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E5%AD%98%E5%82%A8%E5%B1%9E%E6%80%A7"><span class="toc-text">1.1 存储属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7"><span class="toc-text">1.2 计算属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E5%B1%9E%E6%80%A7%E8%A7%82%E5%AF%9F%E8%80%85%EF%BC%88willSet-%E5%92%8C-didSet%EF%BC%89"><span class="toc-text">1.3 属性观察者（willSet 和 didSet）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%B1%9E%E6%80%A7-Getter-%E5%92%8C-Setter-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-text">二、属性 Getter 和 Setter 的生命周期</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-Getter-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-text">2.1 Getter 生命周期</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-Setter-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-text">2.2 Setter 生命周期</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E5%B1%9E%E6%80%A7%E8%A7%82%E5%AF%9F%E8%80%85%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-text">2.3 属性观察者生命周期</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%AE%8C%E6%95%B4%E7%A4%BA%E4%BE%8B"><span class="toc-text">2.4 生命周期完整示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95%E5%92%8C%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-text">三、高级用法和注意事项</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E8%87%AA%E5%AE%9A%E4%B9%89-Getter-%E5%92%8C-Setter-%E7%9A%84%E9%AB%98%E7%BA%A7%E5%9C%BA%E6%99%AF"><span class="toc-text">3.1 自定义 Getter 和 Setter 的高级场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%B1%9E%E6%80%A7%E8%A7%82%E5%AF%9F%E8%80%85%E7%9A%84%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95"><span class="toc-text">3.2 属性观察者的高级用法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E5%B1%9E%E6%80%A7%E8%A7%82%E5%AF%9F%E8%80%85-vs-%E8%87%AA%E5%AE%9A%E4%B9%89-Setter"><span class="toc-text">3.3 属性观察者 vs 自定义 Setter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E5%B9%B6%E5%8F%91%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-text">3.4 并发环境下的注意事项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-%E6%80%A7%E8%83%BD%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-text">3.5 性能注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%97%AE%E9%A2%98"><span class="toc-text">四、常见面试问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E9%AB%98%E7%BA%A7%E5%9C%BA%E6%99%AF%EF%BC%9A%E7%BB%93%E5%90%88%E5%85%B6%E4%BB%96-Swift-%E7%89%B9%E6%80%A7"><span class="toc-text">五、高级场景：结合其他 Swift 特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E7%BB%93%E5%90%88-Codable"><span class="toc-text">5.1 结合 Codable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E7%BB%93%E5%90%88-Combine"><span class="toc-text">5.2 结合 Combine</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E7%BB%93%E5%90%88%E6%B3%9B%E5%9E%8B%E5%92%8C%E5%8D%8F%E8%AE%AE"><span class="toc-text">5.3 结合泛型和协议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-text">六、总结</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-interview-Swift Property Getter and Setter Lifecycle" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Swift 中属性 Getter、Setter 和观察者的生命周期</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2015.06.09</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Niyao</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1>Swift 中属性 Getter、Setter 和观察者的生命周期</h1>
+<h2 id="一、属性-Getter-和-Setter-的基础">一、属性 Getter 和 Setter 的基础</h2>
+<p>Swift 中的属性分为<strong>存储属性</strong>（stored properties）和<strong>计算属性</strong>（computed properties）。<code>getter</code> 和 <code>setter</code> 是属性的核心机制，用于控制属性值的读取和设置。</p>
+<h3 id="1-1-存储属性">1.1 存储属性</h3>
+<ul>
+<li><strong>定义</strong>：存储属性直接存储值，常见于 <code>struct</code> 和 <code>class</code>。</li>
+<li><strong>Getter/Setter</strong>：
+<ul>
+<li>默认情况下，存储属性的 <code>getter</code> 直接返回存储值，<code>setter</code> 直接修改存储值。</li>
+<li>可以自定义 <code>getter</code> 和 <code>setter</code> 来添加逻辑。</li>
+</ul>
+</li>
+<li><strong>示例</strong>：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> _name: <span class="type">String</span></span><br><span class="line">    <span class="keyword">var</span> name: <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123; _name &#125;</span><br><span class="line">        <span class="keyword">set</span> &#123; _name <span class="operator">=</span> newValue.uppercased() &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> person <span class="operator">=</span> <span class="type">Person</span>(_name: <span class="string">&quot;John&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(person.name) <span class="comment">// 输出: JOHN</span></span><br><span class="line">person.name <span class="operator">=</span> <span class="string">&quot;Alice&quot;</span></span><br><span class="line"><span class="built_in">print</span>(person.name) <span class="comment">// 输出: ALICE</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="1-2-计算属性">1.2 计算属性</h3>
+<ul>
+<li><strong>定义</strong>：计算属性不存储值，通过 <code>getter</code> 和（可选）<code>setter</code> 计算得出。</li>
+<li><strong>Getter/Setter</strong>：
+<ul>
+<li><code>getter</code> 必须实现，返回计算值。</li>
+<li><code>setter</code> 可选，用于更新相关状态。</li>
+</ul>
+</li>
+<li><strong>示例</strong>：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Rectangle</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> width: <span class="type">Double</span></span><br><span class="line">    <span class="keyword">var</span> height: <span class="type">Double</span></span><br><span class="line">    <span class="keyword">var</span> area: <span class="type">Double</span> &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123; width <span class="operator">*</span> height &#125;</span><br><span class="line">        <span class="keyword">set</span> &#123; <span class="comment">// 按比例更新 width 和 height</span></span><br><span class="line">            <span class="keyword">let</span> ratio <span class="operator">=</span> width <span class="operator">/</span> height</span><br><span class="line">            height <span class="operator">=</span> sqrt(newValue <span class="operator">/</span> ratio)</span><br><span class="line">            width <span class="operator">=</span> newValue <span class="operator">/</span> height</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> rect <span class="operator">=</span> <span class="type">Rectangle</span>(width: <span class="number">5</span>, height: <span class="number">10</span>)</span><br><span class="line"><span class="built_in">print</span>(rect.area) <span class="comment">// 输出: 50.0</span></span><br><span class="line">rect.area <span class="operator">=</span> <span class="number">200</span></span><br><span class="line"><span class="built_in">print</span>(rect.width, rect.height) <span class="comment">// 输出: 10.0 20.0</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="1-3-属性观察者（willSet-和-didSet）">1.3 属性观察者（willSet 和 didSet）</h3>
+<ul>
+<li><strong>定义</strong>：存储属性支持 <code>willSet</code> 和 <code>didSet</code>，在值将要改变和已改变时触发。</li>
+<li><strong>用途</strong>：
+<ul>
+<li><code>willSet</code>：在属性值改变前执行，可访问新值（<code>newValue</code>）。</li>
+<li><code>didSet</code>：在属性值改变后执行，可访问旧值（<code>oldValue</code>）。</li>
+</ul>
+</li>
+<li><strong>限制</strong>：
+<ul>
+<li>仅适用于存储属性（计算属性不支持）。</li>
+<li>不能与自定义 <code>setter</code> 同时使用（但可与默认 <code>setter</code> 结合）。</li>
+</ul>
+</li>
+<li><strong>示例</strong>：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Counter</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> count: <span class="type">Int</span> <span class="operator">=</span> <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">willSet</span> &#123;</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Will set count to <span class="subst">\(newValue)</span>&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">didSet</span> &#123;</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Did set count from <span class="subst">\(oldValue)</span> to <span class="subst">\(count)</span>&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> counter <span class="operator">=</span> <span class="type">Counter</span>()</span><br><span class="line">counter.count <span class="operator">=</span> <span class="number">10</span></span><br><span class="line"><span class="comment">// 输出:</span></span><br><span class="line"><span class="comment">// Will set count to 10</span></span><br><span class="line"><span class="comment">// Did set count from 0 to 10</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="二、属性-Getter-和-Setter-的生命周期">二、属性 Getter 和 Setter 的生命周期</h2>
+<p>属性的 <code>getter</code> 和 <code>setter</code> 生命周期可以分解为以下阶段：</p>
+<h3 id="2-1-Getter-生命周期">2.1 Getter 生命周期</h3>
+<ol>
+<li><strong>触发</strong>：当访问属性时，调用 <code>getter</code>。</li>
+<li><strong>执行逻辑</strong>：
+<ul>
+<li>返回存储值（存储属性）或计算值（计算属性）。</li>
+<li>可执行附加逻辑（如日志、转换）。</li>
+</ul>
+</li>
+<li><strong>完成</strong>：返回结果给调用者。</li>
+</ol>
+<ul>
+<li><strong>示例</strong>：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Logger</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> value: <span class="type">Int</span> &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123;</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Accessing value&quot;</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="number">42</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> logger <span class="operator">=</span> <span class="type">Logger</span>()</span><br><span class="line"><span class="built_in">print</span>(logger.value) <span class="comment">// 输出: Accessing value \n 42</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="2-2-Setter-生命周期">2.2 Setter 生命周期</h3>
+<ol>
+<li><strong>触发</strong>：当设置属性值时，调用 <code>setter</code>。</li>
+<li><strong>执行逻辑</strong>：
+<ul>
+<li>接收 <code>newValue</code>（默认参数名，可自定义）。</li>
+<li>更新存储值或相关状态。</li>
+<li>可执行附加逻辑（如验证、通知）。</li>
+</ul>
+</li>
+<li><strong>完成</strong>：属性值更新。</li>
+</ol>
+<ul>
+<li><strong>示例</strong>：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Validator</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> age: <span class="type">Int</span> &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123; _age &#125;</span><br><span class="line">        <span class="keyword">set</span> &#123;</span><br><span class="line">            _age <span class="operator">=</span> <span class="built_in">max</span>(<span class="number">0</span>, <span class="built_in">min</span>(newValue, <span class="number">120</span>)) <span class="comment">// 限制年龄范围</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> _age: <span class="type">Int</span> <span class="operator">=</span> <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> validator <span class="operator">=</span> <span class="type">Validator</span>()</span><br><span class="line">validator.age <span class="operator">=</span> <span class="number">150</span></span><br><span class="line"><span class="built_in">print</span>(validator.age) <span class="comment">// 输出: 120</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="2-3-属性观察者生命周期">2.3 属性观察者生命周期</h3>
+<p>属性观察者的生命周期与 <code>setter</code> 紧密相关，分为以下阶段：</p>
+<ol>
+<li>
+<p><strong>willSet 阶段</strong>：</p>
+<ul>
+<li><strong>触发</strong>：在 <code>setter</code> 更新存储值之前。</li>
+<li><strong>可访问</strong>：
+<ul>
+<li><code>newValue</code>：即将设置的新值。</li>
+<li>当前值（<code>self.property</code>）：尚未改变。</li>
+</ul>
+</li>
+<li><strong>用途</strong>：
+<ul>
+<li>验证新值。</li>
+<li>触发前置通知。</li>
+</ul>
+</li>
+<li><strong>限制</strong>：无法阻止值更新（只能抛出错误或间接处理）。</li>
+<li><strong>示例</strong>：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> name: <span class="type">String</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">        <span class="keyword">willSet</span>(newName) &#123;</span><br><span class="line">            <span class="keyword">if</span> newName.isEmpty &#123;</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;Warning: Name cannot be empty&quot;</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> user <span class="operator">=</span> <span class="type">User</span>()</span><br><span class="line">user.name <span class="operator">=</span> <span class="string">&quot;&quot;</span> <span class="comment">// 输出: Warning: Name cannot be empty</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>setter 执行</strong>：</p>
+<ul>
+<li>更新存储属性的值。</li>
+<li>如果有自定义 <code>setter</code>，则执行其逻辑。</li>
+</ul>
+</li>
+<li>
+<p><strong>didSet 阶段</strong>：</p>
+<ul>
+<li><strong>触发</strong>：在 <code>setter</code> 更新存储值之后。</li>
+<li><strong>可访问</strong>：
+<ul>
+<li><code>oldValue</code>：更新前的值。</li>
+<li>当前值（<code>self.property</code>）：已更新。</li>
+</ul>
+</li>
+<li><strong>用途</strong>：
+<ul>
+<li>记录变化日志。</li>
+<li>触发后置通知或 UI 更新。</li>
+</ul>
+</li>
+<li><strong>示例</strong>：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">DataModel</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> data: <span class="type">Int</span> <span class="operator">=</span> <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">didSet</span> &#123;</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Data changed from <span class="subst">\(oldValue)</span> to <span class="subst">\(data)</span>&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> model <span class="operator">=</span> <span class="type">DataModel</span>()</span><br><span class="line">model.data <span class="operator">=</span> <span class="number">42</span> <span class="comment">// 输出: Data changed from 0 to 42</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>完成</strong>：</p>
+<ul>
+<li>属性值更新完成，观察者逻辑执行完毕。</li>
+<li>如果涉及 UI 或通知，可能触发后续事件（如 KVO 或 Combine 发布）。</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-4-生命周期完整示例">2.4 生命周期完整示例</h3>
+<p>以下示例展示了 <code>getter</code>、<code>setter</code>、<code>willSet</code> 和 <code>didSet</code> 的完整生命周期：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Temperature</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> _celsius: <span class="type">Double</span> <span class="operator">=</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">var</span> celsius: <span class="type">Double</span> &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123;</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Getting celsius: <span class="subst">\(_celsius)</span>&quot;</span>)</span><br><span class="line">            <span class="keyword">return</span> _celsius</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">set</span> &#123;</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Setting celsius to <span class="subst">\(newValue)</span>&quot;</span>)</span><br><span class="line">            _celsius <span class="operator">=</span> newValue</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">willSet</span> &#123;</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Will set celsius to <span class="subst">\(newValue)</span>&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">didSet</span> &#123;</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Did set celsius from <span class="subst">\(oldValue)</span> to <span class="subst">\(_celsius)</span>&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> temp <span class="operator">=</span> <span class="type">Temperature</span>()</span><br><span class="line">temp.celsius <span class="operator">=</span> <span class="number">25</span></span><br><span class="line"><span class="comment">// 输出:</span></span><br><span class="line"><span class="comment">// Will set celsius to 25.0</span></span><br><span class="line"><span class="comment">// Setting celsius to 25.0</span></span><br><span class="line"><span class="comment">// Did set celsius from 0.0 to 25.0</span></span><br><span class="line"><span class="built_in">print</span>(temp.celsius)</span><br><span class="line"><span class="comment">// 输出:</span></span><br><span class="line"><span class="comment">// Getting celsius: 25.0</span></span><br><span class="line"><span class="comment">// 25.0</span></span><br></pre></td></tr></table></figure>
+<h2 id="三、高级用法和注意事项">三、高级用法和注意事项</h2>
+<h3 id="3-1-自定义-Getter-和-Setter-的高级场景">3.1 自定义 Getter 和 Setter 的高级场景</h3>
+<ul>
+<li><strong>延迟加载</strong>：
+<ul>
+<li>使用 <code>getter</code> 实现惰性初始化。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ImageLoader</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> image: <span class="type">UIImage</span>? &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> _image <span class="operator">==</span> <span class="literal">nil</span> &#123;</span><br><span class="line">                _image <span class="operator">=</span> <span class="type">UIImage</span>(named: <span class="string">&quot;default&quot;</span>)</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> _image</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> _image: <span class="type">UIImage</span>?</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><strong>权限控制</strong>：
+<ul>
+<li>使用 <code>private(set)</code> 或自定义 <code>setter</code> 限制写权限。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Config</span> &#123;</span><br><span class="line">    <span class="keyword">private(set)</span> <span class="keyword">var</span> apiKey: <span class="type">String</span> <span class="operator">=</span> <span class="string">&quot;default&quot;</span></span><br><span class="line">    <span class="keyword">mutating</span> <span class="keyword">func</span> <span class="title function_">resetKey</span>() &#123;</span><br><span class="line">        apiKey <span class="operator">=</span> <span class="string">&quot;reset&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-2-属性观察者的高级用法">3.2 属性观察者的高级用法</h3>
+<ul>
+<li><strong>通知和状态同步</strong>：
+<ul>
+<li>在 <code>didSet</code> 中触发通知或更新 UI。</li>
+<li>示例（结合 Combine）：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Combine</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ViewModel</span>: <span class="title class_ inherited__">ObservableObject</span> &#123;</span><br><span class="line">    <span class="meta">@Published</span> <span class="keyword">var</span> username: <span class="type">String</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">        <span class="keyword">didSet</span> &#123;</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Username updated to <span class="subst">\(username)</span>&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><strong>验证和回滚</strong>：
+<ul>
+<li>在 <code>willSet</code> 中验证新值，必要时抛出错误。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">SafeCounter</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> count: <span class="type">Int</span> <span class="operator">=</span> <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">willSet</span> &#123;</span><br><span class="line">            <span class="keyword">guard</span> newValue <span class="operator">&gt;=</span> <span class="number">0</span> <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="built_in">fatalError</span>(<span class="string">&quot;Count cannot be negative&quot;</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-3-属性观察者-vs-自定义-Setter">3.3 属性观察者 vs 自定义 Setter</h3>
+<ul>
+<li><strong>区别</strong>：
+<ul>
+<li><code>willSet</code> 和 <code>didSet</code> 适用于存储属性，适合观察值变化。</li>
+<li>自定义 <code>setter</code> 提供更灵活的控制（如转换、拒绝更新）。</li>
+</ul>
+</li>
+<li><strong>结合使用</strong>：
+<ul>
+<li>可以同时使用默认 <code>setter</code> 和观察者。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Circle</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> radius: <span class="type">Double</span> <span class="operator">=</span> <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">willSet</span> &#123; <span class="built_in">print</span>(<span class="string">&quot;Will set radius to <span class="subst">\(newValue)</span>&quot;</span>) &#125;</span><br><span class="line">        <span class="keyword">didSet</span> &#123; <span class="built_in">print</span>(<span class="string">&quot;Radius changed to <span class="subst">\(radius)</span>&quot;</span>) &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li>但自定义 <code>setter</code> 会覆盖 <code>willSet</code> 和 <code>didSet</code>，需手动调用观察逻辑。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-4-并发环境下的注意事项">3.4 并发环境下的注意事项</h3>
+<ul>
+<li><strong>线程安全</strong>：
+<ul>
+<li>属性访问和修改可能涉及多线程，需确保线程安全。</li>
+<li>使用 <code>@MainActor</code> 或 <code>actor</code> 保护属性。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">actor</span> <span class="title class_">SafeStore</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> value: <span class="type">Int</span> <span class="operator">=</span> <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">didSet</span> &#123; <span class="built_in">print</span>(<span class="string">&quot;Value updated to <span class="subst">\(value)</span>&quot;</span>) &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><strong>异步更新</strong>：
+<ul>
+<li>在 <code>async/await</code> 中，属性观察者可能触发多次，需避免重复逻辑。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">AsyncModel</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> data: <span class="type">String</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">        <span class="keyword">didSet</span> &#123; <span class="type">Task</span> &#123; <span class="keyword">await</span> notifyChange() &#125; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@MainActor</span> <span class="keyword">private</span> <span class="keyword">func</span> <span class="title function_">notifyChange</span>() &#123; <span class="built_in">print</span>(<span class="string">&quot;Notified&quot;</span>) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-5-性能注意事项">3.5 性能注意事项</h3>
+<ul>
+<li><strong>避免复杂逻辑</strong>：
+<ul>
+<li><code>getter</code> 和 <code>setter</code> 的复杂计算可能影响性能，考虑缓存结果。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Cache</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> _value: <span class="type">Int</span>?</span><br><span class="line">    <span class="keyword">var</span> value: <span class="type">Int</span> &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">let</span> cached <span class="operator">=</span> _value &#123; <span class="keyword">return</span> cached &#125;</span><br><span class="line">            <span class="keyword">let</span> computed <span class="operator">=</span> heavyCalculation()</span><br><span class="line">            _value <span class="operator">=</span> computed</span><br><span class="line">            <span class="keyword">return</span> computed</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">func</span> <span class="title function_">heavyCalculation</span>() -&gt; <span class="type">Int</span> &#123; <span class="number">42</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><strong>观察者开销</strong>：
+<ul>
+<li><code>willSet</code> 和 <code>didSet</code> 的频繁触发可能导致性能瓶颈，尽量简化逻辑。</li>
+</ul>
+</li>
+</ul>
+<h2 id="四、常见面试问题">四、常见面试问题</h2>
+<ol>
+<li>
+<p><strong>问题</strong>: <code>willSet</code> 和 <code>didSet</code> 可以用在计算属性上吗？为什么？
+<strong>答案</strong>:</p>
+<ul>
+<li>不能。计算属性没有存储值，<code>willSet</code> 和 <code>didSet</code> 仅适用于存储属性。</li>
+<li>替代方案：使用自定义 <code>setter</code> 实现类似逻辑。</li>
+</ul>
+</li>
+<li>
+<p><strong>问题</strong>: 如何在 <code>setter</code> 中防止无限递归？
+<strong>答案</strong>:</p>
+<ul>
+<li>使用私有存储属性，避免直接调用 <code>setter</code>。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">RecursiveSafe</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> _count: <span class="type">Int</span> <span class="operator">=</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">var</span> count: <span class="type">Int</span> &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123; _count &#125;</span><br><span class="line">        <span class="keyword">set</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> newValue <span class="operator">!=</span> _count &#123; <span class="comment">// 避免递归</span></span><br><span class="line">                _count <span class="operator">=</span> newValue</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>问题</strong>: 如何在属性观察者中实现 KVO-like 功能？
+<strong>答案</strong>:</p>
+<ul>
+<li>使用 <code>didSet</code> 发布通知或调用回调。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Observable</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> onChange: ((<span class="type">Int</span>) -&gt; <span class="type">Void</span>)<span class="operator">?</span></span><br><span class="line">    <span class="keyword">var</span> value: <span class="type">Int</span> <span class="operator">=</span> <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">didSet</span> &#123; onChange<span class="operator">?</span>(value) &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>问题</strong>: 如何在 <code>willSet</code> 中取消属性更新？
+<strong>答案</strong>:</p>
+<ul>
+<li>无法直接取消，但可抛出错误或使用自定义 <code>setter</code>。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">StrictModel</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> value: <span class="type">Int</span> &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123; _value &#125;</span><br><span class="line">        <span class="keyword">set</span> &#123;</span><br><span class="line">            <span class="keyword">guard</span> newValue <span class="operator">&gt;=</span> <span class="number">0</span> <span class="keyword">else</span> &#123; <span class="built_in">fatalError</span>(<span class="string">&quot;Invalid value&quot;</span>) &#125;</span><br><span class="line">            _value <span class="operator">=</span> newValue</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> _value: <span class="type">Int</span> <span class="operator">=</span> <span class="number">0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="五、高级场景：结合其他-Swift-特性">五、高级场景：结合其他 Swift 特性</h2>
+<h3 id="5-1-结合-Codable">5.1 结合 Codable</h3>
+<ul>
+<li>使用属性观察者监控 <code>Codable</code> 属性变化。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">User</span>: <span class="title class_ inherited__">Codable</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> name: <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">didSet</span> &#123; <span class="built_in">print</span>(<span class="string">&quot;Name updated to <span class="subst">\(name)</span>&quot;</span>) &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="5-2-结合-Combine">5.2 结合 Combine</h3>
+<ul>
+<li>使用 <code>@Published</code> 自动触发观察者。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Combine</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ViewModel</span>: <span class="title class_ inherited__">ObservableObject</span> &#123;</span><br><span class="line">    <span class="meta">@Published</span> <span class="keyword">var</span> count: <span class="type">Int</span> <span class="operator">=</span> <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">willSet</span> &#123; <span class="built_in">print</span>(<span class="string">&quot;Will set count to <span class="subst">\(newValue)</span>&quot;</span>) &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="5-3-结合泛型和协议">5.3 结合泛型和协议</h3>
+<ul>
+<li>在协议中定义属性观察者逻辑。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">protocol</span> <span class="title class_">ObservableProperty</span> &#123;</span><br><span class="line">    <span class="keyword">associatedtype</span> <span class="type">T</span></span><br><span class="line">    <span class="keyword">var</span> value: <span class="type">T</span> &#123; <span class="keyword">get</span> <span class="keyword">set</span> &#125;</span><br><span class="line">    <span class="keyword">var</span> onChange: ((<span class="type">T</span>) -&gt; <span class="type">Void</span>)<span class="operator">?</span> &#123; <span class="keyword">get</span> <span class="keyword">set</span> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">ObservableValue</span>&lt;<span class="type">T</span>&gt;: <span class="title class_ inherited__">ObservableProperty</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> value: <span class="type">T</span> &#123;</span><br><span class="line">        <span class="keyword">didSet</span> &#123; onChange<span class="operator">?</span>(value) &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> onChange: ((<span class="type">T</span>) -&gt; <span class="type">Void</span>)<span class="operator">?</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="六、总结">六、总结</h2>
+<ul>
+<li><strong>Getter</strong>：控制属性读取，返回值或计算结果。</li>
+<li><strong>Setter</strong>：控制属性写入，更新存储值或状态。</li>
+<li><strong>willSet</strong>：在值改变前触发，适合验证或前置通知。</li>
+<li><strong>didSet</strong>：在值改变后触发，适合日志或后置通知。</li>
+<li><strong>生命周期</strong>：<code>willSet</code> → <code>setter</code> → <code>didSet</code> → 完成。</li>
+<li><strong>注意事项</strong>：
+<ul>
+<li>避免复杂逻辑以优化性能。</li>
+<li>在并发环境中使用 <code>actor</code> 或锁。</li>
+<li>结合 <code>Codable</code>、<code>Combine</code> 等特性实现复杂功能。</li>
+</ul>
+</li>
+</ul>
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2015/06/09/interview-Advanced%20iOS%20Interview%20Questions/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2015/06/09/interview-swift/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: 'e929305d1df52067f223',
+  clientSecret: '465557188fddc6608846e97927bc2fe7a268f141',
+  repo: 'blog-comments',
+  owner: 'niyaoyao',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: md5(location.pathname),
+  admin: ['niyaoyao'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

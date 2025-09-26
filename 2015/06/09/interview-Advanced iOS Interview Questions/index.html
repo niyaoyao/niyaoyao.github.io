@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>资深 iOS 开发工程师面试题 | N.Y.</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="interview," />
+  
+
+  <meta name="description" content="资深 iOS 开发工程师面试题  一、Objective-C 高级 1. 内存管理   ARC 下如何精确管理对象的生命周期？如何处理复杂引用场景（如 Block 和 Delegate 混合使用）？ 答案:  ARC 自动管理引用计数，但需手动处理循环引用。 复杂场景：  Block 捕获 self 和 Delegate 可能导致多重循环引用。 使用 __weak typeof(self) wea">
+<meta property="og:type" content="article">
+<meta property="og:title" content="资深 iOS 开发工程师面试题">
+<meta property="og:url" content="http://niyaoyao.me/2015/06/09/interview-Advanced%20iOS%20Interview%20Questions/index.html">
+<meta property="og:site_name" content="N.Y.">
+<meta property="og:description" content="资深 iOS 开发工程师面试题  一、Objective-C 高级 1. 内存管理   ARC 下如何精确管理对象的生命周期？如何处理复杂引用场景（如 Block 和 Delegate 混合使用）？ 答案:  ARC 自动管理引用计数，但需手动处理循环引用。 复杂场景：  Block 捕获 self 和 Delegate 可能导致多重循环引用。 使用 __weak typeof(self) wea">
+<meta property="og:locale">
+<meta property="article:published_time" content="2015-06-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-09-26T10:44:26.206Z">
+<meta property="article:author" content="Niyao">
+<meta property="article:tag" content="interview">
+<meta name="twitter:card" content="summary">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico/images/avatar_ny.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    
+<link rel="stylesheet" href="/css/personal-style.css">
+
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38189205-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">Hi~</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">Hi~</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text">资深 iOS 开发工程师面试题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81Objective-C-%E9%AB%98%E7%BA%A7"><span class="toc-text">一、Objective-C 高级</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-text">1. 内存管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Runtime"><span class="toc-text">2. Runtime</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%A4%9A%E7%BA%BF%E7%A8%8B"><span class="toc-text">3. 多线程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Swift-%E9%AB%98%E7%BA%A7"><span class="toc-text">二、Swift 高级</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-struct-vs-class"><span class="toc-text">1. struct vs class</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Optional"><span class="toc-text">2. Optional</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%8D%8F%E8%AE%AE-%E6%B3%9B%E5%9E%8B"><span class="toc-text">3. 协议 &amp; 泛型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E9%97%AD%E5%8C%85"><span class="toc-text">4. 闭包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88Swift%EF%BC%89"><span class="toc-text">5. 多线程（Swift）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-Codable"><span class="toc-text">6. Codable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%88Swift%EF%BC%89"><span class="toc-text">7. 内存管理（Swift）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E5%93%8D%E5%BA%94%E5%BC%8F%E7%BC%96%E7%A8%8B"><span class="toc-text">8. 响应式编程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81iOS-%E5%BC%80%E5%8F%91%E9%AB%98%E7%BA%A7"><span class="toc-text">三、iOS 开发高级</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-UI-%E5%8A%A8%E7%94%BB"><span class="toc-text">1. UI &amp; 动画</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%BD%91%E7%BB%9C"><span class="toc-text">2. 网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">3. 数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-text">4. 性能优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%9E%B6%E6%9E%84-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="toc-text">5. 架构 &amp; 设计模式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E9%AB%98%E9%A2%91-Swift-%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%88%E6%89%A9%E5%B1%95%EF%BC%89"><span class="toc-text">四、高频 Swift 面试题（扩展）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-struct-vs-class-2"><span class="toc-text">1. struct vs class</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Codable"><span class="toc-text">2. Codable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%A4%9A%E7%BA%BF%E7%A8%8B-2"><span class="toc-text">3. 多线程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-text">4. 内存管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%93%8D%E5%BA%94%E5%BC%8F%E7%BC%96%E7%A8%8B"><span class="toc-text">5. 响应式编程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E7%BB%BC%E5%90%88%E9%97%AE%E9%A2%98"><span class="toc-text">五、综合问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-text">六、总结</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-interview-Advanced iOS Interview Questions" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">资深 iOS 开发工程师面试题</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2015.06.09</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Niyao</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1>资深 iOS 开发工程师面试题</h1>
+<hr />
+<h2 id="一、Objective-C-高级"><strong>一、Objective-C 高级</strong></h2>
+<h3 id="1-内存管理"><strong>1. 内存管理</strong></h3>
+<ol>
+<li>
+<p><strong>ARC 下如何精确管理对象的生命周期？如何处理复杂引用场景（如 Block 和 Delegate 混合使用）？</strong>
+<strong>答案</strong>:</p>
+<ul>
+<li>ARC 自动管理引用计数，但需手动处理循环引用。</li>
+<li><strong>复杂场景</strong>：
+<ul>
+<li>Block 捕获 self 和 Delegate 可能导致多重循环引用。</li>
+<li>使用 <code>__weak typeof(self) weakSelf</code> 在 Block 中避免循环引用。</li>
+<li>Delegate 使用 <code>weak</code> 修饰，防止强引用。</li>
+</ul>
+</li>
+<li><strong>示例</strong>：<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MyViewController</span> : <span class="title">UIViewController</span></span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">weak</span>) <span class="type">id</span>&lt;Delegate&gt; delegate;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="type">void</span> (^completionBlock)(<span class="type">void</span>);</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MyViewController</span></span></span><br><span class="line">- (<span class="type">void</span>)setup &#123;</span><br><span class="line">    __<span class="keyword">weak</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) weakSelf = <span class="keyword">self</span>;</span><br><span class="line">    <span class="keyword">self</span>.completionBlock = ^&#123;</span><br><span class="line">        __<span class="keyword">strong</span> <span class="keyword">typeof</span>(weakSelf) strongSelf = weakSelf;</span><br><span class="line">        [strongSelf.delegate performAction];</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：分析 <code>objc_retain</code> 和 <code>objc_release</code> 在 ARC 下的插入逻辑，使用 Instruments 的 Allocations 工具跟踪引用计数。</li>
+</ul>
+</li>
+<li>
+<p><strong>在 MRC 中，手动管理内存的常见问题及优化策略？</strong>
+<strong>答案</strong>:</p>
+<ul>
+<li><strong>问题</strong>：
+<ul>
+<li>忘记 <code>release</code> 或 <code>autorelease</code>，导致内存泄漏。</li>
+<li>过度 <code>retain</code>，导致对象无法释放。</li>
+<li><code>dealloc</code> 中未正确释放资源。</li>
+</ul>
+</li>
+<li><strong>优化</strong>：
+<ul>
+<li>使用命名规范（如 <code>create</code> 方法返回需手动释放对象）。</li>
+<li>借助 <code>NSAutoreleasePool</code> 管理临时对象。</li>
+<li>使用静态分析工具检测内存问题。</li>
+</ul>
+</li>
+<li><strong>注意</strong>：MRC 现已淘汰，但理解其原理有助于深入掌握 ARC。</li>
+</ul>
+</li>
+<li>
+<p><strong>如何在 Objective-C 中实现自定义内存管理策略（类似 ARC 的弱引用表）？</strong>
+<strong>答案</strong>:</p>
+<ul>
+<li>使用 <code>objc_setAssociatedObject</code> 和 <code>objc_getAssociatedObject</code> 模拟弱引用。</li>
+<li>示例：<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="type">char</span> kWeakRefKey;</span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">NSObject</span> (<span class="title">WeakReference</span>)</span></span><br><span class="line">- (<span class="type">void</span>)setWeakReference:(<span class="type">id</span>)object &#123;</span><br><span class="line">    objc_setAssociatedObject(<span class="keyword">self</span>, &amp;kWeakRefKey, object, OBJC_ASSOCIATION_ASSIGN);</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="type">id</span>)weakReference &#123;</span><br><span class="line">    <span class="keyword">return</span> objc_getAssociatedObject(<span class="keyword">self</span>, &amp;kWeakRefKey);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：分析 Runtime 的 <code>objc_storeWeak</code> 实现，探讨弱引用表如何管理对象释放。</li>
+</ul>
+</li>
+<li>
+<p><strong>autoreleasepool 的底层实现？如何在高内存压力场景下优化？</strong>
+<strong>答案</strong>:</p>
+<ul>
+<li><strong>实现</strong>：<code>NSAutoreleasePool</code> 创建一个池，对象调用 <code>autorelease</code> 时加入池，池销毁时释放所有对象。</li>
+<li><strong>优化</strong>：
+<ul>
+<li>在循环中创建局部 <code>autoreleasepool</code> 减少内存峰值。</li>
+<li>示例：<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000000</span>; i++) &#123;</span><br><span class="line">        <span class="built_in">NSString</span> *temp = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%d&quot;</span>, i];</span><br><span class="line">        <span class="comment">// 处理</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li>使用 <code>@autoreleasepool</code> 包装高频临时对象创建（如 JSON 解析）。</li>
+</ul>
+</li>
+<li><strong>高级点</strong>：分析 <code>objc_autoreleasePoolPush</code> 和 <code>objc_autoreleasePoolPop</code> 的调用栈。</li>
+</ul>
+</li>
+<li>
+<p><strong>如何调试复杂的内存泄漏问题（如第三方库导致）？</strong>
+<strong>答案</strong>:</p>
+<ul>
+<li>使用 Instruments 的 Leaks 和 Allocations 工具。</li>
+<li>结合 <code>MLeaksFinder</code> 或 <code>FBRetainCycleDetector</code> 检测循环引用。</li>
+<li>手动注入 <code>dealloc</code> 日志，跟踪对象释放。</li>
+<li><strong>高级点</strong>：分析第三方库源码，检查是否正确使用 <code>weak</code> 或 <code>unowned</code>，必要时通过 Category 重写方法。</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-Runtime"><strong>2. Runtime</strong></h3>
+<ol start="6">
+<li>
+<p><strong>Objective-C Runtime 如何支持动态方法解析？实现一个动态添加方法的案例。</strong>
+<strong>答案</strong>:</p>
+<ul>
+<li><strong>动态方法解析</strong>：
+<ul>
+<li>使用 <code>resolveInstanceMethod:</code> 或 <code>resolveClassMethod:</code> 动态添加方法。</li>
+<li>示例：<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MyClass</span></span></span><br><span class="line"><span class="type">void</span> dynamicMethod(<span class="type">id</span> <span class="keyword">self</span>, SEL _cmd) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Dynamic method called&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line">+ (<span class="type">BOOL</span>)resolveInstanceMethod:(SEL)sel &#123;</span><br><span class="line">    <span class="keyword">if</span> (sel == <span class="keyword">@selector</span>(dynamicMethod)) &#123;</span><br><span class="line">        class_addMethod([<span class="keyword">self</span> <span class="keyword">class</span>], sel, (IMP)dynamicMethod, <span class="string">&quot;v@:&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> [<span class="variable language_">super</span> resolveInstanceMethod:sel];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><strong>高级点</strong>：探讨 <code>IMP</code> 类型和方法签名编码（如 <code>v@:</code> 表示 void 返回、id 和 SEL 参数）。</li>
+</ul>
+</li>
+<li>
+<p><strong>消息转发机制的完整流程？如何优化性能？</strong>
+<strong>答案</strong>:</p>
+<ul>
+<li><strong>流程</strong>：
+<ol>
+<li><code>resolveInstanceMethod:</code>：尝试动态添加方法。</li>
+<li><code>forwardingTargetForSelector:</code>：转发给其他对象。</li>
+<li><code>methodSignatureForSelector:</code> 和 <code>forwardInvocation:</code>：自定义转发逻辑。</li>
+</ol>
+</li>
+<li><strong>优化</strong>：
+<ul>
+<li>优先使用 <code>forwardingTargetForSelector:</code>，避免昂贵的 <code>NSInvocation</code>。</li>
+<li>缓存方法签名，减少运行时开销。</li>
+</ul>
+</li>
+<li><strong>示例</strong>：<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Proxy</span></span></span><br><span class="line">- (<span class="type">id</span>)forwardingTargetForSelector:(SEL)aSelector &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>.target; <span class="comment">// 转发给 target 对象</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>如何使用 Runtime 实现 AOP（面向切面编程）？</strong>
+<strong>答案</strong>:</p>
+<ul>
+<li>使用 <code>method swizzling</code> 拦截方法，插入切面逻辑。</li>
+<li>示例（记录方法调用时间）：<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">UIViewController</span> (<span class="title">AOP</span>)</span></span><br><span class="line">+ (<span class="type">void</span>)load &#123;</span><br><span class="line">    Method original = class_getInstanceMethod(<span class="keyword">self</span>, <span class="keyword">@selector</span>(viewDidLoad));</span><br><span class="line">    Method swizzled = class_getInstanceMethod(<span class="keyword">self</span>, <span class="keyword">@selector</span>(swizzled_viewDidLoad));</span><br><span class="line">    method_exchangeImplementations(original, swizzled);</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="type">void</span>)swizzled_viewDidLoad &#123;</span><br><span class="line">    <span class="built_in">CFAbsoluteTime</span> start = <span class="built_in">CFAbsoluteTimeGetCurrent</span>();</span><br><span class="line">    [<span class="keyword">self</span> swizzled_viewDidLoad]; <span class="comment">// 调用原方法</span></span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;viewDidLoad took %f ms&quot;</span>, (<span class="built_in">CFAbsoluteTimeGetCurrent</span>() - start) * <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>坑</strong>：多线程下的 swizzling 需加锁；确保方法存在；避免父类/子类冲突。</li>
+</ul>
+</li>
+<li>
+<p><strong>KVO 的实现原理？如何手动实现 KVO？</strong>
+<strong>答案</strong>:</p>
+<ul>
+<li><strong>原理</strong>：
+<ul>
+<li>KVO 通过 Runtime 动态创建子类（NSKVONotifying_ 前缀），重写 setter 方法，触发通知。</li>
+</ul>
+</li>
+<li><strong>手动实现</strong>：
+<ul>
+<li>使用 <code>objc_setAssociatedObject</code> 存储观察者。</li>
+<li>重写 setter 方法，调用观察者回调。</li>
+<li>示例：<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MyObject</span></span></span><br><span class="line">- (<span class="type">void</span>)setName:(<span class="built_in">NSString</span> *)name &#123;</span><br><span class="line">    [<span class="keyword">self</span> willChangeValueForKey:<span class="string">@&quot;name&quot;</span>];</span><br><span class="line">    objc_setAssociatedObject(<span class="keyword">self</span>, <span class="keyword">@selector</span>(name), name, OBJC_ASSOCIATION_RETAIN);</span><br><span class="line">    [<span class="keyword">self</span> didChangeValueForKey:<span class="string">@&quot;name&quot;</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><strong>高级点</strong>：分析 <code>NSKeyValueObserving</code> 的内部实现，探讨性能瓶颈。</li>
+</ul>
+</li>
+<li>
+<p><strong>如何使用 Runtime 实现一个简单的依赖注入框架？</strong>
+<strong>答案</strong>:</p>
+<ul>
+<li>使用 <code>objc_getAssociatedObject</code> 和 <code>objc_setAssociatedObject</code> 动态绑定依赖。</li>
+<li>示例：<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">Service</span> &lt;<span class="title">NSObject</span>&gt;</span></span><br><span class="line">- (<span class="type">void</span>)perform;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MyClass</span></span></span><br><span class="line">- (<span class="type">void</span>)setService:(<span class="type">id</span>&lt;Service&gt;)service &#123;</span><br><span class="line">    objc_setAssociatedObject(<span class="keyword">self</span>, <span class="keyword">@selector</span>(service), service, OBJC_ASSOCIATION_RETAIN);</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="type">id</span>&lt;Service&gt;)service &#123;</span><br><span class="line">    <span class="keyword">return</span> objc_getAssociatedObject(<span class="keyword">self</span>, <span class="keyword">@selector</span>(service));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：结合 Protocol 和 Runtime 实现类型安全的依赖注入。</li>
+</ul>
+</li>
+</ol>
+<h3 id="3-多线程"><strong>3. 多线程</strong></h3>
+<ol start="11">
+<li>
+<p><strong>如何设计一个高性能的多线程任务调度系统？</strong>
+<strong>答案</strong>:</p>
+<ul>
+<li><strong>架构</strong>：
+<ul>
+<li>使用 <code>NSOperationQueue</code> 管理任务，支持优先级和依赖。</li>
+<li>结合 GCD 的串行/并发队列，优化任务分配。</li>
+<li>使用 <code>DispatchSemaphore</code> 控制并发上限。</li>
+</ul>
+</li>
+<li><strong>示例</strong>：<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="built_in">NSOperationQueue</span> *queue = [[<span class="built_in">NSOperationQueue</span> alloc] init];</span><br><span class="line">queue.maxConcurrentOperationCount = <span class="number">4</span>;</span><br><span class="line"><span class="built_in">NSBlockOperation</span> *op1 = [<span class="built_in">NSBlockOperation</span> blockOperationWithBlock:^&#123;</span><br><span class="line">    <span class="comment">// 任务 1</span></span><br><span class="line">&#125;];</span><br><span class="line"><span class="built_in">NSBlockOperation</span> *op2 = [<span class="built_in">NSBlockOperation</span> blockOperationWithBlock:^&#123;</span><br><span class="line">    <span class="comment">// 任务 2</span></span><br><span class="line">&#125;];</span><br><span class="line">[op2 addDependency:op1];</span><br><span class="line">[queue addOperations:@[op1, op2] waitUntilFinished:<span class="literal">NO</span>];</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：分析 GCD 的 <code>libdispatch</code> 源码，探讨线程池管理和 QoS 优化。</li>
+</ul>
+</li>
+<li>
+<p><strong>dispatch_once 的底层实现？如何替代？</strong>
+<strong>答案</strong>:</p>
+<ul>
+<li><strong>实现</strong>：<code>dispatch_once</code> 使用原子操作（<code>atomic_compare_exchange</code>）确保单次执行。</li>
+<li><strong>替代</strong>：
+<ul>
+<li>使用 <code>static</code> 变量和 <code>std::once_flag</code>（C++）。</li>
+<li>示例：<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="type">id</span> instance;</span><br><span class="line"><span class="keyword">static</span> std::once_flag flag;</span><br><span class="line">std::call_once(flag, ^&#123;</span><br><span class="line">    instance = [[MyClass alloc] init];</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><strong>高级点</strong>：探讨 <code>dispatch_once_t</code> 的内存结构和性能优化。</li>
+</ul>
+</li>
+<li>
+<p><strong>如何在高并发场景下避免死锁？</strong>
+<strong>answers</strong>:</p>
+<ul>
+<li>避免嵌套锁，使用 <code>dispatch_async</code> 替代同步调用。</li>
+<li>使用 <code>NSLock</code> 或 <code>dispatch_semaphore</code> 控制资源访问。</li>
+<li>示例：<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">dispatch_semaphore_t semaphore = dispatch_semaphore_create(<span class="number">1</span>);</span><br><span class="line"><span class="built_in">dispatch_async</span>(queue, ^&#123;</span><br><span class="line">    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);</span><br><span class="line">    <span class="comment">// 访问共享资源</span></span><br><span class="line">    dispatch_semaphore_signal(semaphore);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：分析死锁的调试方法（如 Thread Sanitizer）。</li>
+</ul>
+</li>
+<li>
+<p><strong>NSOperationQueue 如何实现优先级调度？</strong>
+<strong>答案</strong>:</p>
+<ul>
+<li>设置 <code>NSOperation</code> 的 <code>queuePriority</code> 或 <code>qualityOfService</code>。</li>
+<li>示例：<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="built_in">NSOperation</span> *op = [<span class="built_in">NSBlockOperation</span> blockOperationWithBlock:^&#123;</span><br><span class="line">    <span class="comment">// 任务</span></span><br><span class="line">&#125;];</span><br><span class="line">op.queuePriority = <span class="built_in">NSOperationQueuePriorityHigh</span>;</span><br><span class="line">[queue addOperation:op];</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：探讨 <code>NSOperationQueue</code> 的线程池管理和调度算法。</li>
+</ul>
+</li>
+<li>
+<p><strong>如何在 Objective-C 中实现线程安全的单例？</strong>
+<strong>答案</strong>:</p>
+<ul>
+<li>使用 <code>dispatch_once</code> 确保初始化线程安全。</li>
+<li>示例：<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Singleton</span></span></span><br><span class="line">+ (<span class="keyword">instancetype</span>)shared &#123;</span><br><span class="line">    <span class="keyword">static</span> Singleton *instance = <span class="literal">nil</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> onceToken;</span><br><span class="line">    <span class="built_in">dispatch_once</span>(&amp;onceToken, ^&#123;</span><br><span class="line">        instance = [[Singleton alloc] init];</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：分析多线程下的单例初始化性能瓶颈。</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2 id="二、Swift-高级"><strong>二、Swift 高级</strong></h2>
+<h3 id="1-struct-vs-class"><strong>1. struct vs class</strong></h3>
+<ol start="16">
+<li><strong>struct 和 class 在性能优化中的选择？如何结合 Copy-on-Write 优化 struct？</strong>
+<strong>答案</strong>:</li>
+</ol>
+<ul>
+<li><strong>选择</strong>：
+<ul>
+<li>struct：适合小数据量、值语义场景（如模型），栈分配性能高。</li>
+<li>class：适合复杂对象、需要继承或引用语义（如视图控制器）。</li>
+</ul>
+</li>
+<li><strong>Copy-on-Write</strong>：
+<ul>
+<li>struct 内部使用引用类型（如 Array）时，需实现 COW 避免不必要复制。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">Ref</span>&lt;<span class="type">T</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">var</span> value: <span class="type">T</span></span><br><span class="line">    <span class="keyword">init</span>(<span class="keyword">_</span> <span class="params">value</span>: <span class="type">T</span>) &#123; <span class="keyword">self</span>.value <span class="operator">=</span> value &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">MyArray</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> ref: <span class="type">Ref</span>&lt;[<span class="type">Int</span>]&gt;</span><br><span class="line">    <span class="keyword">var</span> values: [<span class="type">Int</span>] &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123; ref.value &#125;</span><br><span class="line">        <span class="keyword">set</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> <span class="operator">!</span><span class="built_in">isKnownUniquelyReferenced</span>(<span class="operator">&amp;</span>ref) &#123;</span><br><span class="line">                ref <span class="operator">=</span> <span class="type">Ref</span>(newValue)</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                ref.value <span class="operator">=</span> newValue</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><strong>高级点</strong>：分析 struct 的值语义对线程安全的影响。</li>
+</ul>
+<ol start="17">
+<li><strong>struct 和 class 在并发环境下的行为差异？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>struct：值类型，复制后独立，天然线程安全。</li>
+<li>class：引用类型，需使用 <code>actor</code> 或锁机制（如 <code>NSLock</code>）保护共享状态。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">actor</span> <span class="title class_">SafeCounter</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> value <span class="operator">=</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">increment</span>() &#123; value <span class="operator">+=</span> <span class="number">1</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：探讨 Swift 6 数据竞争检查对 struct 和 class 的影响。</li>
+</ul>
+<ol start="18">
+<li><strong>如何在 struct 中实现类似 class 的继承行为？</strong>
+<strong>答案</strong>:</li>
+</ol>
+<ul>
+<li>使用 Protocol 和默认实现模拟继承。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">protocol</span> <span class="title class_">Animal</span> &#123;</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">makeSound</span>()</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">extension</span> <span class="title class_">Animal</span> &#123;</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">makeSound</span>() &#123; <span class="built_in">print</span>(<span class="string">&quot;Generic sound&quot;</span>) &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Dog</span>: <span class="title class_ inherited__">Animal</span> &#123;</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">makeSound</span>() &#123; <span class="built_in">print</span>(<span class="string">&quot;Woof&quot;</span>) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：分析 Protocol 扩展与 class 继承的性能差异。</li>
+</ul>
+<h3 id="2-Optional"><strong>2. Optional</strong></h3>
+<ol start="19">
+<li><strong>Optional 的高级用法（如 map、flatMap、compactMap）？</strong>
+<strong>答案</strong>:</li>
+</ol>
+<ul>
+<li><strong>map</strong>：转换 Optional 的值。</li>
+<li><strong>flatMap</strong>：处理嵌套 Optional。</li>
+<li><strong>compactMap</strong>：过滤 nil 并转换。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> optionalString: <span class="type">String</span>? <span class="operator">=</span> <span class="string">&quot;123&quot;</span></span><br><span class="line"><span class="keyword">let</span> number <span class="operator">=</span> optionalString.map &#123; <span class="type">Int</span>(<span class="variable">$0</span>) &#125; <span class="comment">// Optional&lt;Int&gt;?</span></span><br><span class="line"><span class="keyword">let</span> flattened <span class="operator">=</span> optionalString.flatMap &#123; <span class="type">Int</span>(<span class="variable">$0</span>) &#125; <span class="comment">// Int?</span></span><br><span class="line"><span class="keyword">let</span> array <span class="operator">=</span> [<span class="string">&quot;1&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;2&quot;</span>].compactMap &#123; <span class="type">Int</span>(<span class="variable">$0</span>) &#125; <span class="comment">// [1, 2]</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：探讨 Optional 的 monadic 性质和编译器优化。</li>
+</ul>
+<ol start="20">
+<li><strong>如何自定义 Optional 的行为（如自定义解包逻辑）？</strong>
+<strong>答案</strong>:</li>
+</ol>
+<ul>
+<li>通过扩展 Optional 添加方法。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">extension</span> <span class="title class_">Optional</span> &#123;</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">unwrap</span>(<span class="params">orDefault</span> <span class="params">defaultValue</span>: <span class="type">Wrapped</span>) -&gt; <span class="type">Wrapped</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span> <span class="operator">??</span> defaultValue</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> value: <span class="type">String</span>? <span class="operator">=</span> <span class="literal">nil</span></span><br><span class="line"><span class="built_in">print</span>(value.unwrap(orDefault: <span class="string">&quot;default&quot;</span>)) <span class="comment">// 输出 &quot;default&quot;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：分析 Optional 的内存布局和性能开销。</li>
+</ul>
+<h3 id="3-协议-泛型"><strong>3. 协议 &amp; 泛型</strong></h3>
+<ol start="21">
+<li><strong>如何设计一个类型安全的泛型网络层？</strong>
+<strong>答案</strong>:</li>
+</ol>
+<ul>
+<li>使用泛型和 Protocol 约束返回值类型。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">protocol</span> <span class="title class_">APIEndpoint</span> &#123;</span><br><span class="line">    <span class="keyword">associatedtype</span> <span class="type">Response</span>: <span class="type">Decodable</span></span><br><span class="line">    <span class="keyword">var</span> url: <span class="type">URL</span> &#123; <span class="keyword">get</span> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">UserEndpoint</span>: <span class="title class_ inherited__">APIEndpoint</span> &#123;</span><br><span class="line">    <span class="keyword">typealias</span> <span class="type">Response</span> <span class="operator">=</span> <span class="type">User</span></span><br><span class="line">    <span class="keyword">var</span> url: <span class="type">URL</span> &#123; <span class="type">URL</span>(string: <span class="string">&quot;https://api.example.com/user&quot;</span>)<span class="operator">!</span> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">NetworkLayer</span> &#123;</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">fetch</span>&lt;<span class="type">T</span>: <span class="type">APIEndpoint</span>&gt;(<span class="keyword">_</span> <span class="params">endpoint</span>: <span class="type">T</span>) <span class="keyword">async</span> <span class="keyword">throws</span> -&gt; <span class="type">T</span>.<span class="type">Response</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> (data, <span class="keyword">_</span>) <span class="operator">=</span> <span class="keyword">try</span> <span class="keyword">await</span> <span class="type">URLSession</span>.shared.data(from: endpoint.url)</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">try</span> <span class="type">JSONDecoder</span>().decode(<span class="type">T</span>.<span class="type">Response</span>.<span class="keyword">self</span>, from: data)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：探讨泛型约束对编译器类型推断的影响。</li>
+</ul>
+<ol start="22">
+<li><strong>associatedtype 和 where 子句的高级用法？</strong>
+<strong>答案</strong>:</li>
+</ol>
+<ul>
+<li><strong>associatedtype</strong>：定义协议中的类型占位符。</li>
+<li><strong>where 子句</strong>：约束关联类型或泛型。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">protocol</span> <span class="title class_">Container</span> &#123;</span><br><span class="line">    <span class="keyword">associatedtype</span> <span class="type">Item</span> <span class="keyword">where</span> <span class="type">Item</span>: <span class="type">Equatable</span></span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">add</span>(<span class="keyword">_</span> <span class="params">item</span>: <span class="type">Item</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Stack</span>&lt;<span class="type">T</span>: <span class="type">Equatable</span>&gt;: <span class="title class_ inherited__">Container</span> &#123;</span><br><span class="line">    <span class="keyword">typealias</span> <span class="type">Item</span> <span class="operator">=</span> <span class="type">T</span></span><br><span class="line">    <span class="keyword">var</span> items: [<span class="type">T</span>] <span class="operator">=</span> []</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">add</span>(<span class="keyword">_</span> <span class="params">item</span>: <span class="type">T</span>) &#123; items.append(item) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：分析 PAT（Protocol with Associated Types）的动态分发问题。</li>
+</ul>
+<ol start="23">
+<li><strong>如何实现 Protocol 的动态分发？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>使用 <code>Self</code> 要求或 <code>@objc</code> 协议支持动态分发。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">@objc</span> <span class="keyword">protocol</span> <span class="title class_">DynamicProtocol</span> &#123;</span><br><span class="line">    <span class="keyword">@objc</span> <span class="keyword">func</span> <span class="title function_">perform</span>()</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span>: <span class="title class_ inherited__">DynamicProtocol</span> &#123;</span><br><span class="line">    <span class="keyword">@objc</span> <span class="keyword">func</span> <span class="title function_">perform</span>() &#123; <span class="built_in">print</span>(<span class="string">&quot;Performed&quot;</span>) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：探讨 <code>objc</code> 协议与 Swift 原生协议的性能差异。</li>
+</ul>
+<h3 id="4-闭包"><strong>4. 闭包</strong></h3>
+<ol start="24">
+<li><strong>如何优化闭包在高频场景下的性能？</strong>
+<strong>答案</strong>:</li>
+</ol>
+<ul>
+<li>减少捕获变量，降低内存开销。</li>
+<li>使用 <code>@inlinable</code> 或 <code>@inline(__always)</code> 优化编译器内联。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">@inlinable</span> <span class="keyword">func</span> <span class="title function_">execute</span>(<span class="keyword">_</span> <span class="params">closure</span>: () -&gt; <span class="type">Void</span>) &#123;</span><br><span class="line">    closure()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：分析闭包捕获的内存分配（堆 vs 栈）。</li>
+</ul>
+<ol start="25">
+<li><strong>逃逸闭包和非逃逸闭包的性能差异？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>非逃逸闭包：编译器可内联，栈分配，性能更高。</li>
+<li>逃逸闭包：需堆分配，增加引用计数开销。</li>
+<li><strong>高级点</strong>：探讨逃逸闭包的逃逸分析（Escape Analysis）。</li>
+</ul>
+<ol start="26">
+<li><strong>如何在闭包中实现复杂的状态管理？</strong>
+<strong>答案</strong>:</li>
+</ol>
+<ul>
+<li>使用捕获列表和类包装状态。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">State</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> value <span class="operator">=</span> <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> state <span class="operator">=</span> <span class="type">State</span>()</span><br><span class="line"><span class="keyword">let</span> closure <span class="operator">=</span> &#123; [state] <span class="keyword">in</span> state.value <span class="operator">+=</span> <span class="number">1</span> &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：分析闭包状态管理与 actor 的对比。</li>
+</ul>
+<h3 id="5-多线程（Swift）"><strong>5. 多线程（Swift）</strong></h3>
+<ol start="27">
+<li><strong>如何在 Swift 6 中确保数据竞争安全？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>使用 <code>actor</code> 隔离状态。</li>
+<li>实现 <code>Sendable</code> 协议，确保数据跨并发上下文安全。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">actor</span> <span class="title class_">DataStore</span>: <span class="title class_ inherited__">Sendable</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> data: [<span class="type">String</span>: <span class="type">Int</span>] <span class="operator">=</span> [:]</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">set</span>(<span class="keyword">_</span> <span class="params">key</span>: <span class="type">String</span>, <span class="params">value</span>: <span class="type">Int</span>) &#123; data[key] <span class="operator">=</span> value &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：分析 Swift 6 的并发检查器（Concurrency Checker）。</li>
+</ul>
+<ol start="28">
+<li><strong>async/await 如何与 Combine 集成？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>使用 <code>Future</code> 或 <code>PassthroughSubject</code> 桥接。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Combine</span><br><span class="line"><span class="keyword">func</span> <span class="title function_">fetchAsync</span>() <span class="keyword">async</span> <span class="keyword">throws</span> -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">42</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> publisher <span class="operator">=</span> <span class="type">Future</span>&lt;<span class="type">Int</span>, <span class="type">Error</span>&gt; &#123; promise <span class="keyword">in</span></span><br><span class="line">    <span class="type">Task</span> &#123;</span><br><span class="line">        <span class="keyword">do</span> &#123; promise(.success(<span class="keyword">try</span> <span class="keyword">await</span> fetchAsync())) &#125;</span><br><span class="line">        <span class="keyword">catch</span> &#123; promise(.failure(error)) &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：探讨 Combine 与 async/await 的性能差异。</li>
+</ul>
+<ol start="29">
+<li><strong>如何实现一个自定义并发调度器？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>使用 <code>DispatchQueue</code> 或 <code>RunLoop</code> 实现调度。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">CustomScheduler</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> queue <span class="operator">=</span> <span class="type">DispatchQueue</span>(label: <span class="string">&quot;com.custom.scheduler&quot;</span>)</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">schedule</span>(<span class="keyword">_</span> <span class="params">task</span>: <span class="keyword">@escaping</span> () -&gt; <span class="type">Void</span>) &#123;</span><br><span class="line">        queue.async(execute: task)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：分析 Swift Concurrency 的 <code>Continuation</code> 机制。</li>
+</ul>
+<h3 id="6-Codable"><strong>6. Codable</strong></h3>
+<ol start="30">
+<li><strong>如何在 Codable 中处理复杂嵌套 JSON 和动态键？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>使用 <code>unkeyedContainer</code> 或 <code>singleValueContainer</code> 解码动态结构。</li>
+<li>示例（动态键）：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">DynamicResponse</span>: <span class="title class_ inherited__">Decodable</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> data: [<span class="type">String</span>: <span class="keyword">Any</span>]</span><br><span class="line">    <span class="keyword">init</span>(<span class="params">from</span> <span class="params">decoder</span>: <span class="type">Decoder</span>) <span class="keyword">throws</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> container <span class="operator">=</span> <span class="keyword">try</span> decoder.container(keyedBy: <span class="type">CodingKeys</span>.<span class="keyword">self</span>)</span><br><span class="line">        data <span class="operator">=</span> <span class="keyword">try</span> container.decode([String: <span class="keyword">Any</span>].<span class="keyword">self</span>, forKey: .data)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">enum</span> <span class="title class_">CodingKeys</span>: <span class="title class_ inherited__">String</span>, <span class="title class_ inherited__">CodingKey</span> &#123; <span class="keyword">case</span> data &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：探讨 <code>JSONSerialization</code> 与 <code>Codable</code> 的性能对比。</li>
+</ul>
+<ol start="31">
+<li><strong>如何在 Codable 中实现多态解码？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>使用枚举和 <code>Codable</code> 实现多态。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">Animal</span>: <span class="title class_ inherited__">Codable</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> dog(name: <span class="type">String</span>)</span><br><span class="line">    <span class="keyword">case</span> cat(age: <span class="type">Int</span>)</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">enum</span> <span class="title class_">CodingKeys</span>: <span class="title class_ inherited__">String</span>, <span class="title class_ inherited__">CodingKey</span> &#123; <span class="keyword">case</span> type, data &#125;</span><br><span class="line">    <span class="keyword">init</span>(<span class="params">from</span> <span class="params">decoder</span>: <span class="type">Decoder</span>) <span class="keyword">throws</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> container <span class="operator">=</span> <span class="keyword">try</span> decoder.container(keyedBy: <span class="type">CodingKeys</span>.<span class="keyword">self</span>)</span><br><span class="line">        <span class="keyword">let</span> type <span class="operator">=</span> <span class="keyword">try</span> container.decode(<span class="type">String</span>.<span class="keyword">self</span>, forKey: .type)</span><br><span class="line">        <span class="keyword">switch</span> type &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;dog&quot;</span>: <span class="keyword">self</span> <span class="operator">=</span> .dog(name: <span class="keyword">try</span> container.decode(<span class="type">String</span>.<span class="keyword">self</span>, forKey: .data))</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;cat&quot;</span>: <span class="keyword">self</span> <span class="operator">=</span> .cat(age: <span class="keyword">try</span> container.decode(<span class="type">Int</span>.<span class="keyword">self</span>, forKey: .data))</span><br><span class="line">        <span class="keyword">default</span>: <span class="keyword">throw</span> <span class="type">DecodingError</span>.dataCorruptedError(forKey: .type, in: container, debugDescription: <span class="string">&quot;Invalid type&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">encode</span>(<span class="params">to</span> <span class="params">encoder</span>: <span class="type">Encoder</span>) <span class="keyword">throws</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> container <span class="operator">=</span> encoder.container(keyedBy: <span class="type">CodingKeys</span>.<span class="keyword">self</span>)</span><br><span class="line">        <span class="keyword">switch</span> <span class="keyword">self</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> .dog(<span class="keyword">let</span> name):</span><br><span class="line">            <span class="keyword">try</span> container.encode(<span class="string">&quot;dog&quot;</span>, forKey: .type)</span><br><span class="line">            <span class="keyword">try</span> container.encode(name, forKey: .data)</span><br><span class="line">        <span class="keyword">case</span> .cat(<span class="keyword">let</span> age):</span><br><span class="line">            <span class="keyword">try</span> container.encode(<span class="string">&quot;cat&quot;</span>, forKey: .type)</span><br><span class="line">            <span class="keyword">try</span> container.encode(age, forKey: .data)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：分析多态解码的性能开销和替代方案。</li>
+</ul>
+<h3 id="7-内存管理（Swift）"><strong>7. 内存管理（Swift）</strong></h3>
+<ol start="32">
+<li><strong>如何在 Swift 中实现自定义引用计数机制？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>使用 <code>ManagedBuffer</code> 或自定义引用计数类。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">RefCounted</span>&lt;<span class="type">T</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> count <span class="operator">=</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">var</span> value: <span class="type">T</span></span><br><span class="line">    <span class="keyword">init</span>(<span class="keyword">_</span> <span class="params">value</span>: <span class="type">T</span>) &#123; <span class="keyword">self</span>.value <span class="operator">=</span> value &#125;</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">retain</span>() &#123; count <span class="operator">+=</span> <span class="number">1</span> &#125;</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">release</span>() &#123; count <span class="operator">-=</span> <span class="number">1</span>; <span class="keyword">if</span> count <span class="operator">==</span> <span class="number">0</span> &#123; <span class="comment">/* 释放 */</span> &#125; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：对比 ARC 和手动引用计数的内存管理效率。</li>
+</ul>
+<ol start="33">
+<li><strong>如何在 Swift 中调试复杂循环引用？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>使用 Instruments 的 Leaks 工具。</li>
+<li>注入 <code>deinit</code> 日志，跟踪对象生命周期。</li>
+<li>使用 <code>swift_mangled_name</code> 检查编译器生成的符号。</li>
+<li><strong>高级点</strong>：分析 Swift ARC 的 <code>objc_retain</code> 和 <code>objc_release</code> 实现。</li>
+</ul>
+<h3 id="8-响应式编程"><strong>8. 响应式编程</strong></h3>
+<ol start="34">
+<li><strong>Combine 和 RxSwift 的高级集成场景（如与 UIKit/SwiftUI 结合）？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li><strong>Combine</strong>：
+<ul>
+<li>使用 <code>@Published</code> 和 <code>ObservableObject</code> 驱动 SwiftUI。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ViewModel</span>: <span class="title class_ inherited__">ObservableObject</span> &#123;</span><br><span class="line">    <span class="meta">@Published</span> <span class="keyword">var</span> text <span class="operator">=</span> <span class="string">&quot;&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">ContentView</span>: <span class="title class_ inherited__">View</span> &#123;</span><br><span class="line">    <span class="meta">@ObservedObject</span> <span class="keyword">var</span> viewModel <span class="operator">=</span> <span class="type">ViewModel</span>()</span><br><span class="line">    <span class="keyword">var</span> body: <span class="keyword">some</span> <span class="type">View</span> &#123;</span><br><span class="line">        <span class="type">Text</span>(viewModel.text)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><strong>RxSwift</strong>：
+<ul>
+<li>使用 <code>RxCocoa</code> 绑定 UIKit 控件。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> RxSwift</span><br><span class="line"><span class="keyword">import</span> RxCocoa</span><br><span class="line">textField.rx.text.orEmpty</span><br><span class="line">    .bind(to: label.rx.text)</span><br><span class="line">    .disposed(by: disposeBag)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><strong>高级点</strong>：分析 Combine 和 RxSwift 在内存管理和性能上的差异。</li>
+</ul>
+<ol start="35">
+<li><strong>如何实现一个自定义 Combine Operator？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>扩展 <code>Publisher</code> 定义自定义操作符。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">extension</span> <span class="title class_">Publisher</span> &#123;</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">customMap</span>&lt;<span class="type">T</span>&gt;(<span class="keyword">_</span> <span class="params">transform</span>: <span class="keyword">@escaping</span> (<span class="type">Output</span>) -&gt; <span class="type">T</span>) -&gt; <span class="type">Publishers</span>.<span class="type">Map</span>&lt;<span class="keyword">Self</span>, <span class="type">T</span>&gt; &#123;</span><br><span class="line">        <span class="keyword">return</span> map(transform)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：分析 <code>Publishers</code> 的内部实现（如 <code>Inner</code> 类）。</li>
+</ul>
+<hr />
+<h2 id="三、iOS-开发高级"><strong>三、iOS 开发高级</strong></h2>
+<h3 id="1-UI-动画"><strong>1. UI &amp; 动画</strong></h3>
+<ol start="36">
+<li><strong>如何优化复杂 UITableView 的性能？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li><strong>优化</strong>：
+<ul>
+<li>使用 <code>dequeueReusableCell</code> 复用单元格。</li>
+<li>异步加载图片（SDWebImage）。</li>
+<li>缓存行高（<code>estimatedHeightForRow</code>）。</li>
+<li>避免离屏渲染（减少 <code>cornerRadius</code>、<code>shadow</code>）。</li>
+</ul>
+</li>
+<li><strong>高级点</strong>：分析 <code>UITableView</code> 的重用机制和 <code>CATiledLayer</code> 的应用。</li>
+</ul>
+<ol start="37">
+<li><strong>如何实现复杂 SwiftUI 动画（如多阶段动画）？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>使用 <code>withAnimation</code> 和 <code>Animation</code> 组合。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">ContentView</span>: <span class="title class_ inherited__">View</span> &#123;</span><br><span class="line">    <span class="meta">@State</span> <span class="keyword">private</span> <span class="keyword">var</span> scale <span class="operator">=</span> <span class="number">1.0</span></span><br><span class="line">    <span class="keyword">var</span> body: <span class="keyword">some</span> <span class="type">View</span> &#123;</span><br><span class="line">        <span class="type">Circle</span>()</span><br><span class="line">            .scaleEffect(scale)</span><br><span class="line">            .onTapGesture &#123;</span><br><span class="line">                withAnimation(.spring()) &#123;</span><br><span class="line">                    scale <span class="operator">=</span> <span class="number">1.5</span></span><br><span class="line">                &#125; completion: &#123;</span><br><span class="line">                    withAnimation(.easeOut) &#123; scale <span class="operator">=</span> <span class="number">1.0</span> &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：探讨 SwiftUI 的 <code>Animatable</code> 协议和自定义动画曲线。</li>
+</ul>
+<ol start="38">
+<li><strong>如何在 UIKit 中实现自定义转场动画？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>实现 <code>UIViewControllerAnimatedTransitioning</code> 和 <code>UIViewControllerTransitioningDelegate</code>。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">CustomTransition</span>: <span class="title class_ inherited__">NSObject</span>, <span class="title class_ inherited__">UIViewControllerAnimatedTransitioning</span> &#123;</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">transitionDuration</span>(<span class="params">using</span> <span class="params">context</span>: <span class="type">UIViewControllerContextTransitioning</span>?) -&gt; <span class="type">TimeInterval</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0.5</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">animateTransition</span>(<span class="params">using</span> <span class="params">context</span>: <span class="type">UIViewControllerContextTransitioning</span>) &#123;</span><br><span class="line">        <span class="keyword">guard</span> <span class="keyword">let</span> toView <span class="operator">=</span> context.view(forKey: .to) <span class="keyword">else</span> &#123; <span class="keyword">return</span> &#125;</span><br><span class="line">        context.containerView.addSubview(toView)</span><br><span class="line">        toView.alpha <span class="operator">=</span> <span class="number">0</span></span><br><span class="line">        <span class="type">UIView</span>.animate(withDuration: transitionDuration(using: context), animations: &#123;</span><br><span class="line">            toView.alpha <span class="operator">=</span> <span class="number">1</span></span><br><span class="line">        &#125;, completion: &#123; <span class="keyword">_</span> <span class="keyword">in</span></span><br><span class="line">            context.completeTransition(<span class="literal">true</span>)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：分析 <code>CAAnimation</code> 的底层实现。</li>
+</ul>
+<h3 id="2-网络"><strong>2. 网络</strong></h3>
+<ol start="39">
+<li><strong>如何设计一个支持离线缓存和断点续传的网络层？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>使用 <code>URLSessionDownloadTask</code> 支持断点续传。</li>
+<li>使用 <code>FileManager</code> 缓存响应。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">DownloadManager</span> &#123;</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">download</span>(<span class="params">with</span> <span class="params">url</span>: <span class="type">URL</span>, <span class="params">resumeData</span>: <span class="type">Data</span>?) <span class="keyword">async</span> <span class="keyword">throws</span> -&gt; <span class="type">URL</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> task <span class="operator">=</span> resumeData <span class="operator">==</span> <span class="literal">nil</span> <span class="operator">?</span></span><br><span class="line">            <span class="type">URLSession</span>.shared.downloadTask(with: url) :</span><br><span class="line">            <span class="type">URLSession</span>.shared.downloadTask(withResumeData: resumeData<span class="operator">!</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">try</span> <span class="keyword">await</span> task.download()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">extension</span> <span class="title class_">URLSessionDownloadTask</span> &#123;</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">download</span>() <span class="keyword">async</span> <span class="keyword">throws</span> -&gt; <span class="type">URL</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">try</span> <span class="keyword">await</span> withCheckedThrowingContinuation &#123; continuation <span class="keyword">in</span></span><br><span class="line">            resume()</span><br><span class="line">            <span class="comment">// 实现 delegate 监听进度和完成</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：分析 <code>URLSession</code> 的 <code>URLSessionTask</code> 状态机。</li>
+</ul>
+<ol start="40">
+<li><strong>如何实现一个支持 HTTP/2 的网络层？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>使用 <code>URLSession</code> 的 <code>http/2</code> 支持（iOS 9+ 默认启用）。</li>
+<li>配置 <code>URLSessionConfiguration</code> 的 <code>httpShouldUsePipelining</code>。</li>
+<li><strong>高级点</strong>：探讨 HTTP/2 的多路复用和服务器推送。</li>
+</ul>
+<h3 id="3-数据库"><strong>3. 数据库</strong></h3>
+<ol start="41">
+<li><strong>如何优化 Core Data 在高并发场景下的性能？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>使用多 <code>NSManagedObjectContext</code>（主线程和后台线程）。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> container <span class="operator">=</span> <span class="type">NSPersistentContainer</span>(name: <span class="string">&quot;Model&quot;</span>)</span><br><span class="line">container.loadPersistentStores &#123; <span class="keyword">_</span>, <span class="keyword">_</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">let</span> backgroundContext <span class="operator">=</span> container.newBackgroundContext()</span><br><span class="line">    backgroundContext.perform &#123;</span><br><span class="line">        <span class="comment">// 后台操作</span></span><br><span class="line">        <span class="keyword">try?</span> backgroundContext.save()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：分析 Core Data 的 <code>NSMergePolicy</code> 和冲突解决。</li>
+</ul>
+<ol start="42">
+<li><strong>如何实现一个自定义 ORM 框架？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>使用 Codable 和 SQLite 实现轻量级 ORM。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">protocol</span> <span class="title class_">Model</span>: <span class="title class_ inherited__">Codable</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">var</span> tableName: <span class="type">String</span> &#123; <span class="keyword">get</span> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ORM</span> &#123;</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">save</span>&lt;<span class="type">T</span>: <span class="type">Model</span>&gt;(<span class="keyword">_</span> <span class="params">model</span>: <span class="type">T</span>) <span class="keyword">throws</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> data <span class="operator">=</span> <span class="keyword">try</span> <span class="type">JSONEncoder</span>().encode(model)</span><br><span class="line">        <span class="comment">// 保存到 SQLite</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：探讨 ORM 的性能瓶颈和索引优化。</li>
+</ul>
+<h3 id="4-性能优化"><strong>4. 性能优化</strong></h3>
+<ol start="43">
+<li><strong>如何使用 Instruments 分析复杂性能问题？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li><strong>Leaks</strong>：检测内存泄漏。</li>
+<li><strong>Time Profiler</strong>：分析 CPU 热点。</li>
+<li><strong>Core Animation</strong>：检查离屏渲染。</li>
+<li><strong>高级点</strong>：结合 <code>os_signpost</code> 自定义性能埋点。</li>
+</ul>
+<ol start="44">
+<li><strong>如何优化 App 启动时间？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>延迟非必要初始化。</li>
+<li>异步加载资源。</li>
+<li>使用 <code>dyld</code> 分析动态链接时间。</li>
+<li><strong>高级点</strong>：探讨 <code>dyld3</code> 和 <code>dyld4</code> 的启动优化。</li>
+</ul>
+<h3 id="5-架构-设计模式"><strong>5. 架构 &amp; 设计模式</strong></h3>
+<ol start="45">
+<li><strong>如何设计一个模块化的 iOS 架构？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>使用组件化（如 SPM 或 CocoaPods）。</li>
+<li>分层架构：UI 层、业务逻辑层、数据层。</li>
+<li>示例（路由）：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">protocol</span> <span class="title class_">Router</span> &#123;</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">route</span>(<span class="params">to</span> <span class="params">destination</span>: <span class="type">String</span>, <span class="params">parameters</span>: [<span class="params">String</span>: <span class="keyword">Any</span>])</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">AppRouter</span>: <span class="title class_ inherited__">Router</span> &#123;</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">route</span>(<span class="params">to</span> <span class="params">destination</span>: <span class="type">String</span>, <span class="params">parameters</span>: [<span class="params">String</span>: <span class="keyword">Any</span>]) &#123;</span><br><span class="line">        <span class="comment">// 动态加载模块</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：分析模块化的动态加载和依赖管理。</li>
+</ul>
+<ol start="46">
+<li><strong>如何实现一个依赖注入容器？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>使用 Protocol 和工厂模式。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">protocol</span> <span class="title class_">Service</span> &#123;</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">perform</span>()</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DIContainer</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> services: [<span class="type">String</span>: <span class="keyword">Any</span>] <span class="operator">=</span> [:]</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">register</span>&lt;<span class="type">T</span>&gt;(<span class="keyword">_</span> <span class="params">type</span>: <span class="type">T</span>.<span class="keyword">Type</span>, <span class="params">factory</span>: <span class="keyword">@escaping</span> () -&gt; <span class="type">T</span>) &#123;</span><br><span class="line">        services[<span class="string">&quot;<span class="subst">\(T.<span class="keyword">self</span>)</span>&quot;</span>] <span class="operator">=</span> factory</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">resolve</span>&lt;<span class="type">T</span>&gt;(<span class="keyword">_</span> <span class="params">type</span>: <span class="type">T</span>.<span class="keyword">Type</span>) -&gt; <span class="type">T</span>? &#123;</span><br><span class="line">        <span class="keyword">return</span> (services[<span class="string">&quot;<span class="subst">\(T.<span class="keyword">self</span>)</span>&quot;</span>] <span class="keyword">as?</span> () -&gt; <span class="type">T</span>)<span class="operator">?</span>()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：探讨 DI 容器的线程安全和生命周期管理。</li>
+</ul>
+<hr />
+<h2 id="四、高频-Swift-面试题（扩展）"><strong>四、高频 Swift 面试题（扩展）</strong></h2>
+<h3 id="1-struct-vs-class-2"><strong>1. struct vs class</strong></h3>
+<ul>
+<li><strong>如何在 struct 中实现深拷贝？</strong>
+<ul>
+<li>使用 <code>Codable</code> 或手动复制。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">DeepCopy</span>: <span class="title class_ inherited__">Codable</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> data: [<span class="type">Int</span>]</span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">copy</span>() -&gt; <span class="type">DeepCopy</span> &#123;</span><br><span class="line">        <span class="keyword">try!</span> <span class="type">JSONDecoder</span>().decode(<span class="type">DeepCopy</span>.<span class="keyword">self</span>, from: <span class="type">JSONEncoder</span>().encode(<span class="keyword">self</span>))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-Codable"><strong>2. Codable</strong></h3>
+<ul>
+<li><strong>如何处理动态 JSON 结构？</strong>
+<ul>
+<li>使用 <code>AnyCodable</code> 或自定义解码器。</li>
+</ul>
+</li>
+<li><strong>如何优化 Codable 的性能？</strong>
+<ul>
+<li>缓存 <code>JSONDecoder</code> 实例，减少反射开销。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-多线程-2"><strong>3. 多线程</strong></h3>
+<ul>
+<li><strong>如何在 async/await 中实现超时机制？</strong>
+<ul>
+<li>使用 <code>withTimeout</code> 或自定义 <code>Task</code>。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">func</span> <span class="title function_">fetchWithTimeout</span>() <span class="keyword">async</span> <span class="keyword">throws</span> -&gt; <span class="type">Data</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> <span class="keyword">await</span> withTaskCancellationHandler &#123;</span><br><span class="line">        <span class="keyword">try</span> <span class="keyword">await</span> <span class="type">Task</span>.sleep(nanoseconds: <span class="number">5_000_000_000</span>) <span class="comment">// 5s 超时</span></span><br><span class="line">        <span class="keyword">throw</span> <span class="type">CancellationError</span>()</span><br><span class="line">    &#125; operation: &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">try</span> <span class="keyword">await</span> fetchData()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-内存管理"><strong>4. 内存管理</strong></h3>
+<ul>
+<li><strong>如何在 Swift 中实现自定义内存分配器？</strong>
+<ul>
+<li>使用 <code>UnsafeMutablePointer</code> 和 <code>UnsafeBufferPointer</code>。</li>
+<li><strong>高级点</strong>：分析 Swift 的内存分配器（Swift Allocator）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-响应式编程"><strong>5. 响应式编程</strong></h3>
+<ul>
+<li><strong>如何在 Combine 中实现自定义 Publisher？</strong>
+<ul>
+<li>继承 <code>Publisher</code> 并实现 <code>receive(subscriber:)</code>。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">CustomPublisher</span>: <span class="title class_ inherited__">Publisher</span> &#123;</span><br><span class="line">    <span class="keyword">typealias</span> <span class="type">Output</span> <span class="operator">=</span> <span class="type">Int</span></span><br><span class="line">    <span class="keyword">typealias</span> <span class="type">Failure</span> <span class="operator">=</span> <span class="type">Never</span></span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">receive</span>&lt;<span class="type">S</span>: <span class="type">Subscriber</span>&gt;(<span class="params">subscriber</span>: <span class="type">S</span>) <span class="keyword">where</span> <span class="type">S</span>.<span class="type">Input</span> <span class="operator">==</span> <span class="type">Output</span>, <span class="type">S</span>.<span class="type">Failure</span> <span class="operator">==</span> <span class="type">Failure</span> &#123;</span><br><span class="line">        subscriber.receive(<span class="number">42</span>)</span><br><span class="line">        subscriber.receive(completion: .finished)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="五、综合问题"><strong>五、综合问题</strong></h2>
+<ol start="47">
+<li><strong>设计一个支持插件化的 iOS 架构，动态加载模块。</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>使用 <code>NSBundle</code> 或 <code>dlopen</code> 动态加载。</li>
+<li>结合 Protocol 和 DI 实现模块解耦。</li>
+<li><strong>高级点</strong>：分析 App Store 的动态加载限制。</li>
+</ul>
+<ol start="48">
+<li><strong>如何实现一个支持 A/B 测试的网络层？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>使用配置中心动态切换 API。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ABTestingNetwork</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> endpoint: <span class="type">APIEndpoint</span></span><br><span class="line">    <span class="keyword">init</span>(<span class="params">config</span>: [<span class="params">String</span>: <span class="type">String</span>]) &#123;</span><br><span class="line">        endpoint <span class="operator">=</span> config[<span class="string">&quot;variant&quot;</span>] <span class="operator">==</span> <span class="string">&quot;A&quot;</span> <span class="operator">?</span> <span class="type">EndpointA</span>() : <span class="type">EndpointB</span>()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：探讨 A/B 测试的数据收集和分析。</li>
+</ul>
+<ol start="49">
+<li><strong>如何在 SwiftUI 中实现复杂的状态管理？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>使用 <code>ObservableObject</code> 和 <code>EnvironmentObject</code>。</li>
+<li>示例：<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">AppState</span>: <span class="title class_ inherited__">ObservableObject</span> &#123;</span><br><span class="line">    <span class="meta">@Published</span> <span class="keyword">var</span> user: <span class="type">User</span>?</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">ContentView</span>: <span class="title class_ inherited__">View</span> &#123;</span><br><span class="line">    <span class="meta">@EnvironmentObject</span> <span class="keyword">var</span> state: <span class="type">AppState</span></span><br><span class="line">    <span class="keyword">var</span> body: <span class="keyword">some</span> <span class="type">View</span> &#123;</span><br><span class="line">        <span class="type">Text</span>(state.user<span class="operator">?</span>.name <span class="operator">??</span> <span class="string">&quot;No user&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><strong>高级点</strong>：分析 SwiftUI 的状态更新机制（diffing 算法）。</li>
+</ul>
+<ol start="50">
+<li><strong>如何分析和优化第三方库（如 Alamofire）的性能？</strong>
+<strong>answers</strong>:</li>
+</ol>
+<ul>
+<li>使用 Instruments 分析网络请求和内存使用。</li>
+<li>检查源码中的锁机制和异步操作。</li>
+<li><strong>高级点</strong>：探讨 Alamofire 的 <code>Session</code> 和 <code>Interceptor</code> 实现。</li>
+</ul>
+<hr />
+<h2 id="六、总结"><strong>六、总结</strong></h2>
+<ul>
+<li><strong>Objective-C</strong>：深入 Runtime、内存管理（MRC/ARC）、多线程（GCD/NSOperation）、动态特性（KVO/Method Swizzling）。</li>
+<li><strong>Swift</strong>：深入 struct/class、Codable、Optional、多线程（async/await）、内存管理（ARC）、响应式编程（Combine/RxSwift）。</li>
+<li><strong>iOS 开发</strong>：高级 UI（SwiftUI/UIKit）、网络（HTTP/2、断点续传）、数据库（Core Data/ORM）、性能优化（Instruments）、架构设计（模块化/DI）。</li>
+</ul>
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2015/03/02/xcode-errors/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2015/06/09/interview-Swift%20Property%20Getter%20and%20Setter%20Lifecycle/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: 'e929305d1df52067f223',
+  clientSecret: '465557188fddc6608846e97927bc2fe7a268f141',
+  repo: 'blog-comments',
+  owner: 'niyaoyao',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: md5(location.pathname),
+  admin: ['niyaoyao'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
