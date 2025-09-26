@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>SwiftUI async/await Task 应用实践：退避轮询 | N.Y.</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="SwiftUI," />
+  
+
+  <meta name="description" content="好的，我为你整理了一篇完整的技术文章草稿，涵盖 Swift 并发基础、async&#x2F;await、Task、Actor 的原理与用法，并结合 退避轮询（Exponential Backoff Polling） 的实践示例。文章尽量兼顾深入解释与实际应用示例。  SwiftUI async&#x2F;await Task 应用实践：退避轮询 随着 iOS 并发编程的发展，Swift 5.5 引入了 async&#x2F;a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SwiftUI async&#x2F;await Task 应用实践：退避轮询">
+<meta property="og:url" content="http://niyaoyao.me/2025/09/26/swift_async_await/index.html">
+<meta property="og:site_name" content="N.Y.">
+<meta property="og:description" content="好的，我为你整理了一篇完整的技术文章草稿，涵盖 Swift 并发基础、async&#x2F;await、Task、Actor 的原理与用法，并结合 退避轮询（Exponential Backoff Polling） 的实践示例。文章尽量兼顾深入解释与实际应用示例。  SwiftUI async&#x2F;await Task 应用实践：退避轮询 随着 iOS 并发编程的发展，Swift 5.5 引入了 async&#x2F;a">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-09-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-09-26T13:01:40.430Z">
+<meta property="article:author" content="Niyao">
+<meta property="article:tag" content="SwiftUI">
+<meta name="twitter:card" content="summary">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico/images/avatar_ny.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    
+<link rel="stylesheet" href="/css/personal-style.css">
+
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38189205-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">Hi~</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">Hi~</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text">SwiftUI async&#x2F;await Task 应用实践：退避轮询</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81Swift-%E5%B9%B6%E5%8F%91%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="toc-text">一、Swift 并发基础概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-async-await"><span class="toc-text">1. async&#x2F;await</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Task"><span class="toc-text">2. Task</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Actor"><span class="toc-text">3. Actor</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E9%80%80%E9%81%BF%E8%BD%AE%E8%AF%A2%EF%BC%88Exponential-Backoff-Polling%EF%BC%89%E6%A6%82%E5%BF%B5"><span class="toc-text">二、退避轮询（Exponential Backoff Polling）概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81SwiftUI-async-await-%E5%AE%9E%E7%8E%B0%E9%80%80%E9%81%BF%E8%BD%AE%E8%AF%A2"><span class="toc-text">三、SwiftUI + async&#x2F;await 实现退避轮询</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E8%AF%B4%E6%98%8E"><span class="toc-text">实现说明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%80%BB%E7%BB%93%E4%B8%8E%E5%AE%9E%E8%B7%B5%E5%BB%BA%E8%AE%AE"><span class="toc-text">四、总结与实践建议</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-swift_async_await" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">SwiftUI async/await Task 应用实践：退避轮询</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2025.09.26</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Niyao</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>好的，我为你整理了一篇完整的技术文章草稿，涵盖 <strong>Swift 并发基础</strong>、<strong>async/await、Task、Actor</strong> 的原理与用法，并结合 <strong>退避轮询（Exponential Backoff Polling）</strong> 的实践示例。文章尽量兼顾深入解释与实际应用示例。</p>
+<hr />
+<h1>SwiftUI async/await Task 应用实践：退避轮询</h1>
+<p>随着 iOS 并发编程的发展，Swift 5.5 引入了 <strong>async/await</strong>、<strong>Task</strong> 和 <strong>Actor</strong> 等新特性，使得处理异步操作更加简洁、安全和高效。本文将从基础讲解这些技术原理，再结合 <strong>退避轮询（Exponential Backoff Polling）</strong> 实际应用，展示如何在 SwiftUI 中优雅地管理异步任务。</p>
+<hr />
+<h2 id="一、Swift-并发基础概念">一、Swift 并发基础概念</h2>
+<p>在传统 Swift 开发中，异步操作通常依赖 <strong>回调</strong> 或 <strong>Combine</strong>。这种方式虽然可行，但容易出现：</p>
+<ul>
+<li><strong>回调地狱</strong>（callback hell）</li>
+<li><strong>状态竞争</strong>（data race）</li>
+<li><strong>难以追踪的错误处理</strong></li>
+</ul>
+<p>Swift 5.5 引入 <strong>Structured Concurrency</strong>，提供了 <strong>async/await</strong>、<strong>Task</strong> 和 <strong>Actor</strong> 等工具，解决了这些问题。</p>
+<h3 id="1-async-await">1. async/await</h3>
+<ul>
+<li><strong>async</strong> 标记函数为异步函数，调用时需要 <code>await</code>。</li>
+<li><strong>await</strong> 会挂起当前函数的执行，等待异步操作完成后恢复执行。</li>
+<li>异步函数内部可以进行 <strong>顺序调用</strong>，避免回调嵌套。</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">func</span> <span class="title function_">fetchUserData</span>() <span class="keyword">async</span> <span class="keyword">throws</span> -&gt; <span class="type">User</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> data <span class="operator">=</span> <span class="keyword">try</span> <span class="keyword">await</span> <span class="type">URLSession</span>.shared.data(from: <span class="type">URL</span>(string: <span class="string">&quot;https://api.example.com/user&quot;</span>)<span class="operator">!</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">try</span> <span class="type">JSONDecoder</span>().decode(<span class="type">User</span>.<span class="keyword">self</span>, from: data)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用</span></span><br><span class="line"><span class="type">Task</span> &#123;</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> user <span class="operator">=</span> <span class="keyword">try</span> <span class="keyword">await</span> fetchUserData()</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;用户信息：<span class="subst">\(user)</span>&quot;</span>)</span><br><span class="line">    &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;请求失败：<span class="subst">\(error)</span>&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>原理上，<code>await</code> 会暂停当前协程（coroutine），把线程释放给系统，让其他任务运行，完成后再恢复执行，从而避免阻塞线程。</p>
+<hr />
+<h3 id="2-Task">2. Task</h3>
+<p><code>Task</code> 用于创建新的异步上下文，可以在 SwiftUI 或其他地方启动并发操作。</p>
+<ul>
+<li><code>Task &#123;&#125;</code>：创建一个独立任务</li>
+<li><code>Task.detached &#123;&#125;</code>：创建与当前 actor 或任务无关的独立任务</li>
+<li><code>Task.sleep(nanoseconds:)</code>：异步暂停任务，不阻塞线程</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="type">Task</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;任务开始&quot;</span>)</span><br><span class="line">    <span class="keyword">try</span> <span class="keyword">await</span> <span class="type">Task</span>.sleep(nanoseconds: <span class="number">2_000_000_000</span>) <span class="comment">// 2 秒</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;任务结束&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong> <code>Task.sleep</code> 是非阻塞的，它只是挂起当前 Task，不阻塞线程。</p>
+<hr />
+<h3 id="3-Actor">3. Actor</h3>
+<p>Actor 是 Swift 提供的 <strong>数据隔离机制</strong>，用于防止并发环境中的 <strong>数据竞争（Data Race）</strong>。</p>
+<ul>
+<li>使用 <code>actor</code> 定义的类，内部状态是 <strong>线程安全</strong> 的。</li>
+<li>外部访问需要 <strong>await</strong>，因为访问可能被挂起等待。</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">actor</span> <span class="title class_">Counter</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> value <span class="operator">=</span> <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">increment</span>() &#123;</span><br><span class="line">        value <span class="operator">+=</span> <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">getValue</span>() -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> value</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> counter <span class="operator">=</span> <span class="type">Counter</span>()</span><br><span class="line"></span><br><span class="line"><span class="type">Task</span> &#123;</span><br><span class="line">    <span class="keyword">await</span> counter.increment()</span><br><span class="line">    <span class="keyword">let</span> value <span class="operator">=</span> <span class="keyword">await</span> counter.getValue()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;当前计数：<span class="subst">\(value)</span>&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Actor 内部方法可以同步访问，外部访问需要 await，从而保证并发安全。</p>
+<hr />
+<h2 id="二、退避轮询（Exponential-Backoff-Polling）概念">二、退避轮询（Exponential Backoff Polling）概念</h2>
+<p>轮询（Polling）是异步任务中常见需求，例如：</p>
+<ul>
+<li>轮询服务器状态，等待任务完成</li>
+<li>检查异步操作结果</li>
+</ul>
+<p>直接固定间隔轮询可能会：</p>
+<ul>
+<li>消耗过多资源</li>
+<li>增加服务器压力</li>
+</ul>
+<p><strong>退避轮询（Exponential Backoff）</strong> 的核心思想是：</p>
+<ol>
+<li>初始间隔短，快速尝试</li>
+<li>每次失败后，间隔指数级增加</li>
+<li>设定最大间隔避免无限增长</li>
+</ol>
+<p>公式：</p>
+<section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>d</mi><mi>e</mi><mi>l</mi><mi>a</mi><mi>y</mi><mo>=</mo><mi>m</mi><mi>i</mi><mi>n</mi><mo stretchy="false">(</mo><mi>i</mi><mi>n</mi><mi>i</mi><mi>t</mi><mi>i</mi><mi>a</mi><mi>l</mi><mi>D</mi><mi>e</mi><mi>l</mi><mi>a</mi><mi>y</mi><mo>×</mo><msup><mn>2</mn><mrow><mi>a</mi><mi>t</mi><mi>t</mi><mi>e</mi><mi>m</mi><mi>p</mi><mi>t</mi><mi>s</mi></mrow></msup><mo separator="true">,</mo><mi>m</mi><mi>a</mi><mi>x</mi><mi>D</mi><mi>e</mi><mi>l</mi><mi>a</mi><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">
+delay = min(initialDelay \times 2^{attempts}, maxDelay)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">e</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">min</span><span class="mopen">(</span><span class="mord mathnormal">ini</span><span class="mord mathnormal">t</span><span class="mord mathnormal">ia</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">De</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0936em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8436em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight">tt</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">m</span><span class="mord mathnormal mtight">pt</span><span class="mord mathnormal mtight">s</span></span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">ma</span><span class="mord mathnormal">x</span><span class="mord mathnormal">De</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span></span></eqn></section><hr />
+<h2 id="三、SwiftUI-async-await-实现退避轮询">三、SwiftUI + async/await 实现退避轮询</h2>
+<p>我们可以结合 <strong>Task</strong> 和 <strong>async/await</strong> 来实现优雅的退避轮询。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> SwiftUI</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">ContentView</span>: <span class="title class_ inherited__">View</span> &#123;</span><br><span class="line">    <span class="meta">@StateObject</span> <span class="keyword">private</span> <span class="keyword">var</span> viewModel <span class="operator">=</span> <span class="type">PollingViewModel</span>()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> body: <span class="keyword">some</span> <span class="type">View</span> &#123;</span><br><span class="line">        <span class="type">VStack</span>(spacing: <span class="number">20</span>) &#123;</span><br><span class="line">            <span class="type">Text</span>(<span class="string">&quot;轮询状态：<span class="subst">\(viewModel.status)</span>&quot;</span>)</span><br><span class="line">            <span class="type">Button</span>(<span class="string">&quot;开始轮询&quot;</span>) &#123;</span><br><span class="line">                viewModel.startPolling()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        .padding()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@MainActor</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PollingViewModel</span>: <span class="title class_ inherited__">ObservableObject</span> &#123;</span><br><span class="line">    <span class="meta">@Published</span> <span class="keyword">var</span> status <span class="operator">=</span> <span class="string">&quot;未开始&quot;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> pollingTask: <span class="type">Task</span>&lt;<span class="type">Void</span>, <span class="type">Never</span>&gt;?</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">func</span> <span class="title function_">startPolling</span>() &#123;</span><br><span class="line">        pollingTask<span class="operator">?</span>.cancel() <span class="comment">// 取消上一次轮询</span></span><br><span class="line">        pollingTask <span class="operator">=</span> <span class="type">Task</span> &#123;</span><br><span class="line">            <span class="keyword">await</span> pollWithBackoff()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">func</span> <span class="title function_">pollWithBackoff</span>() <span class="keyword">async</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> initialDelay: <span class="type">UInt64</span> <span class="operator">=</span> <span class="number">1_000_000_000</span> <span class="comment">// 1 秒</span></span><br><span class="line">        <span class="keyword">let</span> maxDelay: <span class="type">UInt64</span> <span class="operator">=</span> <span class="number">16_000_000_000</span>    <span class="comment">// 16 秒</span></span><br><span class="line">        <span class="keyword">var</span> attempt <span class="operator">=</span> <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span> <span class="operator">!</span><span class="type">Task</span>.isCancelled &#123;</span><br><span class="line">            <span class="keyword">do</span> &#123;</span><br><span class="line">                status <span class="operator">=</span> <span class="string">&quot;请求中...&quot;</span></span><br><span class="line">                <span class="keyword">let</span> success <span class="operator">=</span> <span class="keyword">try</span> <span class="keyword">await</span> fetchServerStatus()</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">if</span> success &#123;</span><br><span class="line">                    status <span class="operator">=</span> <span class="string">&quot;完成！&quot;</span></span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    attempt <span class="operator">+=</span> <span class="number">1</span></span><br><span class="line">                    <span class="keyword">let</span> delay <span class="operator">=</span> <span class="built_in">min</span>(initialDelay <span class="operator">*</span> (<span class="number">1</span> <span class="operator">&lt;&lt;</span> attempt), maxDelay)</span><br><span class="line">                    status <span class="operator">=</span> <span class="string">&quot;等待 <span class="subst">\(delay <span class="operator">/</span> <span class="number">1_000_000_000</span>)</span> 秒重试...&quot;</span></span><br><span class="line">                    <span class="keyword">try</span> <span class="keyword">await</span> <span class="type">Task</span>.sleep(nanoseconds: delay)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">                status <span class="operator">=</span> <span class="string">&quot;请求出错，停止轮询&quot;</span></span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">func</span> <span class="title function_">fetchServerStatus</span>() <span class="keyword">async</span> <span class="keyword">throws</span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">        <span class="comment">// 模拟异步请求</span></span><br><span class="line">        <span class="keyword">try</span> <span class="keyword">await</span> <span class="type">Task</span>.sleep(nanoseconds: <span class="number">500_000_000</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="type">Bool</span>.random() <span class="comment">// 随机成功或失败</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="实现说明">实现说明</h3>
+<ol>
+<li><strong>Task.isCancelled</strong>：允许安全取消轮询任务</li>
+<li><strong>Task.sleep</strong>：非阻塞等待，不占用线程</li>
+<li><strong>指数退避</strong>：通过 <code>initialDelay * 2^attempt</code> 控制等待时间，并限制最大值</li>
+<li><strong>@MainActor</strong>：确保 UI 更新安全</li>
+</ol>
+<hr />
+<h2 id="四、总结与实践建议">四、总结与实践建议</h2>
+<p>通过上述示例，我们可以看到：</p>
+<ol>
+<li><strong>async/await</strong> 提供了同步风格的异步编程方式</li>
+<li><strong>Task</strong> 可以轻松管理异步任务生命周期</li>
+<li><strong>Actor</strong> 保证并发安全，避免数据竞争</li>
+<li><strong>退避轮询</strong> 在异步网络请求、任务状态轮询场景中非常适用</li>
+</ol>
+<p>在实际开发中：</p>
+<ul>
+<li>长轮询、重试机制推荐使用 <strong>Task + async/await</strong></li>
+<li>结合 <strong>Actor</strong> 管理共享状态，提高安全性</li>
+<li>UI 层使用 <code>@MainActor</code> 或 <code>@Published</code> 更新，保证主线程安全</li>
+</ul>
+<p>这种方式比传统回调或定时器轮询更安全、更简洁，也易于取消和扩展。</p>
+<hr />
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2025/09/26/text_attributed_content/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: 'e929305d1df52067f223',
+  clientSecret: '465557188fddc6608846e97927bc2fe7a268f141',
+  repo: 'blog-comments',
+  owner: 'niyaoyao',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: md5(location.pathname),
+  admin: ['niyaoyao'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
