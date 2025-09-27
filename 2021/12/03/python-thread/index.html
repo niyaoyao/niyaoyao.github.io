@@ -23,7 +23,7 @@
 <meta property="og:description" content="import threadingunzip_semaphore &#x3D; threading.Semaphore(10)unzip_threads &#x3D; []">
 <meta property="og:locale">
 <meta property="article:published_time" content="2021-12-02T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-09-26T12:15:55.262Z">
+<meta property="article:modified_time" content="2024-04-15T15:21:28.587Z">
 <meta property="article:author" content="Niyao">
 <meta property="article:tag" content="Python">
 <meta name="twitter:card" content="summary">
@@ -463,5 +463,20 @@ gitalk.render('gitalk-container')
   }
 </script>
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>

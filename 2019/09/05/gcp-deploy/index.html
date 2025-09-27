@@ -35,7 +35,7 @@
 <meta property="og:image" content="http://niyaoyao.me/images/gcp-08-vpc-firewall.png">
 <meta property="og:image" content="http://niyaoyao.me/images/gcp-09-vpc-firewall.png">
 <meta property="article:published_time" content="2019-09-04T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-09-26T12:15:55.261Z">
+<meta property="article:modified_time" content="2024-04-15T15:21:28.581Z">
 <meta property="article:author" content="Niyao">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://niyaoyao.me/images/gcp-00-menu.png">
@@ -210,7 +210,7 @@ ga('send', 'pageview');
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-VM-%E5%AE%9E%E4%BE%8B"><span class="toc-text">创建 VM 实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2-Golang"><span class="toc-text">部署 Golang</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-text">设置环境变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hello-World-Web-Service"><span class="toc-text">Hello World Web Service</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84-Golang-Web-%E6%9C%8D%E5%8A%A1"><span class="toc-text">写一个简单的 Golang Web 服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE-Web-%E6%9C%8D%E5%8A%A1"><span class="toc-text">访问 Web 服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-supervisord"><span class="toc-text">安装 supervisord</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2-Nodejs-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83"><span class="toc-text">部署 Nodejs 开发环境</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Node"><span class="toc-text">安装 Node</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F-2"><span class="toc-text">设置环境变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E5%AE%89%E8%A3%85"><span class="toc-text">检查安装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2-Nginx-%E7%8E%AF%E5%A2%83"><span class="toc-text">部署 Nginx 环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2-Git-%E7%8E%AF%E5%A2%83"><span class="toc-text">部署 Git 环境</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-2"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5"><span class="toc-text">检查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E9%A1%B9%E7%9B%AE"><span class="toc-text">测试项目</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2-MySQL-%E7%8E%AF%E5%A2%83"><span class="toc-text">部署 MySQL 环境</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-3"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5"><span class="toc-text">远程连接</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98"><span class="toc-text">网络问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98"><span class="toc-text">端口问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E9%85%8D%E7%BD%AE%E9%97%AE%E9%A2%98"><span class="toc-text">数据库配置问题</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-VM-%E5%AE%9E%E4%BE%8B"><span class="toc-text">创建 VM 实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2-Golang"><span class="toc-text">部署 Golang</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-text">设置环境变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hello-World-Web-Service"><span class="toc-text">Hello World Web Service</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84-Golang-Web-%E6%9C%8D%E5%8A%A1"><span class="toc-text">写一个简单的 Golang Web 服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE-Web-%E6%9C%8D%E5%8A%A1"><span class="toc-text">访问 Web 服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-supervisord"><span class="toc-text">安装 supervisord</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2-Nodejs-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83"><span class="toc-text">部署 Nodejs 开发环境</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Node"><span class="toc-text">安装 Node</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F-1"><span class="toc-text">设置环境变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E5%AE%89%E8%A3%85"><span class="toc-text">检查安装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2-Nginx-%E7%8E%AF%E5%A2%83"><span class="toc-text">部署 Nginx 环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2-Git-%E7%8E%AF%E5%A2%83"><span class="toc-text">部署 Git 环境</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-1"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5"><span class="toc-text">检查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E9%A1%B9%E7%9B%AE"><span class="toc-text">测试项目</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2-MySQL-%E7%8E%AF%E5%A2%83"><span class="toc-text">部署 MySQL 环境</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-2"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5"><span class="toc-text">远程连接</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98"><span class="toc-text">网络问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E9%97%AE%E9%A2%98"><span class="toc-text">端口问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E9%85%8D%E7%BD%AE%E9%97%AE%E9%A2%98"><span class="toc-text">数据库配置问题</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
   </div>
 
 
@@ -253,8 +253,7 @@ ga('send', 'pageview');
     
       <p>渣渣的我自从搬瓦工跪了之后，就没有能用的（开飞机的）服务器了，一直听闻 Google Cloud Platform 超级强大，而且首年赠送三百刀额度。所以，说干就干，开始薅羊毛。当然使用 GCP 之前首先要科学上网，即刻开启小飞机，访问 <a target="_blank" rel="noopener" href="https://cloud.google.com/">https://cloud.google.com/</a> 就可以开始薅羊毛之旅。</p>
 <p><em>温馨提示，这是一篇入门水文没有任何干货，只是用于记录自己的部署过程，以避免后期忘记。（求轻喷）</em></p>
-<h2 id="前言">前言</h2>
-<p>本文记录了笔者在学习 GCP 过程中踩到的坑，由于不同云服务商的具体功能不一样，所以初次接触的我还是踩了不少坑。本文将简单介绍 GCP 的常用功能和一些开发环境的部署：</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文记录了笔者在学习 GCP 过程中踩到的坑，由于不同云服务商的具体功能不一样，所以初次接触的我还是踩了不少坑。本文将简单介绍 GCP 的常用功能和一些开发环境的部署：</p>
 <ul>
 <li>了解 Google Cloud Platform 的项目（Project）、 VM 实例（VM instances）、防火墙规则（Firewall rules），并创建一个 VM 实例。</li>
 <li>部署 Golang 开发环境。</li>
@@ -263,42 +262,29 @@ ga('send', 'pageview');
 <li>部署 Git 环境。</li>
 <li>部署 MySQL 环境。</li>
 </ul>
-<h2 id="创建-VM-实例">创建 VM 实例</h2>
-<ul>
+<h2 id="创建-VM-实例"><a href="#创建-VM-实例" class="headerlink" title="创建 VM 实例"></a>创建 VM 实例</h2><ul>
 <li><strong>点击左侧菜单栏选择 Compute Engine 项目，选择 VM Instance。</strong></li>
 </ul>
-<p><img src="/images/gcp-00-menu.png" alt="menu" /></p>
+<p><img src="/images/gcp-00-menu.png" alt="menu"></p>
 <ul>
 <li><strong>创建 GCP VM 实例之前必须先创建一个项目 Project ，Project 的名字随意，这里我命名为“FirstVM”，接着点“Create”。</strong></li>
 </ul>
-<p><img src="/images/gcp-01-create-project.png" alt="menu" />
-<img src="/images/gcp-02-create-project.png" alt="create-project" /></p>
+<p><img src="/images/gcp-01-create-project.png" alt="menu"><br><img src="/images/gcp-02-create-project.png" alt="create-project"></p>
 <ul>
-<li>
-<p><strong>点击 VM Instance 卡片中的 Create 按钮，进入初始化 VM 的页面。</strong>
-<img src="/images/gcp-03-create-vm.png" alt="create-vm" /></p>
+<li><p><strong>点击 VM Instance 卡片中的 Create 按钮，进入初始化 VM 的页面。</strong><br><img src="/images/gcp-03-create-vm.png" alt="create-vm"></p>
 </li>
-<li>
-<p><strong>如图填写相关 VM 的基本配置。</strong>
-<img src="/images/gcp-04-create-vm.png" alt="create-vm" /></p>
+<li><p><strong>如图填写相关 VM 的基本配置。</strong><br><img src="/images/gcp-04-create-vm.png" alt="create-vm"></p>
 </li>
-<li>
-<p><strong>选择菜单栏中的 MetaData。选择 SSH Keys 点击编辑并将本地的公钥粘贴相应输入框中并保存。</strong>
-<img src="/images/gcp-05-add-ssh.png" alt="ssh" /></p>
+<li><p><strong>选择菜单栏中的 MetaData。选择 SSH Keys 点击编辑并将本地的公钥粘贴相应输入框中并保存。</strong><br><img src="/images/gcp-05-add-ssh.png" alt="ssh"></p>
 </li>
-<li>
-<p><strong>回到 VM Instance 界面就可以看到配置好的服务器了。</strong>
-<img src="/images/gcp-07-vm.png" alt="vm" /></p>
+<li><p><strong>回到 VM Instance 界面就可以看到配置好的服务器了。</strong><br><img src="/images/gcp-07-vm.png" alt="vm"></p>
 </li>
-<li>
-<p><strong>在终端输入下面的命令行登录 VM</strong></p>
+<li><p><strong>在终端输入下面的命令行登录 VM</strong></p>
 </li>
 </ul>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">ssh nycode.jn@34.80.135.19 </span><br></pre></td></tr></table></figure>
-<h2 id="部署-Golang">部署 Golang</h2>
-<p>ssh 登录 GCP VM 之后就可以安装服务器软件了。最好在超级用户权限下安装，省事。</p>
-<h3 id="安装">安装</h3>
-<ul>
+<h2 id="部署-Golang"><a href="#部署-Golang" class="headerlink" title="部署 Golang"></a>部署 Golang</h2><p>ssh 登录 GCP VM 之后就可以安装服务器软件了。最好在超级用户权限下安装，省事。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><ul>
 <li>创建项目目录</li>
 </ul>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p go/pkg go/src go/bin</span><br></pre></td></tr></table></figure>
@@ -309,12 +295,11 @@ ga('send', 'pageview');
 <ul>
 <li>解压安装包</li>
 </ul>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> tar -C /usr/local -xzf go1.13.linux-amd64.tar.gz</span><br></pre></td></tr></table></figure>
-<h3 id="设置环境变量">设置环境变量</h3>
-<ul>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo tar -C /usr/local -xzf go1.13.linux-amd64.tar.gz</span><br></pre></td></tr></table></figure>
+<h3 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h3><ul>
 <li>打开配置文件</li>
 </ul>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> vim /etc/profile</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/profile</span><br></pre></td></tr></table></figure>
 <ul>
 <li>添加路径</li>
 </ul>
@@ -327,39 +312,32 @@ ga('send', 'pageview');
 <li>检查安装结果</li>
 </ul>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">go version &amp;&amp; go <span class="built_in">env</span></span><br></pre></td></tr></table></figure>
-<h3 id="Hello-World-Web-Service">Hello World Web Service</h3>
-<h4 id="写一个简单的-Golang-Web-服务">写一个简单的 Golang Web 服务</h4>
-<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;log&quot;</span></span><br><span class="line">	<span class="string">&quot;net/http&quot;</span></span><br><span class="line">	<span class="string">&quot;sync&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> mu sync.Mutex</span><br><span class="line"><span class="keyword">var</span> count <span class="type">int</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;Start&quot;</span>)</span><br><span class="line">	http.HandleFunc(<span class="string">&quot;/&quot;</span>, handler)</span><br><span class="line">	http.HandleFunc(<span class="string">&quot;/counter&quot;</span>, counter)</span><br><span class="line">	http.HandleFunc(<span class="string">&quot;/hello&quot;</span>, helloWorld)</span><br><span class="line"></span><br><span class="line">	log.Fatal(http.ListenAndServe(<span class="string">&quot;:2333&quot;</span>, <span class="literal">nil</span>))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handler</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">	mu.Lock()</span><br><span class="line">	count++</span><br><span class="line">	mu.Unlock()</span><br><span class="line">	fmt.Fprint(w, <span class="string">&quot;URL.Path = %q\n&quot;</span>, r.URL.Path)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">helloWorld</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">	fmt.Fprint(w, <span class="string">&quot;Hello, Welcome.&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">counter</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">	mu.Lock()</span><br><span class="line">	fmt.Fprint(w, <span class="string">&quot;Count:&quot;</span>, count)</span><br><span class="line">	mu.Unlock()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Hello-World-Web-Service"><a href="#Hello-World-Web-Service" class="headerlink" title="Hello World Web Service"></a>Hello World Web Service</h3><h4 id="写一个简单的-Golang-Web-服务"><a href="#写一个简单的-Golang-Web-服务" class="headerlink" title="写一个简单的 Golang Web 服务"></a>写一个简单的 Golang Web 服务</h4><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;log&quot;</span></span><br><span class="line">	<span class="string">&quot;net/http&quot;</span></span><br><span class="line">	<span class="string">&quot;sync&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> mu sync.Mutex</span><br><span class="line"><span class="keyword">var</span> count <span class="type">int</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;Start&quot;</span>)</span><br><span class="line">	http.HandleFunc(<span class="string">&quot;/&quot;</span>, handler)</span><br><span class="line">	http.HandleFunc(<span class="string">&quot;/counter&quot;</span>, counter)</span><br><span class="line">	http.HandleFunc(<span class="string">&quot;/hello&quot;</span>, helloWorld)</span><br><span class="line"></span><br><span class="line">	log.Fatal(http.ListenAndServe(<span class="string">&quot;:2333&quot;</span>, <span class="literal">nil</span>))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handler</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">	mu.Lock()</span><br><span class="line">	count++</span><br><span class="line">	mu.Unlock()</span><br><span class="line">	fmt.Fprint(w, <span class="string">&quot;URL.Path = %q\n&quot;</span>, r.URL.Path)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">helloWorld</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">	fmt.Fprint(w, <span class="string">&quot;Hello, Welcome.&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">counter</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">	mu.Lock()</span><br><span class="line">	fmt.Fprint(w, <span class="string">&quot;Count:&quot;</span>, count)</span><br><span class="line">	mu.Unlock()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>编译运行</li>
 </ul>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">root@first-vm-test:~/gopath/src# go build web-service.go </span><br><span class="line">root@first-vm-test:~/gopath/src# ./web-service </span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">root@first-vm-test:~/gopath/src<span class="comment"># go build web-service.go </span></span><br><span class="line">root@first-vm-test:~/gopath/src<span class="comment"># ./web-service </span></span><br></pre></td></tr></table></figure>
 <ul>
 <li>选择 VPC Networking - External IP Address 配置静态 IP</li>
 </ul>
-<p><img src="/images/gcp-10-vpc-external-ip.png" alt="external" /></p>
-<p>为了让外部网络可以访问 VM 的 IP，必须要将临时 IP 设置为静态 IP。
-<img src="/images/gcp-11-vpc-external-ip.png" alt="external" /></p>
-<p>命名 IP 并保存。
-<img src="/images/gcp-12-vpc-external-ip.png" alt="external" /></p>
+<p><img src="/images/gcp-10-vpc-external-ip.png" alt="external"></p>
+<p>为了让外部网络可以访问 VM 的 IP，必须要将临时 IP 设置为静态 IP。<br><img src="/images/gcp-11-vpc-external-ip.png" alt="external"></p>
+<p>命名 IP 并保存。<br><img src="/images/gcp-12-vpc-external-ip.png" alt="external"></p>
 <ul>
 <li>配置防火墙</li>
 </ul>
-<p><img src="/images/gcp-08-vpc-firewall.png" alt="firewall" /></p>
-<p>对 firewall 命名，并设置相关规则，规则创建完成如下图所示。
-<img src="/images/gcp-09-vpc-firewall.png" alt="firewall" /></p>
-<h4 id="访问-Web-服务">访问 Web 服务</h4>
-<p>在浏览器输入暴露在外部的静态 IP，例如，本例中的 <a target="_blank" rel="noopener" href="http://34.80.135.19:1234/">http://34.80.135.19:1234/</a></p>
+<p><img src="/images/gcp-08-vpc-firewall.png" alt="firewall"></p>
+<p>对 firewall 命名，并设置相关规则，规则创建完成如下图所示。<br><img src="/images/gcp-09-vpc-firewall.png" alt="firewall"></p>
+<h4 id="访问-Web-服务"><a href="#访问-Web-服务" class="headerlink" title="访问 Web 服务"></a>访问 Web 服务</h4><p>在浏览器输入暴露在外部的静态 IP，例如，本例中的 <a target="_blank" rel="noopener" href="http://34.80.135.19:1234/">http://34.80.135.19:1234/</a></p>
 <p>但这样做 Web 服务会存在一个问题，就是退出程序进程，Web 服务就会被关闭了，所以需要安装 supervisor 来使 Go 的进程在后台常驻。</p>
-<h4 id="安装-supervisord">安装 supervisord</h4>
-<ul>
+<h4 id="安装-supervisord"><a href="#安装-supervisord" class="headerlink" title="安装 supervisord"></a>安装 supervisord</h4><ul>
 <li>安装</li>
 </ul>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install supervisor</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo apt-get install supervisor</span><br></pre></td></tr></table></figure>
 <ul>
 <li>创建配置</li>
 </ul>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> su</span><br><span class="line">echo_supervisord_conf &gt; /etc/supervisord.conf</span><br><span class="line">vim  /etc/supervisord.conf</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo su</span><br><span class="line">echo_supervisord_conf &gt; /etc/supervisord.conf</span><br><span class="line">vim  /etc/supervisord.conf</span><br></pre></td></tr></table></figure>
 <ul>
 <li>修改配置</li>
 </ul>
@@ -373,27 +351,16 @@ ga('send', 'pageview');
 </ul>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">supervisorctl</span><br></pre></td></tr></table></figure>
 <p>就可看到 golang-http-server 正在运行中，并且退出 terminal 连接也能正常访问 Web 服务。</p>
-<h2 id="部署-Nodejs-开发环境">部署 Nodejs 开发环境</h2>
-<h3 id="安装-Node">安装 Node</h3>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> node</span><br><span class="line"><span class="built_in">cd</span> node</span><br><span class="line">wget -c https://nodejs.org/dist/v12.9.1/node-v12.9.1-linux-x64.tar.xz</span><br><span class="line">tar -xvf node-v12.9.1-linux-x64.tar.xz </span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /home/apps/node</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">mv</span> node-v12.9.1-linux-x64/* /home/apps/node/</span><br><span class="line"><span class="built_in">sudo</span> vim /etc/profile</span><br></pre></td></tr></table></figure>
-<h3 id="设置环境变量-2">设置环境变量</h3>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=/home/apps/node/bin/:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
-<h3 id="检查安装">检查安装</h3>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
-<h2 id="部署-Nginx-环境">部署 Nginx 环境</h2>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install nginx</span><br></pre></td></tr></table></figure>
+<h2 id="部署-Nodejs-开发环境"><a href="#部署-Nodejs-开发环境" class="headerlink" title="部署 Nodejs 开发环境"></a>部署 Nodejs 开发环境</h2><h3 id="安装-Node"><a href="#安装-Node" class="headerlink" title="安装 Node"></a>安装 Node</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> node</span><br><span class="line"><span class="built_in">cd</span> node</span><br><span class="line">wget -c https://nodejs.org/dist/v12.9.1/node-v12.9.1-linux-x64.tar.xz</span><br><span class="line">tar -xvf node-v12.9.1-linux-x64.tar.xz </span><br><span class="line">sudo <span class="built_in">mkdir</span> -p /home/apps/node</span><br><span class="line">sudo <span class="built_in">mv</span> node-v12.9.1-linux-x64/* /home/apps/node/</span><br><span class="line">sudo vim /etc/profile</span><br></pre></td></tr></table></figure>
+<h3 id="设置环境变量-1"><a href="#设置环境变量-1" class="headerlink" title="设置环境变量"></a>设置环境变量</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=/home/apps/node/bin/:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
+<h3 id="检查安装"><a href="#检查安装" class="headerlink" title="检查安装"></a>检查安装</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+<h2 id="部署-Nginx-环境"><a href="#部署-Nginx-环境" class="headerlink" title="部署 Nginx 环境"></a>部署 Nginx 环境</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo apt-get install nginx</span><br></pre></td></tr></table></figure>
 <p>访问 VM 的外部 IP，即可看到 Nginx 部署的首页。</p>
-<h2 id="部署-Git-环境">部署 Git 环境</h2>
-<h3 id="安装-2">安装</h3>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install git</span><br></pre></td></tr></table></figure>
-<h3 id="检查">检查</h3>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">git --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
-<h3 id="测试项目">测试项目</h3>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/niyaoyao/nytoy-websocket-server-with-nodejs.git</span><br><span class="line"><span class="built_in">cd</span> nytoy-websocket-server-with-nodejs/</span><br><span class="line">npm install</span><br><span class="line">node app.js</span><br></pre></td></tr></table></figure>
+<h2 id="部署-Git-环境"><a href="#部署-Git-环境" class="headerlink" title="部署 Git 环境"></a>部署 Git 环境</h2><h3 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo apt-get install git</span><br></pre></td></tr></table></figure>
+<h3 id="检查"><a href="#检查" class="headerlink" title="检查"></a>检查</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">git --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+<h3 id="测试项目"><a href="#测试项目" class="headerlink" title="测试项目"></a>测试项目</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/niyaoyao/nytoy-websocket-server-with-nodejs.git</span><br><span class="line"><span class="built_in">cd</span> nytoy-websocket-server-with-nodejs/</span><br><span class="line">npm install</span><br><span class="line">node app.js</span><br></pre></td></tr></table></figure>
 <p>访问 IP:23333/app 页面查看结果。</p>
-<h2 id="部署-MySQL-环境">部署 MySQL 环境</h2>
-<h3 id="安装-3">安装</h3>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get update</span><br><span class="line"><span class="built_in">sudo</span> apt-get -y install mysql-server</span><br></pre></td></tr></table></figure>
+<h2 id="部署-MySQL-环境"><a href="#部署-MySQL-环境" class="headerlink" title="部署 MySQL 环境"></a>部署 MySQL 环境</h2><h3 id="安装-2"><a href="#安装-2" class="headerlink" title="安装"></a>安装</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get -y install mysql-server</span><br></pre></td></tr></table></figure>
 <ul>
 <li>查看版本检查安装结果</li>
 </ul>
@@ -401,13 +368,12 @@ ga('send', 'pageview');
 <ul>
 <li>初始化安全设置</li>
 </ul>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> mysql_secure_installation</span><br></pre></td></tr></table></figure>
-<p>初始化过程中远程 Root 登录的选项，根据个人需求进行设置。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Normally, root should only be allowed to connect from &#x27;localhost&#x27;.  This</span><br><span class="line">ensures that someone cannot guess at the root password from the network.</span><br><span class="line"></span><br><span class="line">Disallow root login remotely? [Y/n] n</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo mysql_secure_installation</span><br></pre></td></tr></table></figure>
+<p>初始化过程中远程 Root 登录的选项，根据个人需求进行设置。<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Normally, root should only be allowed to connect from &#x27;localhost&#x27;.  This</span><br><span class="line">ensures that someone cannot guess at the root password from the network.</span><br><span class="line"></span><br><span class="line">Disallow root login remotely? [Y/n] n</span><br></pre></td></tr></table></figure></p>
 <ul>
 <li>连接 mysql 数据库</li>
 </ul>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> mysql -u root -p</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo mysql -u root -p</span><br></pre></td></tr></table></figure>
 <ul>
 <li>重设密码</li>
 </ul>
@@ -419,48 +385,38 @@ ga('send', 'pageview');
 <p>如果报错：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-bash: service: command not found</span><br></pre></td></tr></table></figure>
 <p>需要登录 su</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> su</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo su</span><br></pre></td></tr></table></figure>
 <ul>
 <li>配置 GCP 的防火墙规则</li>
 </ul>
 <p>上文中已经介绍，不做赘述。</p>
-<h3 id="远程连接">远程连接</h3>
-<p>用 ssh 远程连接 MySQL</p>
+<h3 id="远程连接"><a href="#远程连接" class="headerlink" title="远程连接"></a>远程连接</h3><p>用 ssh 远程连接 MySQL</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">mysql -h 354.80.135.19 -u root -p  -P 3306 </span><br></pre></td></tr></table></figure>
-<p>如果出现 <strong>ERROR 2003 (HY000)</strong> 报错，则表明连接出现问题。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Enter password: </span><br><span class="line">ERROR 2003 (HY000): Can&#x27;t connect to MySQL server on &#x27;34.80.135.19&#x27; (61)</span><br></pre></td></tr></table></figure>
+<p>如果出现 <strong>ERROR 2003 (HY000)</strong> 报错，则表明连接出现问题。<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Enter password: </span><br><span class="line">ERROR 2003 (HY000): Can&#x27;t connect to MySQL server on &#x27;34.80.135.19&#x27; (61)</span><br></pre></td></tr></table></figure></p>
 <p>出现连接问题可能有三种原因：</p>
 <ul>
 <li>网络问题。</li>
 <li>端口问题。</li>
 <li>数据库配置问题。</li>
 </ul>
-<h4 id="网络问题">网络问题</h4>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">ping 34.80.135.19</span><br></pre></td></tr></table></figure>
+<h4 id="网络问题"><a href="#网络问题" class="headerlink" title="网络问题"></a>网络问题</h4><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">ping 34.80.135.19</span><br></pre></td></tr></table></figure>
 <p>若能够 ping 通，则排除网络问题。</p>
-<h4 id="端口问题">端口问题</h4>
-<p>远程连接 VM ，登录 su 在 Terminal 输入：</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">netstat -tunlp | grep mysqld</span><br></pre></td></tr></table></figure>
+<h4 id="端口问题"><a href="#端口问题" class="headerlink" title="端口问题"></a>端口问题</h4><p>远程连接 VM ，登录 su 在 Terminal 输入：<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">netstat -tunlp | grep mysqld</span><br></pre></td></tr></table></figure></p>
 <p>查找到 mysqld 的进程，则排除端口问题。</p>
-<h4 id="数据库配置问题">数据库配置问题</h4>
-<p>数据库的配置问题，网上资料多是修改 <strong>/etc/mysql/my.cnf</strong> 文件，并将该文件中的 <strong>bind_address=127.0.0.1</strong> 注释掉，但笔者安装的 MySQL 版本初始化配置是没有这个设置项的。</p>
-<p>登录超级用户，打开配置文件。</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">vim /etc/mysql/my.cnf</span><br></pre></td></tr></table></figure>
-<p>内容如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># Import all .cnf files from configuration directory</span><br><span class="line">!includedir /etc/mysql/conf.d/</span><br><span class="line">!includedir /etc/mysql/mariadb.conf.d/</span><br></pre></td></tr></table></figure>
+<h4 id="数据库配置问题"><a href="#数据库配置问题" class="headerlink" title="数据库配置问题"></a>数据库配置问题</h4><p>数据库的配置问题，网上资料多是修改 <strong>/etc/mysql/my.cnf</strong> 文件，并将该文件中的 <strong>bind_address=127.0.0.1</strong> 注释掉，但笔者安装的 MySQL 版本初始化配置是没有这个设置项的。</p>
+<p>登录超级用户，打开配置文件。<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">vim /etc/mysql/my.cnf</span><br></pre></td></tr></table></figure></p>
+<p>内容如下：<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># Import all .cnf files from configuration directory</span><br><span class="line">!includedir /etc/mysql/conf.d/</span><br><span class="line">!includedir /etc/mysql/mariadb.conf.d/</span><br></pre></td></tr></table></figure></p>
 <p>所以要一个一个去导入的目录找配置 <strong>bind_address=127.0.0.1</strong> 的文件。经过一番查找最终在 <strong>/etc/mysql/mariadb.conf.d/50-server.cnf</strong> 第 29 行找到该配置，并将其注释与保存。</p>
 <p>将配置文件修改并保存后，需要重启 MySQL 服务。</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">service mysql restart</span><br></pre></td></tr></table></figure>
 <p>然后再在本地进行远程连接，就可以直接访问 MySQL 了。</p>
-<h2 id="总结">总结</h2>
-<p>GCP 比较坑的几个点是：</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>GCP 比较坑的几个点是：</p>
 <ul>
 <li>必须将外部临时 IP 设置为静态 IP。</li>
 <li>必须配置防火墙规则以供外部访问相应端口。</li>
 <li>必须注释 MySQL 的配置 bind address，才能进行远程访问。</li>
 </ul>
-<h2 id="参考">参考</h2>
-<ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li>如何在 Google Compute Engine 上设置 MySQL <a target="_blank" rel="noopener" href="https://cloud.google.com/solutions/setup-mysql">https://cloud.google.com/solutions/setup-mysql</a></li>
 <li>MySQL远程访问报错ERROR 2003 <a target="_blank" rel="noopener" href="https://blog.csdn.net/a5nan/article/details/72864249">https://blog.csdn.net/a5nan/article/details/72864249</a></li>
 <li>Google 云服务器搭建MySQL数据库并且远程连接 <a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/news/228350">https://cloud.tencent.com/developer/news/228350</a></li>
@@ -694,5 +650,20 @@ gitalk.render('gitalk-container')
   }
 </script>
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>

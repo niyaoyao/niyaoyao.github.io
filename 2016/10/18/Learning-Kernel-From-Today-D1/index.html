@@ -15,16 +15,16 @@
     <meta name="keywords" content="Mac OS X," />
   
 
-  <meta name="description" content="前言 择日不如撞日，想学东西不能拖，那就今天开始学内核！  这个系列的文章主要学习 OS X 和 iOS 操作系统的原理，主要关注 Darwin 核心，学习用书《Mac OS X and iOS Internals: To the Apple’s Core》。 如果要学习 iOS 的操作系统原理，需要一部越狱手机，因为，非越狱机无法获取 Root 权限。  概述 本篇文章主要介绍 OS X 和 i">
+  <meta name="description" content="前言择日不如撞日，想学东西不能拖，那就今天开始学内核！  这个系列的文章主要学习 OS X 和 iOS 操作系统的原理，主要关注 Darwin 核心，学习用书《Mac OS X and iOS Internals: To the Apple’s Core》。 如果要学习 iOS 的操作系统原理，需要一部越狱手机，因为，非越狱机无法获取 Root 权限。  概述本篇文章主要介绍 OS X 和 iOS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="今天开始学内核：初识 Darwin">
 <meta property="og:url" content="http://niyaoyao.me/2016/10/18/Learning-Kernel-From-Today-D1/index.html">
 <meta property="og:site_name" content="N.Y.">
-<meta property="og:description" content="前言 择日不如撞日，想学东西不能拖，那就今天开始学内核！  这个系列的文章主要学习 OS X 和 iOS 操作系统的原理，主要关注 Darwin 核心，学习用书《Mac OS X and iOS Internals: To the Apple’s Core》。 如果要学习 iOS 的操作系统原理，需要一部越狱手机，因为，非越狱机无法获取 Root 权限。  概述 本篇文章主要介绍 OS X 和 i">
+<meta property="og:description" content="前言择日不如撞日，想学东西不能拖，那就今天开始学内核！  这个系列的文章主要学习 OS X 和 iOS 操作系统的原理，主要关注 Darwin 核心，学习用书《Mac OS X and iOS Internals: To the Apple’s Core》。 如果要学习 iOS 的操作系统原理，需要一部越狱手机，因为，非越狱机无法获取 Root 权限。  概述本篇文章主要介绍 OS X 和 iOS">
 <meta property="og:locale">
 <meta property="og:image" content="https://niyaoyao.github.io/images/darwin_structure.png">
 <meta property="article:published_time" content="2016-10-17T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-09-26T12:15:55.261Z">
+<meta property="article:modified_time" content="2024-04-15T15:21:28.578Z">
 <meta property="article:author" content="Niyao">
 <meta property="article:tag" content="Mac OS X">
 <meta name="twitter:card" content="summary">
@@ -200,7 +200,7 @@ ga('send', 'pageview');
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84"><span class="toc-text">基本架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E6%80%81"><span class="toc-text">用户态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Darwin"><span class="toc-text">Darwin</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Darwin-%E4%B8%8A%E5%B1%82"><span class="toc-text">Darwin 上层</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BSD"><span class="toc-text">BSD</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Mach-%E6%8A%BD%E8%B1%A1%E5%B1%82"><span class="toc-text">Mach 抽象层</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6"><span class="toc-text">硬件</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E6%80%81-2"><span class="toc-text">用户态</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E4%BD%93%E9%AA%8C%E5%B1%82"><span class="toc-text">用户体验层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E6%A1%86%E6%9E%B6%E5%B1%82"><span class="toc-text">应用框架层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%A1%86%E6%9E%B6"><span class="toc-text">核心框架</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Darwin-%E2%80%94%E2%80%94-UNIX-%E6%A0%B8%E5%BF%83"><span class="toc-text">Darwin —— UNIX 核心</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Shell"><span class="toc-text">Shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="toc-text">文件系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E7%9B%AE%E5%BD%95"><span class="toc-text">系统目录</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#OS-X-%E4%B8%AD%E7%9A%84-UNIX-%E6%A0%87%E5%87%86%E7%9B%AE%E5%BD%95"><span class="toc-text">OS X 中的 UNIX 标准目录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#OS-X-%E4%B8%AD%E7%9A%84-UNIX-%E7%89%B9%E6%9C%89%E7%9B%AE%E5%BD%95"><span class="toc-text">OS X 中的 UNIX 特有目录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iOS-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E4%B8%8E-Mac-OS-X-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">iOS 文件系统与 Mac OS X 文件系统的区别</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%93"><span class="toc-text">库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BSD-Mach-%E5%8E%9F%E7%94%9F%E7%A8%8B%E5%BA%8F"><span class="toc-text">BSD&#x2F;Mach 原生程序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-text">系统调用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#POSIX"><span class="toc-text">POSIX</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Mach-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-text">Mach 系统调用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XNU"><span class="toc-text">XNU</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Mach"><span class="toc-text">Mach</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BSD-%E5%B1%82"><span class="toc-text">BSD 层</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#libkern"><span class="toc-text">libkern</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#I-O-Kit"><span class="toc-text">I&#x2F;O Kit</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-text">小结</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84"><span class="toc-text">基本架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E6%80%81"><span class="toc-text">用户态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Darwin"><span class="toc-text">Darwin</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Darwin-%E4%B8%8A%E5%B1%82"><span class="toc-text">Darwin 上层</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BSD"><span class="toc-text">BSD</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Mach-%E6%8A%BD%E8%B1%A1%E5%B1%82"><span class="toc-text">Mach 抽象层</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6"><span class="toc-text">硬件</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E6%80%81-1"><span class="toc-text">用户态</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E4%BD%93%E9%AA%8C%E5%B1%82"><span class="toc-text">用户体验层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E6%A1%86%E6%9E%B6%E5%B1%82"><span class="toc-text">应用框架层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%A1%86%E6%9E%B6"><span class="toc-text">核心框架</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Darwin-%E2%80%94%E2%80%94-UNIX-%E6%A0%B8%E5%BF%83"><span class="toc-text">Darwin —— UNIX 核心</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Shell"><span class="toc-text">Shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="toc-text">文件系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E7%9B%AE%E5%BD%95"><span class="toc-text">系统目录</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#OS-X-%E4%B8%AD%E7%9A%84-UNIX-%E6%A0%87%E5%87%86%E7%9B%AE%E5%BD%95"><span class="toc-text">OS X 中的 UNIX 标准目录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#OS-X-%E4%B8%AD%E7%9A%84-UNIX-%E7%89%B9%E6%9C%89%E7%9B%AE%E5%BD%95"><span class="toc-text">OS X 中的 UNIX 特有目录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iOS-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E4%B8%8E-Mac-OS-X-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">iOS 文件系统与 Mac OS X 文件系统的区别</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%93"><span class="toc-text">库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BSD-Mach-%E5%8E%9F%E7%94%9F%E7%A8%8B%E5%BA%8F"><span class="toc-text">BSD&#x2F;Mach 原生程序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-text">系统调用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#POSIX"><span class="toc-text">POSIX</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Mach-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-text">Mach 系统调用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XNU"><span class="toc-text">XNU</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Mach"><span class="toc-text">Mach</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BSD-%E5%B1%82"><span class="toc-text">BSD 层</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#libkern"><span class="toc-text">libkern</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#I-O-Kit"><span class="toc-text">I&#x2F;O Kit</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-text">小结</span></a></li></ol>
   </div>
 
 
@@ -246,35 +246,26 @@ ga('send', 'pageview');
 
   <div class="article-content">
     
-      <h2 id="前言">前言</h2>
-<p>择日不如撞日，想学东西不能拖，那就今天开始学内核！</p>
+      <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>择日不如撞日，想学东西不能拖，那就今天开始学内核！</p>
 <ul>
 <li>这个系列的文章主要学习 OS X 和 iOS 操作系统的原理，主要关注 Darwin 核心，学习用书《Mac OS X and iOS Internals: To the Apple’s Core》。</li>
 <li>如果要学习 iOS 的操作系统原理，需要一部越狱手机，因为，非越狱机无法获取 Root 权限。</li>
 </ul>
-<h2 id="概述">概述</h2>
-<p>本篇文章主要介绍 OS X 和 iOS 操作系统的基本架构，只是架构概览，读完本文希望读者能有个简单的架构脉络。</p>
-<h2 id="基本架构">基本架构</h2>
-<h3 id="用户态">用户态</h3>
-<ul>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>本篇文章主要介绍 OS X 和 iOS 操作系统的基本架构，只是架构概览，读完本文希望读者能有个简单的架构脉络。</p>
+<h2 id="基本架构"><a href="#基本架构" class="headerlink" title="基本架构"></a>基本架构</h2><h3 id="用户态"><a href="#用户态" class="headerlink" title="用户态"></a>用户态</h3><ul>
 <li>用户体验层</li>
 <li>应用程序框架</li>
 <li>核心框架</li>
 </ul>
-<h3 id="Darwin">Darwin</h3>
-<p>Darwin 是操作系统的类 UNIX 核心，本身由内核（kernel）、XNU（X is not UNIX 的递归缩写，类似 GNU 的递归缩写）和运行时组成的。OS X 的 Darwin 是开源的，而 iOS 中的 Darwin 是 ARM 上的移植，这个 Darwin 是不开源的。</p>
-<h4 id="Darwin-上层">Darwin 上层</h4>
-<ul>
+<h3 id="Darwin"><a href="#Darwin" class="headerlink" title="Darwin"></a>Darwin</h3><p>Darwin 是操作系统的类 UNIX 核心，本身由内核（kernel）、XNU（X is not UNIX 的递归缩写，类似 GNU 的递归缩写）和运行时组成的。OS X 的 Darwin 是开源的，而 iOS 中的 Darwin 是 ARM 上的移植，这个 Darwin 是不开源的。</p>
+<h4 id="Darwin-上层"><a href="#Darwin-上层" class="headerlink" title="Darwin 上层"></a>Darwin 上层</h4><ul>
 <li>libSystem.B.dylib, libc.dylib, libm.dylib 与其他 Darwin 库</li>
 <li>内核态／用户态转换</li>
 </ul>
-<h4 id="BSD">BSD</h4>
-<p>“柏克莱软件套件（英语：Berkeley Software Distribution，缩写为 BSD），也被称为柏克莱 Unix（Berkeley Unix），是一个操作系统的名称。衍生自 Unix（类Unix），1970年代由伯克利加州大学的学生比尔·乔伊（Bill Joy）开创，也被用来代表其衍生出的各种套件。
-BSD 常被当作工作站级别的 Unix 系统，这得归功于 BSD 用户许可证非常地宽松，许多1980年代成立的计算机公司，不少都从 BSD 中获益，比较著名的例子如 DEC 的 Ultrix，以及 Sun 公司的 SunOS。1990年代，BSD很大程度上被 System V 4.x 版以及 OSF/1 系统所取代，但其开源版本被采用，促进了因特网的开发。” —— Wiki</p>
+<h4 id="BSD"><a href="#BSD" class="headerlink" title="BSD"></a>BSD</h4><p>“柏克莱软件套件（英语：Berkeley Software Distribution，缩写为 BSD），也被称为柏克莱 Unix（Berkeley Unix），是一个操作系统的名称。衍生自 Unix（类Unix），1970年代由伯克利加州大学的学生比尔·乔伊（Bill Joy）开创，也被用来代表其衍生出的各种套件。<br>BSD 常被当作工作站级别的 Unix 系统，这得归功于 BSD 用户许可证非常地宽松，许多1980年代成立的计算机公司，不少都从 BSD 中获益，比较著名的例子如 DEC 的 Ultrix，以及 Sun 公司的 SunOS。1990年代，BSD很大程度上被 System V 4.x 版以及 OSF/1 系统所取代，但其开源版本被采用，促进了因特网的开发。” —— Wiki</p>
 <ul>
 <li>mack_trap_table</li>
-<li>安全组件
-<ul>
+<li>安全组件<ul>
 <li>调度</li>
 <li>虚拟内存</li>
 <li>虚拟文件交换</li>
@@ -283,28 +274,19 @@ BSD 常被当作工作站级别的 Unix 系统，这得归功于 BSD 用户许�
 </ul>
 </li>
 </ul>
-<h4 id="Mach-抽象层">Mach 抽象层</h4>
-<ul>
+<h4 id="Mach-抽象层"><a href="#Mach-抽象层" class="headerlink" title="Mach 抽象层"></a>Mach 抽象层</h4><ul>
 <li>调度</li>
 <li>IPC</li>
 <li>VM</li>
 </ul>
-<h4 id="硬件">硬件</h4>
-<ul>
+<h4 id="硬件"><a href="#硬件" class="headerlink" title="硬件"></a>硬件</h4><ul>
 <li>机器相关代码； ml_*APIs； Platform Expert</li>
 <li>硬件设备</li>
 </ul>
-<h2 id="用户态-2">用户态</h2>
-<h3 id="用户体验层">用户体验层</h3>
-<p>比如，Spotlight ， Siri 等。</p>
-<h3 id="应用框架层">应用框架层</h3>
-<p>包括 Cocoa、Carbon 和 Java。而在 iOS 中只有 Cocoa Touch（Cocoa 的衍生品）。
-比如， Mac App 和 iOS App 开发都需要用到 Cocoa 或 Cocoa Touch 的框架。</p>
-<h3 id="核心框架">核心框架</h3>
-<p>包括核心框架、OpenGL 等</p>
-<h2 id="Darwin-——-UNIX-核心">Darwin —— UNIX 核心</h2>
-<h3 id="Shell">Shell</h3>
-<p>OS X 的 Terminal 支持以下几种 Shell 命令。在 GitHub 可以安装 “<a target="_blank" rel="noopener" href="https://github.com/robbyrussell/oh-my-zsh">oh my zsh!</a>”， 一个非常赞的开源 zsh 的配置管理框架。</p>
+<h2 id="用户态-1"><a href="#用户态-1" class="headerlink" title="用户态"></a>用户态</h2><h3 id="用户体验层"><a href="#用户体验层" class="headerlink" title="用户体验层"></a>用户体验层</h3><p>比如，Spotlight ， Siri 等。</p>
+<h3 id="应用框架层"><a href="#应用框架层" class="headerlink" title="应用框架层"></a>应用框架层</h3><p>包括 Cocoa、Carbon 和 Java。而在 iOS 中只有 Cocoa Touch（Cocoa 的衍生品）。<br>比如， Mac App 和 iOS App 开发都需要用到 Cocoa 或 Cocoa Touch 的框架。</p>
+<h3 id="核心框架"><a href="#核心框架" class="headerlink" title="核心框架"></a>核心框架</h3><p>包括核心框架、OpenGL 等</p>
+<h2 id="Darwin-——-UNIX-核心"><a href="#Darwin-——-UNIX-核心" class="headerlink" title="Darwin —— UNIX 核心"></a>Darwin —— UNIX 核心</h2><h3 id="Shell"><a href="#Shell" class="headerlink" title="Shell"></a>Shell</h3><p>OS X 的 Terminal 支持以下几种 Shell 命令。在 GitHub 可以安装 “<a target="_blank" rel="noopener" href="https://github.com/robbyrussell/oh-my-zsh">oh my zsh!</a>”， 一个非常赞的开源 zsh 的配置管理框架。</p>
 <ul>
 <li>/bin/sh</li>
 <li>/bin/bash</li>
@@ -313,17 +295,12 @@ BSD 常被当作工作站级别的 Unix 系统，这得归功于 BSD 用户许�
 <li>/bin/ksh</li>
 <li>/bin/zsh(oh my zsh!)</li>
 </ul>
-<h3 id="文件系统">文件系统</h3>
-<p>Mac OS X 采用了 Hierarchical File System Plus (HFS+) 文件系统。
-iOS 采用的是 HFSX 文件系统。</p>
-<h3 id="系统目录">系统目录</h3>
-<h4 id="OS-X-中的-UNIX-标准目录">OS X 中的 UNIX 标准目录</h4>
-<ul>
+<h3 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h3><p>Mac OS X 采用了 Hierarchical File System Plus (HFS+) 文件系统。<br>iOS 采用的是 HFSX 文件系统。</p>
+<h3 id="系统目录"><a href="#系统目录" class="headerlink" title="系统目录"></a>系统目录</h3><h4 id="OS-X-中的-UNIX-标准目录"><a href="#OS-X-中的-UNIX-标准目录" class="headerlink" title="OS X 中的 UNIX 标准目录"></a>OS X 中的 UNIX 标准目录</h4><ul>
 <li>/bin： UNIX 中的二进制程序</li>
 <li>/sbin：  系统程序</li>
-<li>/usr： User 目录
-<ul>
-<li>/usr/bin</li>
+<li>/usr： User 目录<ul>
+<li>/usr/bin </li>
 <li>/usr/lib 共享的目标文件(动态链接库)</li>
 <li>/usr/sbin</li>
 </ul>
@@ -333,8 +310,7 @@ iOS 采用的是 HFSX 文件系统。</p>
 <li>/tmp</li>
 <li>/var</li>
 </ul>
-<h4 id="OS-X-中的-UNIX-特有目录">OS X 中的 UNIX 特有目录</h4>
-<ul>
+<h4 id="OS-X-中的-UNIX-特有目录"><a href="#OS-X-中的-UNIX-特有目录" class="headerlink" title="OS X 中的 UNIX 特有目录"></a>OS X 中的 UNIX 特有目录</h4><ul>
 <li>/Applications</li>
 <li>/Developer</li>
 <li>/Library</li>
@@ -344,40 +320,27 @@ iOS 采用的是 HFSX 文件系统。</p>
 <li>/Volumes</li>
 <li>/Cores</li>
 </ul>
-<h4 id="iOS-文件系统与-Mac-OS-X-文件系统的区别">iOS 文件系统与 Mac OS X 文件系统的区别</h4>
-<ul>
+<h4 id="iOS-文件系统与-Mac-OS-X-文件系统的区别"><a href="#iOS-文件系统与-Mac-OS-X-文件系统的区别" class="headerlink" title="iOS 文件系统与 Mac OS X 文件系统的区别"></a>iOS 文件系统与 Mac OS X 文件系统的区别</h4><ul>
 <li>HFSX 是大小写敏感的，且文件系统是部分加密的</li>
 <li>iOS 没有 /Users 目录</li>
 <li>iOS 没有 /Volumes 目录</li>
 <li>iOS 的 /Developer 只有在设备被 Xcode 选中为“Use for development”时才会出现。</li>
 </ul>
-<h3 id="库">库</h3>
-<p>OS X 的动态链接库存储在 /usr/lib 目录下，库文件使用 .dylib 作为后缀。查看 /usr/lib 下的库</p>
+<h3 id="库"><a href="#库" class="headerlink" title="库"></a>库</h3><p>OS X 的动态链接库存储在 /usr/lib 目录下，库文件使用 .dylib 作为后缀。查看 /usr/lib 下的库</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">➜  NYSpace <span class="built_in">ls</span> -l /usr/lib | grep ^l | grep libSystem.dylib</span><br><span class="line">lrwxr-xr-x   1 root  wheel        17 Dec  3  2015 libSystem.dylib -&gt; libSystem.B.dylib</span><br><span class="line">lrwxr-xr-x   1 root  wheel        15 Dec  3  2015 libc.dylib -&gt; libSystem.dylib</span><br><span class="line">lrwxr-xr-x   1 root  wheel        15 Dec  3  2015 libdbm.dylib -&gt; libSystem.dylib</span><br><span class="line">lrwxr-xr-x   1 root  wheel        15 Dec  3  2015 libdl.dylib -&gt; libSystem.dylib</span><br><span class="line">lrwxr-xr-x   1 root  wheel        15 Dec  3  2015 libinfo.dylib -&gt; libSystem.dylib</span><br><span class="line">lrwxr-xr-x   1 root  wheel        15 Dec  3  2015 libm.dylib -&gt; libSystem.dylib</span><br><span class="line">lrwxr-xr-x   1 root  wheel        15 Dec  3  2015 libmx.A.dylib -&gt; libSystem.dylib</span><br><span class="line">lrwxr-xr-x   1 root  wheel        15 Dec  3  2015 libmx.dylib -&gt; libSystem.dylib</span><br><span class="line">lrwxr-xr-x   1 root  wheel        15 Dec  3  2015 libpoll.dylib -&gt; libSystem.dylib</span><br><span class="line">lrwxr-xr-x   1 root  wheel        15 Dec  3  2015 libproc.dylib -&gt; libSystem.dylib</span><br><span class="line">lrwxr-xr-x   1 root  wheel        15 Dec  3  2015 libpthread.dylib -&gt; libSystem.dylib</span><br><span class="line">lrwxr-xr-x   1 root  wheel        15 Dec  3  2015 librpcsvc.dylib -&gt; libSystem.dylib</span><br></pre></td></tr></table></figure>
-<p>从以上输出可以看出， /usr/lib 中的库实际上都是由 libSystem.dylib 实现的。
-再通过 otool 查看 libSystem 库的依赖关系</p>
+<p>从以上输出可以看出， /usr/lib 中的库实际上都是由 libSystem.dylib 实现的。<br>再通过 otool 查看 libSystem 库的依赖关系</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">➜  lib otool -L libSystem.B.dylib</span><br><span class="line">libSystem.B.dylib:</span><br><span class="line">	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1226.10.1)</span><br><span class="line">	/usr/lib/system/libcache.dylib (compatibility version 1.0.0, current version 75.0.0)</span><br><span class="line">	/usr/lib/system/libcommonCrypto.dylib (compatibility version 1.0.0, current version 60075.50.1)</span><br><span class="line">	/usr/lib/system/libcompiler_rt.dylib (compatibility version 1.0.0, current version 62.0.0)</span><br><span class="line">	/usr/lib/system/libcopyfile.dylib (compatibility version 1.0.0, current version 1.0.0)</span><br><span class="line">	/usr/lib/system/libcorecrypto.dylib (compatibility version 1.0.0, current version 335.50.1)</span><br><span class="line">	/usr/lib/system/libdispatch.dylib (compatibility version 1.0.0, current version 501.40.12)</span><br><span class="line">	/usr/lib/system/libdyld.dylib (compatibility version 1.0.0, current version 360.22.0)</span><br><span class="line">	/usr/lib/system/libkeymgr.dylib (compatibility version 1.0.0, current version 28.0.0)</span><br><span class="line">	/usr/lib/system/liblaunch.dylib (compatibility version 1.0.0, current version 765.50.8)</span><br><span class="line">	/usr/lib/system/libmacho.dylib (compatibility version 1.0.0, current version 875.1.0)</span><br><span class="line">	/usr/lib/system/libquarantine.dylib (compatibility version 1.0.0, current version 80.0.0)</span><br><span class="line">	/usr/lib/system/libremovefile.dylib (compatibility version 1.0.0, current version 41.0.0)</span><br><span class="line">	/usr/lib/system/libsystem_asl.dylib (compatibility version 1.0.0, current version 323.50.1)</span><br><span class="line">	/usr/lib/system/libsystem_blocks.dylib (compatibility version 1.0.0, current version 65.0.0)</span><br><span class="line">	/usr/lib/system/libsystem_c.dylib (compatibility version 1.0.0, current version 1082.60.1)</span><br><span class="line">	/usr/lib/system/libsystem_configuration.dylib (compatibility version 1.0.0, current version 802.40.13)</span><br><span class="line">	/usr/lib/system/libsystem_coreservices.dylib (compatibility version 1.0.0, current version 19.2.0)</span><br><span class="line">	/usr/lib/system/libsystem_coretls.dylib (compatibility version 1.0.0, current version 83.40.5)</span><br><span class="line">	/usr/lib/system/libsystem_dnssd.dylib (compatibility version 1.0.0, current version 625.60.4)</span><br><span class="line">	/usr/lib/system/libsystem_info.dylib (compatibility version 1.0.0, current version 477.50.4)</span><br><span class="line">	/usr/lib/system/libsystem_kernel.dylib (compatibility version 1.0.0, current version 3248.60.11)</span><br><span class="line">	/usr/lib/system/libsystem_m.dylib (compatibility version 1.0.0, current version 3105.0.0)</span><br><span class="line">	/usr/lib/system/libsystem_malloc.dylib (compatibility version 1.0.0, current version 67.40.1)</span><br><span class="line">	/usr/lib/system/libsystem_network.dylib (compatibility version 1.0.0, current version 583.50.1)</span><br><span class="line">	/usr/lib/system/libsystem_networkextension.dylib (compatibility version 1.0.0, current version 1.0.0)</span><br><span class="line">	/usr/lib/system/libsystem_notify.dylib (compatibility version 1.0.0, current version 150.40.1)</span><br><span class="line">	/usr/lib/system/libsystem_platform.dylib (compatibility version 1.0.0, current version 74.40.2)</span><br><span class="line">	/usr/lib/system/libsystem_pthread.dylib (compatibility version 1.0.0, current version 138.10.4)</span><br><span class="line">	/usr/lib/system/libsystem_sandbox.dylib (compatibility version 1.0.0, current version 460.60.2)</span><br><span class="line">	/usr/lib/system/libsystem_secinit.dylib (compatibility version 1.0.0, current version 20.0.0)</span><br><span class="line">	/usr/lib/system/libsystem_trace.dylib (compatibility version 1.0.0, current version 201.10.3)</span><br><span class="line">	/usr/lib/system/libunc.dylib (compatibility version 1.0.0, current version 29.0.0)</span><br><span class="line">	/usr/lib/system/libunwind.dylib (compatibility version 1.0.0, current version 35.3.0)</span><br><span class="line">	/usr/lib/system/libxpc.dylib (compatibility version 1.0.0, current version 765.50.8)</span><br></pre></td></tr></table></figure>
-<h3 id="BSD-Mach-原生程序">BSD/Mach 原生程序</h3>
-<p>由于 OS X 兼容 POSIX，所以应用程序移植很方便。</p>
-<h3 id="系统调用">系统调用</h3>
-<h4 id="POSIX">POSIX</h4>
-<p>“可移植操作系统接口（英语：Portable Operating System Interface of UNIX，缩写为POSIX），是IEEE为要在各种UNIX操作系统上运行软件，而定义API的一系列互相关联的标准的总称，其正式称呼为IEEE Std 1003，而国际标准名称为ISO/IEC 9945。此标准源于一个大约开始于1985年的项目。POSIX这个名称是由理查德·斯托曼应IEEE的要求而提议的一个易于记忆的名称。它基本上是Portable Operating System Interface（可移植操作系统接口）的缩写，而X则表明其对Unix API的传承。
-当前的POSIX主要分为四个部分[3]：Base Definitions、System Interfaces、Shell and Utilities和Rationale。” —— Wiki</p>
-<h4 id="Mach-系统调用">Mach 系统调用</h4>
-<p>OS X 实在 Mach 内核基础上构建的，是 NeXTSTEP 的遗产，BSD 层是对 Mach 内核的封装，但是 Mach 系统调用仍然可以在用户态访问。
-用 otool 查看 x86_64 上动态链接库 libSystem.B.dylib 的实现.(otool 是 OS X 的查看 Mach-O )</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">➜  lib otool -<span class="built_in">arch</span> x86_64 -tV /usr/lib/libSystem.B.dylib | more</span><br><span class="line">/usr/lib/libSystem.B.dylib:</span><br><span class="line">(__TEXT,__text) section</span><br><span class="line">_libSystem_initializer:</span><br><span class="line">0000000000001989        pushq   %rbp</span><br><span class="line">000000000000198a        movq    %rsp, %rbp</span><br><span class="line">000000000000198d        pushq   %r15</span><br><span class="line">000000000000198f        pushq   %r14</span><br><span class="line">0000000000001991        pushq   %rbx</span><br><span class="line">0000000000001992        pushq   %rax</span><br><span class="line">0000000000001993        movq    %r8, %r14</span><br><span class="line">0000000000001996        movq    %rcx, %r15</span><br><span class="line">0000000000001999        movq    %rdx, %rbx</span><br><span class="line">000000000000199c        leaq    _libSystem_initializer.libkernel_funcs(%rip), %rdi</span><br><span class="line">00000000000019a3        movq    %rbx, %rsi</span><br><span class="line">00000000000019a6        movq    %r15, %rdx</span><br><span class="line">00000000000019a9        movq    %r14, %rcx</span><br><span class="line">00000000000019ac        callq   0x1bda <span class="comment">## symbol stub for: ___libkernel_init</span></span><br><span class="line">00000000000019b1        xorl    %edi, %edi</span><br><span class="line">00000000000019b3        movq    %rbx, %rsi</span><br><span class="line">00000000000019b6        movq    %r15, %rdx</span><br><span class="line">00000000000019b9        movq    %r14, %rcx</span><br><span class="line">00000000000019bc        callq   0x1c58 <span class="comment">## symbol stub for: ___libplatform_init</span></span><br><span class="line">00000000000019c1        leaq    _libSystem_initializer.libpthread_funcs(%rip), %rdi</span><br><span class="line">00000000000019c8        movq    %rbx, %rsi</span><br><span class="line">00000000000019cb        movq    %r15, %rdx</span><br><span class="line">00000000000019ce        movq    %r14, %rcx</span><br><span class="line">00000000000019d1        callq   0x1c5e <span class="comment">## symbol stub for: ___pthread_init</span></span><br><span class="line">00000000000019d6        leaq    _libSystem_initializer.libc_funcs(%rip), %rdi</span><br><span class="line">00000000000019dd        movq    %rbx, %rsi</span><br><span class="line">00000000000019e0        movq    %r15, %rdx</span><br><span class="line">00000000000019e3        movq    %r14, %rcx</span><br><span class="line">00000000000019e6        callq   0x1b98 <span class="comment">## symbol stub for: __libc_initializer</span></span><br><span class="line">00000000000019eb        movq    %r15, %rdi</span><br><span class="line">00000000000019ee        callq   0x1c34 <span class="comment">## symbol stub for: ___malloc_init</span></span><br><span class="line">00000000000019f3        callq   0x1b86 <span class="comment">## symbol stub for: ___keymgr_initializer</span></span><br><span class="line">00000000000019f8        callq   0x1b7a <span class="comment">## symbol stub for: __dyld_initializer</span></span><br><span class="line">00000000000019fd        callq   0x1b6e <span class="comment">## symbol stub for: _libdispatch_init</span></span><br></pre></td></tr></table></figure>
-<h3 id="XNU">XNU</h3>
-<p>XNU 是 Darwin 的核心，也是整个 OS X 的核心。</p>
-<h4 id="Mach">Mach</h4>
-<ul>
+<h3 id="BSD-Mach-原生程序"><a href="#BSD-Mach-原生程序" class="headerlink" title="BSD/Mach 原生程序"></a>BSD/Mach 原生程序</h3><p>由于 OS X 兼容 POSIX，所以应用程序移植很方便。</p>
+<h3 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h3><h4 id="POSIX"><a href="#POSIX" class="headerlink" title="POSIX"></a>POSIX</h4><p>“可移植操作系统接口（英语：Portable Operating System Interface of UNIX，缩写为POSIX），是IEEE为要在各种UNIX操作系统上运行软件，而定义API的一系列互相关联的标准的总称，其正式称呼为IEEE Std 1003，而国际标准名称为ISO/IEC 9945。此标准源于一个大约开始于1985年的项目。POSIX这个名称是由理查德·斯托曼应IEEE的要求而提议的一个易于记忆的名称。它基本上是Portable Operating System Interface（可移植操作系统接口）的缩写，而X则表明其对Unix API的传承。<br>当前的POSIX主要分为四个部分[3]：Base Definitions、System Interfaces、Shell and Utilities和Rationale。” —— Wiki</p>
+<h4 id="Mach-系统调用"><a href="#Mach-系统调用" class="headerlink" title="Mach 系统调用"></a>Mach 系统调用</h4><p>OS X 实在 Mach 内核基础上构建的，是 NeXTSTEP 的遗产，BSD 层是对 Mach 内核的封装，但是 Mach 系统调用仍然可以在用户态访问。<br>用 otool 查看 x86_64 上动态链接库 libSystem.B.dylib 的实现.(otool 是 OS X 的查看 Mach-O )<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">➜  lib otool -<span class="built_in">arch</span> x86_64 -tV /usr/lib/libSystem.B.dylib | more</span><br><span class="line">/usr/lib/libSystem.B.dylib:</span><br><span class="line">(__TEXT,__text) section</span><br><span class="line">_libSystem_initializer:</span><br><span class="line">0000000000001989        pushq   %rbp</span><br><span class="line">000000000000198a        movq    %rsp, %rbp</span><br><span class="line">000000000000198d        pushq   %r15</span><br><span class="line">000000000000198f        pushq   %r14</span><br><span class="line">0000000000001991        pushq   %rbx</span><br><span class="line">0000000000001992        pushq   %rax</span><br><span class="line">0000000000001993        movq    %r8, %r14</span><br><span class="line">0000000000001996        movq    %rcx, %r15</span><br><span class="line">0000000000001999        movq    %rdx, %rbx</span><br><span class="line">000000000000199c        leaq    _libSystem_initializer.libkernel_funcs(%rip), %rdi</span><br><span class="line">00000000000019a3        movq    %rbx, %rsi</span><br><span class="line">00000000000019a6        movq    %r15, %rdx</span><br><span class="line">00000000000019a9        movq    %r14, %rcx</span><br><span class="line">00000000000019ac        callq   0x1bda <span class="comment">## symbol stub for: ___libkernel_init</span></span><br><span class="line">00000000000019b1        xorl    %edi, %edi</span><br><span class="line">00000000000019b3        movq    %rbx, %rsi</span><br><span class="line">00000000000019b6        movq    %r15, %rdx</span><br><span class="line">00000000000019b9        movq    %r14, %rcx</span><br><span class="line">00000000000019bc        callq   0x1c58 <span class="comment">## symbol stub for: ___libplatform_init</span></span><br><span class="line">00000000000019c1        leaq    _libSystem_initializer.libpthread_funcs(%rip), %rdi</span><br><span class="line">00000000000019c8        movq    %rbx, %rsi</span><br><span class="line">00000000000019cb        movq    %r15, %rdx</span><br><span class="line">00000000000019ce        movq    %r14, %rcx</span><br><span class="line">00000000000019d1        callq   0x1c5e <span class="comment">## symbol stub for: ___pthread_init</span></span><br><span class="line">00000000000019d6        leaq    _libSystem_initializer.libc_funcs(%rip), %rdi</span><br><span class="line">00000000000019dd        movq    %rbx, %rsi</span><br><span class="line">00000000000019e0        movq    %r15, %rdx</span><br><span class="line">00000000000019e3        movq    %r14, %rcx</span><br><span class="line">00000000000019e6        callq   0x1b98 <span class="comment">## symbol stub for: __libc_initializer</span></span><br><span class="line">00000000000019eb        movq    %r15, %rdi</span><br><span class="line">00000000000019ee        callq   0x1c34 <span class="comment">## symbol stub for: ___malloc_init</span></span><br><span class="line">00000000000019f3        callq   0x1b86 <span class="comment">## symbol stub for: ___keymgr_initializer</span></span><br><span class="line">00000000000019f8        callq   0x1b7a <span class="comment">## symbol stub for: __dyld_initializer</span></span><br><span class="line">00000000000019fd        callq   0x1b6e <span class="comment">## symbol stub for: _libdispatch_init</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="XNU"><a href="#XNU" class="headerlink" title="XNU"></a>XNU</h3><p>XNU 是 Darwin 的核心，也是整个 OS X 的核心。</p>
+<h4 id="Mach"><a href="#Mach" class="headerlink" title="Mach"></a>Mach</h4><ul>
 <li>进程和线程抽象</li>
 <li>虚拟内存管理</li>
 <li>任务调度</li>
 <li>进程间通信和消息传递机制</li>
 </ul>
-<h4 id="BSD-层">BSD 层</h4>
-<ul>
+<h4 id="BSD-层"><a href="#BSD-层" class="headerlink" title="BSD 层"></a>BSD 层</h4><ul>
 <li>UNIX 进程模型</li>
 <li>POSIX 线程模型(Pthread)及其相关的同步原语</li>
 <li>UNIX 用户和组</li>
@@ -385,13 +348,10 @@ iOS 采用的是 HFSX 文件系统。</p>
 <li>文件系统访问</li>
 <li>设备访问（通过 /dev 目录访问）</li>
 </ul>
-<h4 id="libkern">libkern</h4>
-<p>大部分内核是利用 C 语言和底层汇编并编写的。</p>
-<h4 id="I-O-Kit">I/O Kit</h4>
-<p>苹果对 XNU 最重要的修改是引入了 I/O Kit 设备驱动程序框架。</p>
-<h2 id="小结">小结</h2>
-<p>本篇文章主要学习了 OS X 的基本结构，如下图所示</p>
-<p><img src="https://niyaoyao.github.io/images/darwin_structure.png" alt="" /></p>
+<h4 id="libkern"><a href="#libkern" class="headerlink" title="libkern"></a>libkern</h4><p>大部分内核是利用 C 语言和底层汇编并编写的。</p>
+<h4 id="I-O-Kit"><a href="#I-O-Kit" class="headerlink" title="I/O Kit"></a>I/O Kit</h4><p>苹果对 XNU 最重要的修改是引入了 I/O Kit 设备驱动程序框架。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>本篇文章主要学习了 OS X 的基本结构，如下图所示</p>
+<p><img src="https://niyaoyao.github.io/images/darwin_structure.png" alt=""></p>
 
     
   </div>
@@ -621,5 +581,20 @@ gitalk.render('gitalk-container')
   }
 </script>
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>

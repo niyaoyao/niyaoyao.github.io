@@ -15,15 +15,15 @@
     <meta name="keywords" content="Xcode," />
   
 
-  <meta name="description" content="错误整理 这篇文章会整理开发过程中，我认为非常奇葩蹊跷的错误。会不定期更新。 Undefined symbols  在链接过程中找不到符号表  Undefined symbols for architecture i386:  &quot;_OBJC_CLASS_$_ShareService&quot;, referenced from:      objc-class-ref in AppDel">
+  <meta name="description" content="错误整理这篇文章会整理开发过程中，我认为非常奇葩蹊跷的错误。会不定期更新。 Undefined symbols 在链接过程中找不到符号表  Undefined symbols for architecture i386:  &quot;_OBJC_CLASS_$_ShareService&quot;, referenced from:      objc-class-ref in AppDeleg">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Xcode 开发的出错整理">
 <meta property="og:url" content="http://niyaoyao.me/2015/03/02/xcode-errors/index.html">
 <meta property="og:site_name" content="N.Y.">
-<meta property="og:description" content="错误整理 这篇文章会整理开发过程中，我认为非常奇葩蹊跷的错误。会不定期更新。 Undefined symbols  在链接过程中找不到符号表  Undefined symbols for architecture i386:  &quot;_OBJC_CLASS_$_ShareService&quot;, referenced from:      objc-class-ref in AppDel">
+<meta property="og:description" content="错误整理这篇文章会整理开发过程中，我认为非常奇葩蹊跷的错误。会不定期更新。 Undefined symbols 在链接过程中找不到符号表  Undefined symbols for architecture i386:  &quot;_OBJC_CLASS_$_ShareService&quot;, referenced from:      objc-class-ref in AppDeleg">
 <meta property="og:locale">
 <meta property="article:published_time" content="2015-03-01T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-09-26T12:15:55.263Z">
+<meta property="article:modified_time" content="2024-04-15T15:21:28.591Z">
 <meta property="article:author" content="Niyao">
 <meta property="article:tag" content="Xcode">
 <meta name="twitter:card" content="summary">
@@ -244,20 +244,16 @@ ga('send', 'pageview');
 
   <div class="article-content">
     
-      <h2 id="错误整理">错误整理</h2>
-<p>这篇文章会整理开发过程中，我认为非常奇葩蹊跷的错误。会不定期更新。</p>
-<h3 id="Undefined-symbols">Undefined symbols</h3>
-<ul>
+      <h2 id="错误整理"><a href="#错误整理" class="headerlink" title="错误整理"></a>错误整理</h2><p>这篇文章会整理开发过程中，我认为非常奇葩蹊跷的错误。会不定期更新。</p>
+<h3 id="Undefined-symbols"><a href="#Undefined-symbols" class="headerlink" title="Undefined symbols"></a>Undefined symbols</h3><ul>
 <li>在链接过程中找不到符号表</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Undefined symbols for architecture i386:</span><br><span class="line">  &quot;_OBJC_CLASS_$_ShareService&quot;, referenced from:</span><br><span class="line">      objc-class-ref in AppDelegate.o</span><br><span class="line">ld: symbol(s) not found for architecture i386</span><br><span class="line">clang: error: linker command failed with exit code 1 (use -v to see invocation)</span><br></pre></td></tr></table></figure>
-<p>解决办法</p>
+<p>解决办法 </p>
 <ul>
-<li>
-<p>TargetSettings -&gt; Build Phases -&gt; Compile Sources -&gt; add your .m class -&gt;Build and Run</p>
+<li><p>TargetSettings -&gt; Build Phases -&gt; Compile Sources -&gt; add your .m class -&gt;Build and Run</p>
 </li>
-<li>
-<p>WeChat</p>
+<li><p>WeChat</p>
 </li>
 </ul>
 <p>链接过程找不到符号</p>
@@ -268,8 +264,7 @@ ga('send', 'pageview');
 <li>Build Settings -&gt; Library Search Paths 中添加 libWeChatSDK.a ，WXApi.h，WXApiObject.h，文件所在位置</li>
 <li>Build Phases -&gt; Linked Frameworks and Libraries 添加 framework 和 libWeChatSDK.a 库</li>
 </ol>
-<h3 id="结论">结论</h3>
-<p><strong>Undefined symbols</strong> 问题一般就是缺少了编译的文件、库等，而导致项目在链接过程中找不到对应的符号。</p>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p><strong>Undefined symbols</strong> 问题一般就是缺少了编译的文件、库等，而导致项目在链接过程中找不到对应的符号。</p>
 
     
   </div>
@@ -310,7 +305,7 @@ ga('send', 'pageview');
     <a class="hide pull-left" href="/">
         <i class="icon icon-angle-left"></i>
     </a>
-    <a class="show pull-right" href="/2015/06/09/interview-swift/">
+    <a class="show pull-right" href="/2016/07/29/oc-compile/">
         <i class="icon icon-angle-right"></i>
     </a>
   </div>
@@ -499,5 +494,20 @@ gitalk.render('gitalk-container')
   }
 </script>
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>
