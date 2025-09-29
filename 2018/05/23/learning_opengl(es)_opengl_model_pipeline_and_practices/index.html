@@ -15,12 +15,12 @@
     <meta name="keywords" content="OpenGL," />
   
 
-  <meta name="description" content="Introduction这半年的时间都在做音视频合成的相关工作，项目研发过程中也遇到很多问题，但是网上优秀的技术资源也比较少，因此，想系统地学习和整理 OpenGL 图形图像处理的相关内容。 本篇文章基本包括以下内容：  OpenGL 的 C&#x2F;S 模型架构。OpenGL 使用 Client - Server 模型，客户端（Client）运行在 CPU 上，服务端（Server）运行在 GPU 上，">
+  <meta name="description" content="Introduction 这半年的时间都在做音视频合成的相关工作，项目研发过程中也遇到很多问题，但是网上优秀的技术资源也比较少，因此，想系统地学习和整理 OpenGL 图形图像处理的相关内容。 本篇文章基本包括以下内容：   OpenGL 的 C&#x2F;S 模型架构。OpenGL 使用 Client - Server 模型，客户端（Client）运行在 CPU 上，服务端（Server）运行在 GPU">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Learning OpenGL(ES) —— OpenGL Model, Pipeline and Practices">
 <meta property="og:url" content="http://niyaoyao.me/2018/05/23/learning_opengl(es)_opengl_model_pipeline_and_practices/index.html">
 <meta property="og:site_name" content="N.Y.">
-<meta property="og:description" content="Introduction这半年的时间都在做音视频合成的相关工作，项目研发过程中也遇到很多问题，但是网上优秀的技术资源也比较少，因此，想系统地学习和整理 OpenGL 图形图像处理的相关内容。 本篇文章基本包括以下内容：  OpenGL 的 C&#x2F;S 模型架构。OpenGL 使用 Client - Server 模型，客户端（Client）运行在 CPU 上，服务端（Server）运行在 GPU 上，">
+<meta property="og:description" content="Introduction 这半年的时间都在做音视频合成的相关工作，项目研发过程中也遇到很多问题，但是网上优秀的技术资源也比较少，因此，想系统地学习和整理 OpenGL 图形图像处理的相关内容。 本篇文章基本包括以下内容：   OpenGL 的 C&#x2F;S 模型架构。OpenGL 使用 Client - Server 模型，客户端（Client）运行在 CPU 上，服务端（Server）运行在 GPU">
 <meta property="og:locale">
 <meta property="og:image" content="https://niyaoyao.github.io/images/opengl/ios_screen_display.png">
 <meta property="og:image" content="https://niyaoyao.github.io/images/opengl/pixels-software-stack@2x-1ae69f5a.png">
@@ -112,119 +112,7 @@ ga('send', 'pageview');
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
   
 
-<meta name="generator" content="Hexo 5.4.2"><style>mjx-container[jax="SVG"] {
-  direction: ltr;
-}
-
-mjx-container[jax="SVG"] > svg {
-  overflow: visible;
-}
-
-mjx-container[jax="SVG"][display="true"] {
-  display: block;
-  text-align: center;
-  margin: 1em 0;
-}
-
-mjx-container[jax="SVG"][justify="left"] {
-  text-align: left;
-}
-
-mjx-container[jax="SVG"][justify="right"] {
-  text-align: right;
-}
-
-g[data-mml-node="merror"] > g {
-  fill: red;
-  stroke: red;
-}
-
-g[data-mml-node="merror"] > rect[data-background] {
-  fill: yellow;
-  stroke: none;
-}
-
-g[data-mml-node="mtable"] > line[data-line] {
-  stroke-width: 70px;
-  fill: none;
-}
-
-g[data-mml-node="mtable"] > rect[data-frame] {
-  stroke-width: 70px;
-  fill: none;
-}
-
-g[data-mml-node="mtable"] > .mjx-dashed {
-  stroke-dasharray: 140;
-}
-
-g[data-mml-node="mtable"] > .mjx-dotted {
-  stroke-linecap: round;
-  stroke-dasharray: 0,140;
-}
-
-g[data-mml-node="mtable"] > svg {
-  overflow: visible;
-}
-
-[jax="SVG"] mjx-tool {
-  display: inline-block;
-  position: relative;
-  width: 0;
-  height: 0;
-}
-
-[jax="SVG"] mjx-tool > mjx-tip {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-mjx-tool > mjx-tip {
-  display: inline-block;
-  padding: .2em;
-  border: 1px solid #888;
-  font-size: 70%;
-  background-color: #F8F8F8;
-  color: black;
-  box-shadow: 2px 2px 5px #AAAAAA;
-}
-
-g[data-mml-node="maction"][data-toggle] {
-  cursor: pointer;
-}
-
-mjx-status {
-  display: block;
-  position: fixed;
-  left: 1em;
-  bottom: 1em;
-  min-width: 25%;
-  padding: .2em .4em;
-  border: 1px solid #888;
-  font-size: 90%;
-  background-color: #F8F8F8;
-  color: black;
-}
-
-foreignObject[data-mjx-xml] {
-  font-family: initial;
-  line-height: normal;
-  overflow: visible;
-}
-
-.MathJax path {
-  stroke-width: 3;
-}
-
-mjx-container[display="true"] {
-  overflow: auto hidden;
-}
-
-mjx-container[display="true"] + br {
-  display: none;
-}
-</style></head>
+<meta name="generator" content="Hexo 5.4.2"></head>
 
 <body>
 
@@ -375,14 +263,18 @@ mjx-container[display="true"] + br {
 
   <div class="article-content">
     
-      <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>这半年的时间都在做音视频合成的相关工作，项目研发过程中也遇到很多问题，但是网上优秀的技术资源也比较少，因此，想系统地学习和整理 OpenGL 图形图像处理的相关内容。</p>
+      <h2 id="Introduction">Introduction</h2>
+<p>这半年的时间都在做音视频合成的相关工作，项目研发过程中也遇到很多问题，但是网上优秀的技术资源也比较少，因此，想系统地学习和整理 OpenGL 图形图像处理的相关内容。</p>
 <p>本篇文章基本包括以下内容：</p>
 <ul>
-<li><p>OpenGL 的 C/S 模型架构。OpenGL 使用 Client - Server 模型，客户端（Client）运行在 CPU 上，服务端（Server）运行在 GPU 上，这部分会具体讨论 CPU 传输数据到 GPU 而造成的性能损耗，以及讨论离屏渲染会造成巨大性能开销的原因。</p>
+<li>
+<p>OpenGL 的 C/S 模型架构。OpenGL 使用 Client - Server 模型，客户端（Client）运行在 CPU 上，服务端（Server）运行在 GPU 上，这部分会具体讨论 CPU 传输数据到 GPU 而造成的性能损耗，以及讨论离屏渲染会造成巨大性能开销的原因。</p>
 </li>
-<li><p>OpenGL 的 Pipeline 及重要的 Shader 简介。这一部分主要讨论 OpenGL 是以 C/S 为模型设计的架构，在这套架构之上，当数据由 CPU 传递给 GPU 之后，GPU 怎样对 CPU 提供的数据进行加工、处理最终形成 FrameBuffer（帧缓冲），交给屏幕驱动进行屏幕渲染的过程。</p>
+<li>
+<p>OpenGL 的 Pipeline 及重要的 Shader 简介。这一部分主要讨论 OpenGL 是以 C/S 为模型设计的架构，在这套架构之上，当数据由 CPU 传递给 GPU 之后，GPU 怎样对 CPU 提供的数据进行加工、处理最终形成 FrameBuffer（帧缓冲），交给屏幕驱动进行屏幕渲染的过程。</p>
 </li>
-<li><p>OpenGL（ES）编程实践。用具体的程序代码来详细学习和理解什么是 Shader（着色器），什么是 VBO（Vertex Buffer Object），什么是 EBO（Element Buffer Object），什么是 VAO（Vertex Array Object）。</p>
+<li>
+<p>OpenGL（ES）编程实践。用具体的程序代码来详细学习和理解什么是 Shader（着色器），什么是 VBO（Vertex Buffer Object），什么是 EBO（Element Buffer Object），什么是 VAO（Vertex Array Object）。</p>
 </li>
 </ul>
 <p>以上三个部分是本文主要讨论的内容，前两部分用较多的笔墨着重介绍 OpenGL 理论基础。鄙人认为只有先理解了 OpenGL 的设计理念，才能更好的使用 OpenGL 提供的函数进行图形处理。阅读本文可以先带着这样几个问题来进行 OpenGL 的探究：</p>
@@ -403,27 +295,39 @@ mjx-container[display="true"] + br {
 </ul>
 <p>当然以上所有问题会在本文内容中加以详细解释，如果对以上问题感兴趣，就和我一起开始学习 OpenGL 吧。</p>
 <p><em>注：我使用的是 macOS 系统，所以本文中 OpenGL 开发框架和代码示例都是基于 Cocoa（Cocoa Touch）框架来编写的。但 OpenGL 图形处理的理论是通用的，在学习过程中我也通过学习其他开发平台（Windows、Android、Linux 等）的资料来辅助自己对 OpenGL 原理的理解。</em></p>
-<h2 id="OpenGL-Model"><a href="#OpenGL-Model" class="headerlink" title="OpenGL Model"></a>OpenGL Model</h2><h3 id="Screen-Rendering"><a href="#Screen-Rendering" class="headerlink" title="Screen Rendering"></a>Screen Rendering</h3><p><img src="https://niyaoyao.github.io/images/opengl/ios_screen_display.png" alt=""><br>图 1 屏幕显像过程图</p>
+<h2 id="OpenGL-Model">OpenGL Model</h2>
+<h3 id="Screen-Rendering">Screen Rendering</h3>
+<p><img src="https://niyaoyao.github.io/images/opengl/ios_screen_display.png" alt="" />
+图 1 屏幕显像过程图</p>
 <p>在 ibireme 大佬的<a target="_blank" rel="noopener" href="https://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/">《iOS 保持界面流畅的技巧》</a>一文中，他是这样解释屏幕显像的过程的：</p>
 <blockquote>
 <p>计算机系统中 CPU、GPU、显示器是以上面这种方式协同工作的。CPU 计算好显示内容提交到 GPU，GPU 渲染完成后将渲染结果放入帧缓冲区，随后视频控制器会按照 VSync 信号逐行读取帧缓冲区的数据，经过可能的数模转换传递给显示器显示。</p>
 </blockquote>
 <p>在图 1 中我们可以看到数据从 CPU 到 GPU，经过 GPU 的处理形成 FrameBuffer，并交由视频控制器，最终控制显示器显像的过程。而在这整个过程中，CPU 与 GPU 的通讯，GPU 将 CPU 传递来的数据处理成 FrameBuffer 这个阶段，实际上就是 OpenGL 的任务，即 <strong>OpenGL 的工作就是将 CPU 传递来的渲染数据，作为输入数据，经过 Pipeline 中的不同 Shader （可编程着色器）处理加工成 FrameBuffer 输出给底层硬件</strong>。所以，简单讲 OpenGL 图形处理过程就是，丢给 OpenGL 输入数据，OpenGL 吐出 FrameBuffer 输出数据的过程。</p>
-<p><img src="https://niyaoyao.github.io/images/opengl/pixels-software-stack@2x-1ae69f5a.png" alt=""><br>图 2 屏幕显像过程软件组件图</p>
+<p><img src="https://niyaoyao.github.io/images/opengl/pixels-software-stack@2x-1ae69f5a.png" alt="" />
+图 2 屏幕显像过程软件组件图</p>
 <p>上图是 <a target="_blank" rel="noopener" href="https://www.objc.io/issues/3-views/moving-pixels-onto-the-screen/">《Getting Pixels onto the Screen》</a> 文章中提供的显像过程图。应用程序利用 Core Graphics、Core Animation、Core Image 等框架设定渲染图形所需要的数据，并交由 OpenGL(ES) ，然后，OpenGL 与 GPU 驱动进行通讯，最终 GPU 控制显示器进行渲染显示。</p>
 <p>了解基本的屏幕显像原理之后，接下来就具体学习 OpenGL 是什么，OpenGL 的架构是如何设计，以及 OpenGL 是如何进行图形处理的。</p>
-<h3 id="About-OpenGL"><a href="#About-OpenGL" class="headerlink" title="About OpenGL"></a>About OpenGL</h3><p>OpenGL 是一个开放的、跨平台的拥有广泛工业支持的图形处理标准。OpenGL 通过提供一个成熟、文档完善的，支持现在和未来硬件加速的抽象概念的图形处理管道，令写实时 2D 或者 3D 的图形应用非常容易。</p>
-<h3 id="Client-Server-Model"><a href="#Client-Server-Model" class="headerlink" title="Client-Server Model"></a>Client-Server Model</h3><p><img src="https://niyaoyao.github.io/images/opengl/cpu_gpu.jpg" alt=""><br>图 3 OpenGL CPU and GPU</p>
+<h3 id="About-OpenGL">About OpenGL</h3>
+<p>OpenGL 是一个开放的、跨平台的拥有广泛工业支持的图形处理标准。OpenGL 通过提供一个成熟、文档完善的，支持现在和未来硬件加速的抽象概念的图形处理管道，令写实时 2D 或者 3D 的图形应用非常容易。</p>
+<h3 id="Client-Server-Model">Client-Server Model</h3>
+<p><img src="https://niyaoyao.github.io/images/opengl/cpu_gpu.jpg" alt="" />
+图 3 OpenGL CPU and GPU</p>
 <p>macOS 中的 OpenGL 使用通用的 OpenGL 框架和插件驱动实现了 OpenGL Client-Server 模型。如图 3 所示，框架和驱动联合一起，用来实现客户端 OpenGL 端口。专用的图形处理硬件支持了服务端。尽管这是通用场景，Apple 也在 CPU 上提供了全部的软件渲染实现。</p>
-<p><img src="https://niyaoyao.github.io/images/opengl/client_server_model.jpg" alt=""><br>图 4 OpenGL client-server model</p>
+<p><img src="https://niyaoyao.github.io/images/opengl/client_server_model.jpg" alt="" />
+图 4 OpenGL client-server model</p>
 <p>如图 4 所示，最上层是应用层，中间是 OpenGL Client，下层是 OpenGL Server。当我们的应用调用 OpenGL API 的时候，它会先跟 OpenGL Client 进行通讯，然后，OpenGL Client 向 OpenGL Server 传递绘画指令。OpenGL Client-Server 模型设计的好处是，Client 能够在命令完成执行之前将控制权返回给应用程序，即 OpenGL 的命令能够异步执行。</p>
-<p><img src="https://niyaoyao.github.io/images/opengl/macintosh_hardware_architecture.jpg" alt=""><br>图 5 Macintosh OpenGL Hardware Architecture</p>
+<p><img src="https://niyaoyao.github.io/images/opengl/macintosh_hardware_architecture.jpg" alt="" />
+图 5 Macintosh OpenGL Hardware Architecture</p>
 <p>Client-Server 模型允许图形工作在客户端和在服务端之间被分开。例如，所有 Macintosh 计算机搭载了专属于图形处理的硬件，使运行图形处理的并行计算最优化。图 5 展示了一组 CPU 和 GPU 的通用布局。通过这样的硬件配置，<strong>OpenGL 客户端在 CPU 上执行，而 OpenGL 服务端在 GPU 上执行</strong>。</p>
-<h3 id="Rendering-Context"><a href="#Rendering-Context" class="headerlink" title="Rendering Context"></a>Rendering Context</h3><p>OpenGL 提供了一套丰富的跨平台绘图命令，但并不定义它和操作系统的图形子系统交互的函数，而是 OpenGL 要求每个平台实现去定义一个接口用来创建<strong>渲染上下文（Context）</strong>，并且将它们和图形子系统相关联。渲染上下文保存所有在 <strong>OpenGL 状态机（OpenGL State Machine）</strong>中存储的数据。程序可以维护多个上下文，允许一个上下文被应用改变机器中的状态，而不影响其他上下文。</p>
+<h3 id="Rendering-Context">Rendering Context</h3>
+<p>OpenGL 提供了一套丰富的跨平台绘图命令，但并不定义它和操作系统的图形子系统交互的函数，而是 OpenGL 要求每个平台实现去定义一个接口用来创建<strong>渲染上下文（Context）</strong>，并且将它们和图形子系统相关联。渲染上下文保存所有在 **OpenGL 状态机（OpenGL State Machine）**中存储的数据。程序可以维护多个上下文，允许一个上下文被应用改变机器中的状态，而不影响其他上下文。</p>
 <p>那什么是渲染上下文呢？<strong>渲染上下文（Context），或者说简单上下文，包含 OpenGL 状态信息和应用的对象</strong>。状态变量包括诸如绘图颜色、视图和投影转换、照明特性以及材质属性等内容。状态变量在每个上下文被设置。当你的应用创建 OpenGL 对象（如，纹理），这些都与渲染上下文相关。<strong>尽管应用程序可以维护多个上下文，但只有一个上下文能够在一个线程中成为当前上下文。当前上下文是接收应用发出 OpenGL 命令的渲染上下文</strong>。</p>
 <p>当我们的应用程序调用 OpenGL 的函数时，OpenGL Client 在将控制权返回给应用程序之前，会拷贝任何一个在参数中提供的数据。因此，应用是自由改变他自己拥有的内存的，无需顾忌他对 OpenGL 的调用。 Client(CPU) 拷贝的数据，在传递给 Server(GPU) 之前经常会被重新格式化，故而向 Server(GPU) 拷贝、修改以及传递参数增加了调用 OpenGL 的开支。</p>
-<h3 id="Offscreen-Rendering"><a href="#Offscreen-Rendering" class="headerlink" title="Offscreen Rendering"></a>Offscreen Rendering</h3><p>来看 CPU 和英伟达显卡之间进行数据通信的一张图片，以加深以上这段文字的理解。</p>
-<p><img src="https://niyaoyao.github.io/images/opengl/231515339536381.png" alt=""><br>图 6 现代计算机的硬件结构</p>
+<h3 id="Offscreen-Rendering">Offscreen Rendering</h3>
+<p>来看 CPU 和英伟达显卡之间进行数据通信的一张图片，以加深以上这段文字的理解。</p>
+<p><img src="https://niyaoyao.github.io/images/opengl/231515339536381.png" alt="" />
+图 6 现代计算机的硬件结构</p>
 <p>上图中，CPU 中二级缓存（L2 Cache）和 2GB 主存（Main Memory）的数据交换速度为 12.8GB/sec，NVIDIA GPU 和显存（Video Memory）数据交换速度是 84 GB/sec，而主存和显存通过 PCI 总线之间的数据交换速度为 4 GB/sec。显然，显存的带宽是内存的 5 倍以上，而 PCI 总线的带宽大约是内存速度的三分之一。</p>
 <p>在上文的学习中，我们已经知道，渲染上下文（Context）包含 OpenGL 状态信息和用于应用对象，在调用任何 OpenGL 的接口前我们必须要先创建渲染上下文（Context），并且一个线程中只有一个上下文能够成为当前上下文。当 OpenGL Client(CPU) 拷贝数据时，由于显存和主存以及总线带宽之间速度的不匹配，如果频繁地由 CPU 向 GPU 传递数据，那么必然会增加调用 OpenGL 的开支。</p>
 <p>在当前上下文不是屏幕所显示的上下文时，比如屏幕显示了一个列表视图，但是程序员需要调用 OpenGL 命令去绘制一张图片，创建新的渲染上下文，并把 OpenGL 的当前上下文切换到这张图片的上下文，此时就发生了<strong>离屏渲染</strong>。为了调用 OpenGL 命令来进行新图片的渲染运算，程序必须创建新的渲染上下文，所以，离屏渲染时，CPU 会对新创建的渲染上下文存储的数据进行拷贝，这些渲染数据再经由主存、总线、显存，最终传递到 GPU 进行大量并行计算，输出 FrameBuffer。而在这个数据传递和处理过程中，由于如图 6 所显示的 CPU 和主存、主存和显存，以及显存和 GPU 带宽速度不一致，导致 CPU 数据拷贝和传递的过程中，增加了调用 OpenGL 的开支。</p>
@@ -435,33 +339,45 @@ mjx-container[display="true"] + br {
 <blockquote>
 <p>OpenGL 应用程序可能想要使用 OpenGL 来渲染图像，而无需将其实际显示给用户（显示到屏幕上）。 例如，图像处理应用程序可能会渲染图像，然后将该图像复制回应用程序并将其保存到磁盘。 另一个有用的策略是创建稍后用于呈现额外内容的中间图像。 例如，您的应用程序可能想要渲染图像，并将其用作未来渲染过程中的纹理。 为了获得最佳性能，屏幕外目标应由 OpenGL 管理。 使用OpenGL管理屏幕外目标可以避免将像素数据复制回应用程序，除非这是绝对必要的。</p>
 </blockquote>
-<h2 id="OpenGL-Pipeline-and-Shader"><a href="#OpenGL-Pipeline-and-Shader" class="headerlink" title="OpenGL Pipeline and Shader"></a>OpenGL Pipeline and Shader</h2><p>在本文的第一部分 OpenGL 模型内容中，我们主要学习了 OpenGL 基于 Client-Server 模型的架构，以及这样的架构会对渲染有怎样的影响。接下来，我们开始学习 OpenGL 在这个架构上具体如何处理输入的渲染数据并输出 FrameBuffer 的，即 OpenGL 的管线（Pipeline）。</p>
-<p><img src="https://niyaoyao.github.io/images/opengl/pipeline.png" alt=""><br>图 7 OpenGL Graphics Pipeline</p>
+<h2 id="OpenGL-Pipeline-and-Shader">OpenGL Pipeline and Shader</h2>
+<p>在本文的第一部分 OpenGL 模型内容中，我们主要学习了 OpenGL 基于 Client-Server 模型的架构，以及这样的架构会对渲染有怎样的影响。接下来，我们开始学习 OpenGL 在这个架构上具体如何处理输入的渲染数据并输出 FrameBuffer 的，即 OpenGL 的管线（Pipeline）。</p>
+<p><img src="https://niyaoyao.github.io/images/opengl/pipeline.png" alt="" />
+图 7 OpenGL Graphics Pipeline</p>
 <p>文章开头，我用比较浅白的语言描述 Pipeline 是什么，“OpenGL 图形处理过程就是，丢给 OpenGL 输入数据，OpenGL 吐出 FrameBuffer 输出数据的过程”。如果用规范的语言来描述应该是，“OpenGL 的图形渲染管线（Graphics Pipeline）指的是一堆原始图形数据途经一个输送管道，期间经过各种变化处理最终出现在屏幕的过程。”</p>
 <p>而我们程序员所要参与的过程，实际就是 Pipeline 这中间的几个可编程着色器（Shader）的阶段（Stage）。图 7 为我们简略展示了 Pipeline 的主要几个阶段。输入数据 Vertex Data 是一个一维数组，分别经过顶点着色器（Vertex Shader）、图元装配（Shape Assembly）、几何着色器（Geometry Shader）、光栅化（Rasterization）、片段着色器（Fragment Shader）、测试与混合（Tests and Blending）等阶段，最终输出帧缓冲（FrameBuffer）。</p>
-<p>而在图 7 中蓝色底色的<strong>顶点着色器（Vertex Shader）、几何着色器（Geometry Shader）以及片段着色器（Fragment Shader）可以注入自己的编写着色器程序来达到程序所需的渲染效果。现代 OpenGL 要求我们，必须定义至少一个顶点着色器和一个片段着色器（因为GPU中没有默认的顶点/片段着色器）。所以，我们能够自己编写 Shader 对 Shader 源码进行编译等处理，然后对 Vertex Buffer Object、Element Buffer Object 以及 Vertex Array Object 进行绑定，最终输出 FrameBuffer 将图形绘制到屏幕上。这种用于编写 Shader 程序的类 C 的编程语言，称之为 GLSL（OpenGL Shading Language）。</strong>而这也是为什么称 Shader 为可编程管线的原因，在本文的第三部分 Practice 中，我们会编写两个比较简单的 Shader 程序，来绘制三角形和矩形，并且学习如何使用 OpenGL 进行图形处理的编程。</p>
-<p><img src="https://niyaoyao.github.io/images/opengl/shader_inputs_outputs.png" alt=""><br>图 8 Shader Inputs and Outputs</p>
+<p>而在图 7 中蓝色底色的**顶点着色器（Vertex Shader）、几何着色器（Geometry Shader）以及片段着色器（Fragment Shader）可以注入自己的编写着色器程序来达到程序所需的渲染效果。现代 OpenGL 要求我们，必须定义至少一个顶点着色器和一个片段着色器（因为GPU中没有默认的顶点/片段着色器）。所以，我们能够自己编写 Shader 对 Shader 源码进行编译等处理，然后对 Vertex Buffer Object、Element Buffer Object 以及 Vertex Array Object 进行绑定，最终输出 FrameBuffer 将图形绘制到屏幕上。这种用于编写 Shader 程序的类 C 的编程语言，称之为 GLSL（OpenGL Shading Language）。**而这也是为什么称 Shader 为可编程管线的原因，在本文的第三部分 Practice 中，我们会编写两个比较简单的 Shader 程序，来绘制三角形和矩形，并且学习如何使用 OpenGL 进行图形处理的编程。</p>
+<p><img src="https://niyaoyao.github.io/images/opengl/shader_inputs_outputs.png" alt="" />
+图 8 Shader Inputs and Outputs</p>
 <p>接下来，先分别看一下图中几个重要的 Shader 具体都做了些什么。图 8 中显示的是 OpenGL 4.5 版本的内置的输入和输出，从这个图表中，我们就可以比较清楚地了解具体着色器所需的输入数据，以及经过着色器处理后的输出数据。内置输入输出数据更加清楚地启示给我们，我们编写 Shader 源码需要向 OpenGL 输入什么数据，以及 OpenGL 最终输出怎样的数据。</p>
-<h3 id="Programmable-Vertex-Processing"><a href="#Programmable-Vertex-Processing" class="headerlink" title="Programmable Vertex Processing"></a>Programmable Vertex Processing</h3><h4 id="Vertex-Shaders"><a href="#Vertex-Shaders" class="headerlink" title="Vertex Shaders"></a>Vertex Shaders</h4><p>图形渲染管线的第一个阶段是顶点着色器（Vertex Shader），顶点着色器进行有关顶点值和顶点数据的操作，主要是顶点齐次坐标变换和光照。</p>
+<h3 id="Programmable-Vertex-Processing">Programmable Vertex Processing</h3>
+<h4 id="Vertex-Shaders">Vertex Shaders</h4>
+<p>图形渲染管线的第一个阶段是顶点着色器（Vertex Shader），顶点着色器进行有关顶点值和顶点数据的操作，主要是顶点齐次坐标变换和光照。</p>
 <p>为了进行顶点处理，在编程过程中，我们需要先向 Vertex Shader 输入一组顶点数组，让 Vertex Shader 可以将顶点数据（Vertex Data）设置成顶点属性（Vertex Attribute）。</p>
-<h4 id="Vertex-Input"><a href="#Vertex-Input" class="headerlink" title="Vertex Input"></a>Vertex Input</h4><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">float</span> vertices[] = {</span><br><span class="line">        <span class="number">0.5f</span>,  <span class="number">0.5f</span>, <span class="number">0.0f</span>,  <span class="comment">// top right</span></span><br><span class="line">        <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,  <span class="comment">// bottom right</span></span><br><span class="line">        <span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,  <span class="comment">// bottom left</span></span><br><span class="line">    };</span><br></pre></td></tr></table></figure>
+<h4 id="Vertex-Input">Vertex Input</h4>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">float</span> vertices[] = &#123;</span><br><span class="line">        <span class="number">0.5f</span>,  <span class="number">0.5f</span>, <span class="number">0.0f</span>,  <span class="comment">// top right</span></span><br><span class="line">        <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,  <span class="comment">// bottom right</span></span><br><span class="line">        <span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,  <span class="comment">// bottom left</span></span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure>
 <p>上段代码就声明（declare）了一个浮点型的顶点数组，这个数组将 9 个浮点数元素分三行编码，按照这样的格式编码的原因是，OpenGL 是在三维空间中进行渲染工作的，所以每三个浮点数就表示一个点在三维空间中的坐标(x, y, z)。由于我们渲染的图形是显示在平面的屏幕上，所以，z 轴的坐标值始终为 0。</p>
 <p>以上段代码为例，第一行的顶点坐标为(0.5, 0.5, 0)，第二行的顶点坐标为(0.5, -0.5, 0)，第三行的顶点坐标为(-0.5, -0.5, 0)。当我们完成绑定 Vertex Buffer Object、Vertex Array Object 等操作，调用绘制图形命令后就会出现如下所显示的三角形。</p>
-<p><img src="https://niyaoyao.github.io/images/opengl/vertex_triangle.png" alt=""><br>图 9 Triangle</p>
+<p><img src="https://niyaoyao.github.io/images/opengl/vertex_triangle.png" alt="" />
+图 9 Triangle</p>
 <p>注意，在 OpenGL 的坐标系（标准化设备坐标，Normalized Device Coordinates, NDC）中，坐标的原点位于视口（View Port）的中心，这与 Cocoa（Cocoa Touch）框架中的窗体（Window）的坐标系原点不同。NDC 坐标系如下图所示。</p>
-<p><img src="https://niyaoyao.github.io/images/opengl/ndc.png" alt=""><br>图 10 Normalized Device Coordinates</p>
+<p><img src="https://niyaoyao.github.io/images/opengl/ndc.png" alt="" />
+图 10 Normalized Device Coordinates</p>
 <p>在编程学习的部分中，我们会利用 GLSL 编写一个简单的 Vertex Shader 程序。Vertex Shader 顶点着色器允许我们指定任何以顶点属性为形式的输入。顶点坐标属性的输入数据是一组 4 字节 float 型的数组。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line">layout (location = <span class="number">0</span>) in vec3 aPos;</span><br><span class="line"><span class="type">void</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">{</span><br><span class="line">    gl_Position = vec4(aPos.x, aPos.y, aPos.z, <span class="number">1.0</span>);</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line">layout (location = <span class="number">0</span>) in vec3 aPos;</span><br><span class="line"><span class="type">void</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    gl_Position = vec4(aPos.x, aPos.y, aPos.z, <span class="number">1.0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上段代码就是一个 Vertex Shader 程序的代码。</p>
 <ul>
-<li><p>代码的第一行指定了 GLSL 的版本为 3.3，这就意味着程序在运行时，Shader 的编译器必须能够支持 3.3 的 GLSL 的版本。（直接使用 Cocoa 框架提供的 NSOpenGLView 来编译这段代码会报错，原因稍后具体解释。）</p>
+<li>
+<p>代码的第一行指定了 GLSL 的版本为 3.3，这就意味着程序在运行时，Shader 的编译器必须能够支持 3.3 的 GLSL 的版本。（直接使用 Cocoa 框架提供的 NSOpenGLView 来编译这段代码会报错，原因稍后具体解释。）</p>
 </li>
-<li><p>代码第二行声明了一个指定为顶点属性的 float 类型三维向量 aPos，这个向量表示了输入的顶点坐标。这一步就将顶点数组 vertices 第一行所代表的顶点坐标 (0.5, 0.5, 0) 设置成了顶点属性。“顶点属性”意味着 GPU 中的 Shader 程序每调用一次，顶点缓冲区（Vertex Buffer）都会为其提供一个新的顶点数据，顶点属性的数据结构如下图所示。</p>
+<li>
+<p>代码第二行声明了一个指定为顶点属性的 float 类型三维向量 aPos，这个向量表示了输入的顶点坐标。这一步就将顶点数组 vertices 第一行所代表的顶点坐标 (0.5, 0.5, 0) 设置成了顶点属性。“顶点属性”意味着 GPU 中的 Shader 程序每调用一次，顶点缓冲区（Vertex Buffer）都会为其提供一个新的顶点数据，顶点属性的数据结构如下图所示。</p>
 </li>
 </ul>
-<p><img src="https://niyaoyao.github.io/images/opengl/vertex_attribute_pointer.png" alt=""><br>图 11 Vertex Attribute</p>
+<p><img src="https://niyaoyao.github.io/images/opengl/vertex_attribute_pointer.png" alt="" />
+图 11 Vertex Attribute</p>
 <p>在上图中，0 ~ 12 BYTE 这一整个格子就表示了一个顶点属性的所有数据，这个顶点属性表示顶点的坐标，包括了顶点的 x、 y、 z 的坐标值。<strong>顶点属性除了顶点坐标，有时还可能包括其他属性，如颜色（RGB）、法向量（Normal）、 纹理坐标（Texture Coordinates）等属性</strong>。如图 12，展示了包含颜色属性的顶点属性内存布局。</p>
-<p><img src="https://niyaoyao.github.io/images/opengl/vertex_attribute_pointer_interleaved.png" alt=""><br>图 12 Vertex Attribute with Color</p>
+<p><img src="https://niyaoyao.github.io/images/opengl/vertex_attribute_pointer_interleaved.png" alt="" />
+图 12 Vertex Attribute with Color</p>
 <p>添加额外的顶点属性，会增加顶点属性所占用的内存空间，但本篇文章并不对如何添加除坐标以外属性的方法做更多讨论，但文末会举一个简单示例。</p>
 <ul>
 <li>进入 GLSL 主函数之后，在代码第五行，调用 <strong>gl_Position</strong> 函数，使用顶点坐标属性创建的四维向量 vec4 赋值给 Shader 的 Position 作为输出。可以观察到，除了 aPos 向量的 x、y、z 三个坐标值，还有一个值 1.0，这个值代表的是深度（Depth），是用在所谓透视划分(Perspective Division)上，本文不做更多研究。</li>
@@ -470,11 +386,14 @@ mjx-container[display="true"] + br {
 <p>为了设置顶点着色器的输出，我们必须把位置数据赋值给预定义的 <strong>gl_Position</strong> 变量，它在幕后是 vec4 类型的。在 main 函数的最后，<strong>我们使用 <em>gl_Position</em> 设置的值会成为该顶点着色器的输出</strong>。</p>
 </blockquote>
 <p>这样，一段简单的 Vertex Shader 代码就编写完成了。</p>
-<h4 id="Vertex-Attribute-Values"><a href="#Vertex-Attribute-Values" class="headerlink" title="Vertex Attribute Values"></a>Vertex Attribute Values</h4><p>在之前的学习中，我们已经了解到顶点处理过程，顶点着色器会通过输入顶点数据的数组解析成顶点坐标，顶点属性还包括颜色、法向量（Normal）、 纹理坐标（Texture Coordinates）等属性。具体详细介绍可以回顾上面的内容。</p>
-<h3 id="Primitive-Assembly"><a href="#Primitive-Assembly" class="headerlink" title="Primitive Assembly"></a>Primitive Assembly</h3><p><em>注：本节公示可以在 <a target="_blank" rel="noopener" href="https://www.khronos.org/registry/OpenGL/specs/gl/glspec46.core.pdf">《OpenGL 4.6 Core Profile》</a> 454 页找到。</em></p>
-<p><img src="https://niyaoyao.github.io/images/opengl/vertex_processing_and_primitive_assembly.png" alt=""><br>图 13 Vertex Processing and Primitive Assembly</p>
-<p>顶点处理完成后就进行图元装配（Primitive Assembly），图元装配场景包括图元装配、裁剪、透视除法、视口变换等。顶点处理或者顶点着色器的输出一个四维向量，输出的向量如下所示。</p>
-<script type="math/tex; mode=display">
+<h4 id="Vertex-Attribute-Values">Vertex Attribute Values</h4>
+<p>在之前的学习中，我们已经了解到顶点处理过程，顶点着色器会通过输入顶点数据的数组解析成顶点坐标，顶点属性还包括颜色、法向量（Normal）、 纹理坐标（Texture Coordinates）等属性。具体详细介绍可以回顾上面的内容。</p>
+<h3 id="Primitive-Assembly">Primitive Assembly</h3>
+<p><em>注：本节公示可以在 <a target="_blank" rel="noopener" href="https://www.khronos.org/registry/OpenGL/specs/gl/glspec46.core.pdf">《OpenGL 4.6 Core Profile》</a> 454 页找到。</em></p>
+<p><img src="https://niyaoyao.github.io/images/opengl/vertex_processing_and_primitive_assembly.png" alt="" />
+图 13 Vertex Processing and Primitive Assembly</p>
+<p>顶点处理完成后就进行图元装配（Primitive Assembly），图元装配场景包括图元装配、裁剪、透视除法、视口变换等。顶点处理或者顶点着色器的输出一个四维向量，输出的向量如下所示。
+<section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>x</mi><mi mathvariant="normal">_</mi><mi>c</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>y</mi><mi mathvariant="normal">_</mi><mi>c</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>z</mi><mi mathvariant="normal">_</mi><mi>c</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>w</mi><mi mathvariant="normal">_</mi><mi>c</mi></mrow></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">
  \left(
  \begin{matrix}
    x\_c \\
@@ -482,17 +401,53 @@ mjx-container[display="true"] + br {
    z\_c \\
    w\_c
   \end{matrix}
-  \right)</script><p>图元装配之后是裁剪（Clipping），裁剪公式如下。<br><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.357ex;" xmlns="http://www.w3.org/2000/svg" width="14.97ex" height="1.796ex" role="img" focusable="false" viewBox="0 -636 6616.6 793.8"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path></g><g data-mml-node="msub" transform="translate(778,0)"><g data-mml-node="mi"><path data-c="1D464" d="M580 385Q580 406 599 424T641 443Q659 443 674 425T690 368Q690 339 671 253Q656 197 644 161T609 80T554 12T482 -11Q438 -11 404 5T355 48Q354 47 352 44Q311 -11 252 -11Q226 -11 202 -5T155 14T118 53T104 116Q104 170 138 262T173 379Q173 380 173 381Q173 390 173 393T169 400T158 404H154Q131 404 112 385T82 344T65 302T57 280Q55 278 41 278H27Q21 284 21 287Q21 293 29 315T52 366T96 418T161 441Q204 441 227 416T250 358Q250 340 217 250T184 111Q184 65 205 46T258 26Q301 26 334 87L339 96V119Q339 122 339 128T340 136T341 143T342 152T345 165T348 182T354 206T362 238T373 281Q402 395 406 404Q419 431 449 431Q468 431 475 421T483 402Q483 389 454 274T422 142Q420 131 420 107V100Q420 85 423 71T442 42T487 26Q558 26 600 148Q609 171 620 213T632 273Q632 306 619 325T593 357T580 385Z"></path></g><g data-mml-node="mi" transform="translate(749,-150) scale(0.707)"><path data-c="1D450" d="M34 159Q34 268 120 355T306 442Q362 442 394 418T427 355Q427 326 408 306T360 285Q341 285 330 295T319 325T330 359T352 380T366 386H367Q367 388 361 392T340 400T306 404Q276 404 249 390Q228 381 206 359Q162 315 142 235T121 119Q121 73 147 50Q169 26 205 26H209Q321 26 394 111Q403 121 406 121Q410 121 419 112T429 98T420 83T391 55T346 25T282 0T202 -11Q127 -11 81 37T34 159Z"></path></g></g><g data-mml-node="mo" transform="translate(2161,0)"><path data-c="2264" d="M674 636Q682 636 688 630T694 615T687 601Q686 600 417 472L151 346L399 228Q687 92 691 87Q694 81 694 76Q694 58 676 56H670L382 192Q92 329 90 331Q83 336 83 348Q84 359 96 365Q104 369 382 500T665 634Q669 636 674 636ZM84 -118Q84 -108 99 -98H678Q694 -104 694 -118Q694 -130 679 -138H98Q84 -131 84 -118Z"></path></g><g data-mml-node="msub" transform="translate(3216.7,0)"><g data-mml-node="mi"><path data-c="1D465" d="M52 289Q59 331 106 386T222 442Q257 442 286 424T329 379Q371 442 430 442Q467 442 494 420T522 361Q522 332 508 314T481 292T458 288Q439 288 427 299T415 328Q415 374 465 391Q454 404 425 404Q412 404 406 402Q368 386 350 336Q290 115 290 78Q290 50 306 38T341 26Q378 26 414 59T463 140Q466 150 469 151T485 153H489Q504 153 504 145Q504 144 502 134Q486 77 440 33T333 -11Q263 -11 227 52Q186 -10 133 -10H127Q78 -10 57 16T35 71Q35 103 54 123T99 143Q142 143 142 101Q142 81 130 66T107 46T94 41L91 40Q91 39 97 36T113 29T132 26Q168 26 194 71Q203 87 217 139T245 247T261 313Q266 340 266 352Q266 380 251 392T217 404Q177 404 142 372T93 290Q91 281 88 280T72 278H58Q52 284 52 289Z"></path></g><g data-mml-node="mi" transform="translate(605,-150) scale(0.707)"><path data-c="1D450" d="M34 159Q34 268 120 355T306 442Q362 442 394 418T427 355Q427 326 408 306T360 285Q341 285 330 295T319 325T330 359T352 380T366 386H367Q367 388 361 392T340 400T306 404Q276 404 249 390Q228 381 206 359Q162 315 142 235T121 119Q121 73 147 50Q169 26 205 26H209Q321 26 394 111Q403 121 406 121Q410 121 419 112T429 98T420 83T391 55T346 25T282 0T202 -11Q127 -11 81 37T34 159Z"></path></g></g><g data-mml-node="mo" transform="translate(4455.7,0)"><path data-c="2264" d="M674 636Q682 636 688 630T694 615T687 601Q686 600 417 472L151 346L399 228Q687 92 691 87Q694 81 694 76Q694 58 676 56H670L382 192Q92 329 90 331Q83 336 83 348Q84 359 96 365Q104 369 382 500T665 634Q669 636 674 636ZM84 -118Q84 -108 99 -98H678Q694 -104 694 -118Q694 -130 679 -138H98Q84 -131 84 -118Z"></path></g><g data-mml-node="msub" transform="translate(5511.5,0)"><g data-mml-node="mi"><path data-c="1D464" d="M580 385Q580 406 599 424T641 443Q659 443 674 425T690 368Q690 339 671 253Q656 197 644 161T609 80T554 12T482 -11Q438 -11 404 5T355 48Q354 47 352 44Q311 -11 252 -11Q226 -11 202 -5T155 14T118 53T104 116Q104 170 138 262T173 379Q173 380 173 381Q173 390 173 393T169 400T158 404H154Q131 404 112 385T82 344T65 302T57 280Q55 278 41 278H27Q21 284 21 287Q21 293 29 315T52 366T96 418T161 441Q204 441 227 416T250 358Q250 340 217 250T184 111Q184 65 205 46T258 26Q301 26 334 87L339 96V119Q339 122 339 128T340 136T341 143T342 152T345 165T348 182T354 206T362 238T373 281Q402 395 406 404Q419 431 449 431Q468 431 475 421T483 402Q483 389 454 274T422 142Q420 131 420 107V100Q420 85 423 71T442 42T487 26Q558 26 600 148Q609 171 620 213T632 273Q632 306 619 325T593 357T580 385Z"></path></g><g data-mml-node="mi" transform="translate(749,-150) scale(0.707)"><path data-c="1D450" d="M34 159Q34 268 120 355T306 442Q362 442 394 418T427 355Q427 326 408 306T360 285Q341 285 330 295T319 325T330 359T352 380T366 386H367Q367 388 361 392T340 400T306 404Q276 404 249 390Q228 381 206 359Q162 315 142 235T121 119Q121 73 147 50Q169 26 205 26H209Q321 26 394 111Q403 121 406 121Q410 121 419 112T429 98T420 83T391 55T346 25T282 0T202 -11Q127 -11 81 37T34 159Z"></path></g></g></g></g></svg></mjx-container><br><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.464ex;" xmlns="http://www.w3.org/2000/svg" width="14.784ex" height="1.903ex" role="img" focusable="false" viewBox="0 -636 6534.6 841"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path></g><g data-mml-node="msub" transform="translate(778,0)"><g data-mml-node="mi"><path data-c="1D464" d="M580 385Q580 406 599 424T641 443Q659 443 674 425T690 368Q690 339 671 253Q656 197 644 161T609 80T554 12T482 -11Q438 -11 404 5T355 48Q354 47 352 44Q311 -11 252 -11Q226 -11 202 -5T155 14T118 53T104 116Q104 170 138 262T173 379Q173 380 173 381Q173 390 173 393T169 400T158 404H154Q131 404 112 385T82 344T65 302T57 280Q55 278 41 278H27Q21 284 21 287Q21 293 29 315T52 366T96 418T161 441Q204 441 227 416T250 358Q250 340 217 250T184 111Q184 65 205 46T258 26Q301 26 334 87L339 96V119Q339 122 339 128T340 136T341 143T342 152T345 165T348 182T354 206T362 238T373 281Q402 395 406 404Q419 431 449 431Q468 431 475 421T483 402Q483 389 454 274T422 142Q420 131 420 107V100Q420 85 423 71T442 42T487 26Q558 26 600 148Q609 171 620 213T632 273Q632 306 619 325T593 357T580 385Z"></path></g><g data-mml-node="mi" transform="translate(749,-150) scale(0.707)"><path data-c="1D450" d="M34 159Q34 268 120 355T306 442Q362 442 394 418T427 355Q427 326 408 306T360 285Q341 285 330 295T319 325T330 359T352 380T366 386H367Q367 388 361 392T340 400T306 404Q276 404 249 390Q228 381 206 359Q162 315 142 235T121 119Q121 73 147 50Q169 26 205 26H209Q321 26 394 111Q403 121 406 121Q410 121 419 112T429 98T420 83T391 55T346 25T282 0T202 -11Q127 -11 81 37T34 159Z"></path></g></g><g data-mml-node="mo" transform="translate(2161,0)"><path data-c="2264" d="M674 636Q682 636 688 630T694 615T687 601Q686 600 417 472L151 346L399 228Q687 92 691 87Q694 81 694 76Q694 58 676 56H670L382 192Q92 329 90 331Q83 336 83 348Q84 359 96 365Q104 369 382 500T665 634Q669 636 674 636ZM84 -118Q84 -108 99 -98H678Q694 -104 694 -118Q694 -130 679 -138H98Q84 -131 84 -118Z"></path></g><g data-mml-node="msub" transform="translate(3216.7,0)"><g data-mml-node="mi"><path data-c="1D466" d="M21 287Q21 301 36 335T84 406T158 442Q199 442 224 419T250 355Q248 336 247 334Q247 331 231 288T198 191T182 105Q182 62 196 45T238 27Q261 27 281 38T312 61T339 94Q339 95 344 114T358 173T377 247Q415 397 419 404Q432 431 462 431Q475 431 483 424T494 412T496 403Q496 390 447 193T391 -23Q363 -106 294 -155T156 -205Q111 -205 77 -183T43 -117Q43 -95 50 -80T69 -58T89 -48T106 -45Q150 -45 150 -87Q150 -107 138 -122T115 -142T102 -147L99 -148Q101 -153 118 -160T152 -167H160Q177 -167 186 -165Q219 -156 247 -127T290 -65T313 -9T321 21L315 17Q309 13 296 6T270 -6Q250 -11 231 -11Q185 -11 150 11T104 82Q103 89 103 113Q103 170 138 262T173 379Q173 380 173 381Q173 390 173 393T169 400T158 404H154Q131 404 112 385T82 344T65 302T57 280Q55 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(523,-150) scale(0.707)"><path data-c="1D450" d="M34 159Q34 268 120 355T306 442Q362 442 394 418T427 355Q427 326 408 306T360 285Q341 285 330 295T319 325T330 359T352 380T366 386H367Q367 388 361 392T340 400T306 404Q276 404 249 390Q228 381 206 359Q162 315 142 235T121 119Q121 73 147 50Q169 26 205 26H209Q321 26 394 111Q403 121 406 121Q410 121 419 112T429 98T420 83T391 55T346 25T282 0T202 -11Q127 -11 81 37T34 159Z"></path></g></g><g data-mml-node="mo" transform="translate(4373.7,0)"><path data-c="2264" d="M674 636Q682 636 688 630T694 615T687 601Q686 600 417 472L151 346L399 228Q687 92 691 87Q694 81 694 76Q694 58 676 56H670L382 192Q92 329 90 331Q83 336 83 348Q84 359 96 365Q104 369 382 500T665 634Q669 636 674 636ZM84 -118Q84 -108 99 -98H678Q694 -104 694 -118Q694 -130 679 -138H98Q84 -131 84 -118Z"></path></g><g data-mml-node="msub" transform="translate(5429.5,0)"><g data-mml-node="mi"><path data-c="1D464" d="M580 385Q580 406 599 424T641 443Q659 443 674 425T690 368Q690 339 671 253Q656 197 644 161T609 80T554 12T482 -11Q438 -11 404 5T355 48Q354 47 352 44Q311 -11 252 -11Q226 -11 202 -5T155 14T118 53T104 116Q104 170 138 262T173 379Q173 380 173 381Q173 390 173 393T169 400T158 404H154Q131 404 112 385T82 344T65 302T57 280Q55 278 41 278H27Q21 284 21 287Q21 293 29 315T52 366T96 418T161 441Q204 441 227 416T250 358Q250 340 217 250T184 111Q184 65 205 46T258 26Q301 26 334 87L339 96V119Q339 122 339 128T340 136T341 143T342 152T345 165T348 182T354 206T362 238T373 281Q402 395 406 404Q419 431 449 431Q468 431 475 421T483 402Q483 389 454 274T422 142Q420 131 420 107V100Q420 85 423 71T442 42T487 26Q558 26 600 148Q609 171 620 213T632 273Q632 306 619 325T593 357T580 385Z"></path></g><g data-mml-node="mi" transform="translate(749,-150) scale(0.707)"><path data-c="1D450" d="M34 159Q34 268 120 355T306 442Q362 442 394 418T427 355Q427 326 408 306T360 285Q341 285 330 295T319 325T330 359T352 380T366 386H367Q367 388 361 392T340 400T306 404Q276 404 249 390Q228 381 206 359Q162 315 142 235T121 119Q121 73 147 50Q169 26 205 26H209Q321 26 394 111Q403 121 406 121Q410 121 419 112T429 98T420 83T391 55T346 25T282 0T202 -11Q127 -11 81 37T34 159Z"></path></g></g></g></g></svg></mjx-container><br><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.357ex;" xmlns="http://www.w3.org/2000/svg" width="14.728ex" height="1.796ex" role="img" focusable="false" viewBox="0 -636 6509.6 793.8"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path></g><g data-mml-node="msub" transform="translate(778,0)"><g data-mml-node="mi"><path data-c="1D464" d="M580 385Q580 406 599 424T641 443Q659 443 674 425T690 368Q690 339 671 253Q656 197 644 161T609 80T554 12T482 -11Q438 -11 404 5T355 48Q354 47 352 44Q311 -11 252 -11Q226 -11 202 -5T155 14T118 53T104 116Q104 170 138 262T173 379Q173 380 173 381Q173 390 173 393T169 400T158 404H154Q131 404 112 385T82 344T65 302T57 280Q55 278 41 278H27Q21 284 21 287Q21 293 29 315T52 366T96 418T161 441Q204 441 227 416T250 358Q250 340 217 250T184 111Q184 65 205 46T258 26Q301 26 334 87L339 96V119Q339 122 339 128T340 136T341 143T342 152T345 165T348 182T354 206T362 238T373 281Q402 395 406 404Q419 431 449 431Q468 431 475 421T483 402Q483 389 454 274T422 142Q420 131 420 107V100Q420 85 423 71T442 42T487 26Q558 26 600 148Q609 171 620 213T632 273Q632 306 619 325T593 357T580 385Z"></path></g><g data-mml-node="mi" transform="translate(749,-150) scale(0.707)"><path data-c="1D450" d="M34 159Q34 268 120 355T306 442Q362 442 394 418T427 355Q427 326 408 306T360 285Q341 285 330 295T319 325T330 359T352 380T366 386H367Q367 388 361 392T340 400T306 404Q276 404 249 390Q228 381 206 359Q162 315 142 235T121 119Q121 73 147 50Q169 26 205 26H209Q321 26 394 111Q403 121 406 121Q410 121 419 112T429 98T420 83T391 55T346 25T282 0T202 -11Q127 -11 81 37T34 159Z"></path></g></g><g data-mml-node="mo" transform="translate(2161,0)"><path data-c="2264" d="M674 636Q682 636 688 630T694 615T687 601Q686 600 417 472L151 346L399 228Q687 92 691 87Q694 81 694 76Q694 58 676 56H670L382 192Q92 329 90 331Q83 336 83 348Q84 359 96 365Q104 369 382 500T665 634Q669 636 674 636ZM84 -118Q84 -108 99 -98H678Q694 -104 694 -118Q694 -130 679 -138H98Q84 -131 84 -118Z"></path></g><g data-mml-node="msub" transform="translate(3216.7,0)"><g data-mml-node="mi"><path data-c="1D467" d="M347 338Q337 338 294 349T231 360Q211 360 197 356T174 346T162 335T155 324L153 320Q150 317 138 317Q117 317 117 325Q117 330 120 339Q133 378 163 406T229 440Q241 442 246 442Q271 442 291 425T329 392T367 375Q389 375 411 408T434 441Q435 442 449 442H462Q468 436 468 434Q468 430 463 420T449 399T432 377T418 358L411 349Q368 298 275 214T160 106L148 94L163 93Q185 93 227 82T290 71Q328 71 360 90T402 140Q406 149 409 151T424 153Q443 153 443 143Q443 138 442 134Q425 72 376 31T278 -11Q252 -11 232 6T193 40T155 57Q111 57 76 -3Q70 -11 59 -11H54H41Q35 -5 35 -2Q35 13 93 84Q132 129 225 214T340 322Q352 338 347 338Z"></path></g><g data-mml-node="mi" transform="translate(498,-150) scale(0.707)"><path data-c="1D450" d="M34 159Q34 268 120 355T306 442Q362 442 394 418T427 355Q427 326 408 306T360 285Q341 285 330 295T319 325T330 359T352 380T366 386H367Q367 388 361 392T340 400T306 404Q276 404 249 390Q228 381 206 359Q162 315 142 235T121 119Q121 73 147 50Q169 26 205 26H209Q321 26 394 111Q403 121 406 121Q410 121 419 112T429 98T420 83T391 55T346 25T282 0T202 -11Q127 -11 81 37T34 159Z"></path></g></g><g data-mml-node="mo" transform="translate(4348.7,0)"><path data-c="2264" d="M674 636Q682 636 688 630T694 615T687 601Q686 600 417 472L151 346L399 228Q687 92 691 87Q694 81 694 76Q694 58 676 56H670L382 192Q92 329 90 331Q83 336 83 348Q84 359 96 365Q104 369 382 500T665 634Q669 636 674 636ZM84 -118Q84 -108 99 -98H678Q694 -104 694 -118Q694 -130 679 -138H98Q84 -131 84 -118Z"></path></g><g data-mml-node="msub" transform="translate(5404.5,0)"><g data-mml-node="mi"><path data-c="1D464" d="M580 385Q580 406 599 424T641 443Q659 443 674 425T690 368Q690 339 671 253Q656 197 644 161T609 80T554 12T482 -11Q438 -11 404 5T355 48Q354 47 352 44Q311 -11 252 -11Q226 -11 202 -5T155 14T118 53T104 116Q104 170 138 262T173 379Q173 380 173 381Q173 390 173 393T169 400T158 404H154Q131 404 112 385T82 344T65 302T57 280Q55 278 41 278H27Q21 284 21 287Q21 293 29 315T52 366T96 418T161 441Q204 441 227 416T250 358Q250 340 217 250T184 111Q184 65 205 46T258 26Q301 26 334 87L339 96V119Q339 122 339 128T340 136T341 143T342 152T345 165T348 182T354 206T362 238T373 281Q402 395 406 404Q419 431 449 431Q468 431 475 421T483 402Q483 389 454 274T422 142Q420 131 420 107V100Q420 85 423 71T442 42T487 26Q558 26 600 148Q609 171 620 213T632 273Q632 306 619 325T593 357T580 385Z"></path></g><g data-mml-node="mi" transform="translate(749,-150) scale(0.707)"><path data-c="1D450" d="M34 159Q34 268 120 355T306 442Q362 442 394 418T427 355Q427 326 408 306T360 285Q341 285 330 295T319 325T330 359T352 380T366 386H367Q367 388 361 392T340 400T306 404Q276 404 249 390Q228 381 206 359Q162 315 142 235T121 119Q121 73 147 50Q169 26 205 26H209Q321 26 394 111Q403 121 406 121Q410 121 419 112T429 98T420 83T391 55T346 25T282 0T202 -11Q127 -11 81 37T34 159Z"></path></g></g></g></g></svg></mjx-container></p>
-<p>裁剪之后是透视除法（Perspective Division），公示如下。其中，</p>
-<script type="math/tex; mode=display">
+  \right)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:4.8em;vertical-align:-2.15em;"></span><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.65em;"><span style="top:-4.65em;"><span class="pstrut" style="height:6.8em;"></span><span style="width:0.875em;height:4.800em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.875em" height="4.800em" viewBox="0 0 875 4800"><path d="M863,9c0,-2,-2,-5,-6,-9c0,0,-17,0,-17,0c-12.7,0,-19.3,0.3,-20,1
+c-5.3,5.3,-10.3,11,-15,17c-242.7,294.7,-395.3,682,-458,1162c-21.3,163.3,-33.3,349,
+-36,557 l0,1284c0.2,6,0,26,0,60c2,159.3,10,310.7,24,454c53.3,528,210,
+949.7,470,1265c4.7,6,9.7,11.7,15,17c0.7,0.7,7,1,19,1c0,0,18,0,18,0c4,-4,6,-7,6,-9
+c0,-2.7,-3.3,-8.7,-10,-18c-135.3,-192.7,-235.5,-414.3,-300.5,-665c-65,-250.7,-102.5,
+-544.7,-112.5,-882c-2,-104,-3,-167,-3,-189
+l0,-1292c0,-162.7,5.7,-314,17,-454c20.7,-272,63.7,-513,129,-723c65.3,
+-210,155.3,-396.3,270,-559c6.7,-9.3,10,-15.3,10,-18z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.65em;"><span style="top:-4.81em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">c</span></span></span><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">c</span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">c</span></span></span><span style="top:-1.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">c</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.15em;"><span></span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.65em;"><span style="top:-4.65em;"><span class="pstrut" style="height:6.8em;"></span><span style="width:0.875em;height:4.800em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.875em" height="4.800em" viewBox="0 0 875 4800"><path d="M76,0c-16.7,0,-25,3,-25,9c0,2,2,6.3,6,13c21.3,28.7,42.3,60.3,
+63,95c96.7,156.7,172.8,332.5,228.5,527.5c55.7,195,92.8,416.5,111.5,664.5
+c11.3,139.3,17,290.7,17,454c0,28,1.7,43,3.3,45l0,1209
+c-3,4,-3.3,16.7,-3.3,38c0,162,-5.7,313.7,-17,455c-18.7,248,-55.8,469.3,-111.5,664
+c-55.7,194.7,-131.8,370.3,-228.5,527c-20.7,34.7,-41.7,66.3,-63,95c-2,3.3,-4,7,-6,11
+c0,7.3,5.7,11,17,11c0,0,11,0,11,0c9.3,0,14.3,-0.3,15,-1c5.3,-5.3,10.3,-11,15,-17
+c242.7,-294.7,395.3,-681.7,458,-1161c21.3,-164.7,33.3,-350.7,36,-558
+l0,-1344c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
+-470,-1265c-4.7,-6,-9.7,-11.7,-15,-17c-0.7,-0.7,-6.7,-1,-18,-1z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.15em;"><span></span></span></span></span></span></span></span></span></span></span></span></eqn></section></p>
+<p>图元装配之后是裁剪（Clipping），裁剪公式如下。
+$ -w_c \le x_c \le w_c $
+$ -w_c \le y_c \le w_c $
+$ -w_c \le z_c \le w_c $</p>
+<p>裁剪之后是透视除法（Perspective Division），公示如下。其中，
+<section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>x</mi><mi mathvariant="normal">_</mi><mi>d</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>y</mi><mi mathvariant="normal">_</mi><mi>d</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>z</mi><mi mathvariant="normal">_</mi><mi>d</mi></mrow></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">
 \left(
  \begin{matrix}
    x\_d \\
    y\_d \\
    z\_d 
   \end{matrix}
-  \right)</script><p>是设备（Device）显示的坐标向量。</p>
-<script type="math/tex; mode=display">
+  \right)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:3.6em;vertical-align:-1.55em;"></span><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.05em;"><span class="pstrut" style="height:5.6em;"></span><span style="width:0.875em;height:3.600em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.875em" height="3.600em" viewBox="0 0 875 3600"><path d="M863,9c0,-2,-2,-5,-6,-9c0,0,-17,0,-17,0c-12.7,0,-19.3,0.3,-20,1
+c-5.3,5.3,-10.3,11,-15,17c-242.7,294.7,-395.3,682,-458,1162c-21.3,163.3,-33.3,349,
+-36,557 l0,84c0.2,6,0,26,0,60c2,159.3,10,310.7,24,454c53.3,528,210,
+949.7,470,1265c4.7,6,9.7,11.7,15,17c0.7,0.7,7,1,19,1c0,0,18,0,18,0c4,-4,6,-7,6,-9
+c0,-2.7,-3.3,-8.7,-10,-18c-135.3,-192.7,-235.5,-414.3,-300.5,-665c-65,-250.7,-102.5,
+-544.7,-112.5,-882c-2,-104,-3,-167,-3,-189
+l0,-92c0,-162.7,5.7,-314,17,-454c20.7,-272,63.7,-513,129,-723c65.3,
+-210,155.3,-396.3,270,-559c6.7,-9.3,10,-15.3,10,-18z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">d</span></span></span><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">d</span></span></span><span style="top:-1.81em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.05em;"><span class="pstrut" style="height:5.6em;"></span><span style="width:0.875em;height:3.600em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.875em" height="3.600em" viewBox="0 0 875 3600"><path d="M76,0c-16.7,0,-25,3,-25,9c0,2,2,6.3,6,13c21.3,28.7,42.3,60.3,
+63,95c96.7,156.7,172.8,332.5,228.5,527.5c55.7,195,92.8,416.5,111.5,664.5
+c11.3,139.3,17,290.7,17,454c0,28,1.7,43,3.3,45l0,9
+c-3,4,-3.3,16.7,-3.3,38c0,162,-5.7,313.7,-17,455c-18.7,248,-55.8,469.3,-111.5,664
+c-55.7,194.7,-131.8,370.3,-228.5,527c-20.7,34.7,-41.7,66.3,-63,95c-2,3.3,-4,7,-6,11
+c0,7.3,5.7,11,17,11c0,0,11,0,11,0c9.3,0,14.3,-0.3,15,-1c5.3,-5.3,10.3,-11,15,-17
+c242.7,-294.7,395.3,-681.7,458,-1161c21.3,-164.7,33.3,-350.7,36,-558
+l0,-144c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
+-470,-1265c-4.7,-6,-9.7,-11.7,-15,-17c-0.7,-0.7,-6.7,-1,-18,-1z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span></span></span></span></span></span></eqn></section></p>
+<p>是设备（Device）显示的坐标向量。</p>
+<section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>x</mi><mi mathvariant="normal">_</mi><mi>d</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>y</mi><mi mathvariant="normal">_</mi><mi>d</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>z</mi><mi mathvariant="normal">_</mi><mi>d</mi></mrow></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><mo>=</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mfrac><mrow><mi>x</mi><mi mathvariant="normal">_</mi><mi>c</mi></mrow><mrow><mi>w</mi><mi mathvariant="normal">_</mi><mi>c</mi></mrow></mfrac></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mfrac><mrow><mi>f</mi><mo>×</mo><mi>y</mi><mi mathvariant="normal">_</mi><mi>c</mi></mrow><mrow><mi>w</mi><mi mathvariant="normal">_</mi><mi>c</mi></mrow></mfrac></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mfrac><mrow><mi>z</mi><mi mathvariant="normal">_</mi><mi>c</mi></mrow><mrow><mi>w</mi><mi mathvariant="normal">_</mi><mi>c</mi></mrow></mfrac></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">
 \left(
  \begin{matrix}
    x\_d \\
@@ -506,8 +461,39 @@ mjx-container[display="true"] + br {
    \frac{f \times y\_c}{w\_c} \\
    \frac{z\_c}{w\_c} 
   \end{matrix}
-  \right)</script><p>最后进行的是视口变换（Viewport Transformation）。视口转换由所选视口的宽度和高度（以像素为单位）确定，后面的编程学习中，我们将会利用 <strong>glViewport</strong> 对视口的 x、y 坐标，以及视口的宽度和高度进行设定。视口变换的公示如下。</p>
-<script type="math/tex; mode=display">
+  \right)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:3.6em;vertical-align:-1.55em;"></span><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.05em;"><span class="pstrut" style="height:5.6em;"></span><span style="width:0.875em;height:3.600em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.875em" height="3.600em" viewBox="0 0 875 3600"><path d="M863,9c0,-2,-2,-5,-6,-9c0,0,-17,0,-17,0c-12.7,0,-19.3,0.3,-20,1
+c-5.3,5.3,-10.3,11,-15,17c-242.7,294.7,-395.3,682,-458,1162c-21.3,163.3,-33.3,349,
+-36,557 l0,84c0.2,6,0,26,0,60c2,159.3,10,310.7,24,454c53.3,528,210,
+949.7,470,1265c4.7,6,9.7,11.7,15,17c0.7,0.7,7,1,19,1c0,0,18,0,18,0c4,-4,6,-7,6,-9
+c0,-2.7,-3.3,-8.7,-10,-18c-135.3,-192.7,-235.5,-414.3,-300.5,-665c-65,-250.7,-102.5,
+-544.7,-112.5,-882c-2,-104,-3,-167,-3,-189
+l0,-92c0,-162.7,5.7,-314,17,-454c20.7,-272,63.7,-513,129,-723c65.3,
+-210,155.3,-396.3,270,-559c6.7,-9.3,10,-15.3,10,-18z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">d</span></span></span><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">d</span></span></span><span style="top:-1.81em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.05em;"><span class="pstrut" style="height:5.6em;"></span><span style="width:0.875em;height:3.600em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.875em" height="3.600em" viewBox="0 0 875 3600"><path d="M76,0c-16.7,0,-25,3,-25,9c0,2,2,6.3,6,13c21.3,28.7,42.3,60.3,
+63,95c96.7,156.7,172.8,332.5,228.5,527.5c55.7,195,92.8,416.5,111.5,664.5
+c11.3,139.3,17,290.7,17,454c0,28,1.7,43,3.3,45l0,9
+c-3,4,-3.3,16.7,-3.3,38c0,162,-5.7,313.7,-17,455c-18.7,248,-55.8,469.3,-111.5,664
+c-55.7,194.7,-131.8,370.3,-228.5,527c-20.7,34.7,-41.7,66.3,-63,95c-2,3.3,-4,7,-6,11
+c0,7.3,5.7,11,17,11c0,0,11,0,11,0c9.3,0,14.3,-0.3,15,-1c5.3,-5.3,10.3,-11,15,-17
+c242.7,-294.7,395.3,-681.7,458,-1161c21.3,-164.7,33.3,-350.7,36,-558
+l0,-144c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
+-470,-1265c-4.7,-6,-9.7,-11.7,-15,-17c-0.7,-0.7,-6.7,-1,-18,-1z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:4.3791em;vertical-align:-1.9396em;"></span><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.35em;"><span style="top:-4.35em;"><span class="pstrut" style="height:6.2em;"></span><span style="width:0.875em;height:4.200em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.875em" height="4.200em" viewBox="0 0 875 4200"><path d="M863,9c0,-2,-2,-5,-6,-9c0,0,-17,0,-17,0c-12.7,0,-19.3,0.3,-20,1
+c-5.3,5.3,-10.3,11,-15,17c-242.7,294.7,-395.3,682,-458,1162c-21.3,163.3,-33.3,349,
+-36,557 l0,684c0.2,6,0,26,0,60c2,159.3,10,310.7,24,454c53.3,528,210,
+949.7,470,1265c4.7,6,9.7,11.7,15,17c0.7,0.7,7,1,19,1c0,0,18,0,18,0c4,-4,6,-7,6,-9
+c0,-2.7,-3.3,-8.7,-10,-18c-135.3,-192.7,-235.5,-414.3,-300.5,-665c-65,-250.7,-102.5,
+-544.7,-112.5,-882c-2,-104,-3,-167,-3,-189
+l0,-692c0,-162.7,5.7,-314,17,-454c20.7,-272,63.7,-513,129,-723c65.3,
+-210,155.3,-396.3,270,-559c6.7,-9.3,10,-15.3,10,-18z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.85em;"><span></span></span></span></span></span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.4396em;"><span style="top:-4.6127em;"><span class="pstrut" style="height:3.0131em;"></span><span class="mord"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8284em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.02691em;">w</span><span class="mord mtight" style="margin-right:0.02778em;">_</span><span class="mord mathnormal mtight">c</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.527em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="mord mtight" style="margin-right:0.02778em;">_</span><span class="mord mathnormal mtight">c</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.562em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span><span style="top:-3.0376em;"><span class="pstrut" style="height:3.0131em;"></span><span class="mord"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0131em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.02691em;">w</span><span class="mord mtight" style="margin-right:0.02778em;">_</span><span class="mord mathnormal mtight">c</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.527em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10764em;">f</span><span class="mbin mtight">×</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span><span class="mord mtight" style="margin-right:0.02778em;">_</span><span class="mord mathnormal mtight">c</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.562em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span><span style="top:-1.6356em;"><span class="pstrut" style="height:3.0131em;"></span><span class="mord"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8284em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.02691em;">w</span><span class="mord mtight" style="margin-right:0.02778em;">_</span><span class="mord mathnormal mtight">c</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.527em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.04398em;">z</span><span class="mord mtight" style="margin-right:0.02778em;">_</span><span class="mord mathnormal mtight">c</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.562em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.9396em;"><span></span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.35em;"><span style="top:-4.35em;"><span class="pstrut" style="height:6.2em;"></span><span style="width:0.875em;height:4.200em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.875em" height="4.200em" viewBox="0 0 875 4200"><path d="M76,0c-16.7,0,-25,3,-25,9c0,2,2,6.3,6,13c21.3,28.7,42.3,60.3,
+63,95c96.7,156.7,172.8,332.5,228.5,527.5c55.7,195,92.8,416.5,111.5,664.5
+c11.3,139.3,17,290.7,17,454c0,28,1.7,43,3.3,45l0,609
+c-3,4,-3.3,16.7,-3.3,38c0,162,-5.7,313.7,-17,455c-18.7,248,-55.8,469.3,-111.5,664
+c-55.7,194.7,-131.8,370.3,-228.5,527c-20.7,34.7,-41.7,66.3,-63,95c-2,3.3,-4,7,-6,11
+c0,7.3,5.7,11,17,11c0,0,11,0,11,0c9.3,0,14.3,-0.3,15,-1c5.3,-5.3,10.3,-11,15,-17
+c242.7,-294.7,395.3,-681.7,458,-1161c21.3,-164.7,33.3,-350.7,36,-558
+l0,-744c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
+-470,-1265c-4.7,-6,-9.7,-11.7,-15,-17c-0.7,-0.7,-6.7,-1,-18,-1z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.85em;"><span></span></span></span></span></span></span></span></span></span></span></span></eqn></section><p>最后进行的是视口变换（Viewport Transformation）。视口转换由所选视口的宽度和高度（以像素为单位）确定，后面的编程学习中，我们将会利用 <strong>glViewport</strong> 对视口的 x、y 坐标，以及视口的宽度和高度进行设定。视口变换的公示如下。</p>
+<section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>x</mi><mi mathvariant="normal">_</mi><mi>w</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>y</mi><mi mathvariant="normal">_</mi><mi>w</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>z</mi><mi mathvariant="normal">_</mi><mi>w</mi></mrow></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><mo>=</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mfrac><mrow><mi>p</mi><mi mathvariant="normal">_</mi><mi>x</mi></mrow><mn>2</mn></mfrac><mi>x</mi><mi mathvariant="normal">_</mi><mi>d</mi><mo>+</mo><mi>o</mi><mi mathvariant="normal">_</mi><mi>x</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mfrac><mrow><mi>p</mi><mi mathvariant="normal">_</mi><mi>y</mi></mrow><mn>2</mn></mfrac><mi>y</mi><mi mathvariant="normal">_</mi><mi>d</mi><mo>+</mo><mi>o</mi><mi mathvariant="normal">_</mi><mi>y</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>f</mi><mo>×</mo><mi>z</mi><mi mathvariant="normal">_</mi><mi>d</mi><mo>+</mo><mi>b</mi></mrow></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">
 \left(
  \begin{matrix}
    x\_w \\
@@ -521,10 +507,44 @@ mjx-container[display="true"] + br {
    \frac{p\_y}{2} y\_d + o\_y \\
    f \times z\_d + b 
   \end{matrix}
-  \right)</script><p>其中，<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.439ex;" xmlns="http://www.w3.org/2000/svg" width="2.241ex" height="1.439ex" role="img" focusable="false" viewBox="0 -442 990.5 636"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msub"><g data-mml-node="mi"><path data-c="1D45D" d="M23 287Q24 290 25 295T30 317T40 348T55 381T75 411T101 433T134 442Q209 442 230 378L240 387Q302 442 358 442Q423 442 460 395T497 281Q497 173 421 82T249 -10Q227 -10 210 -4Q199 1 187 11T168 28L161 36Q160 35 139 -51T118 -138Q118 -144 126 -145T163 -148H188Q194 -155 194 -157T191 -175Q188 -187 185 -190T172 -194Q170 -194 161 -194T127 -193T65 -192Q-5 -192 -24 -194H-32Q-39 -187 -39 -183Q-37 -156 -26 -148H-6Q28 -147 33 -136Q36 -130 94 103T155 350Q156 355 156 364Q156 405 131 405Q109 405 94 377T71 316T59 280Q57 278 43 278H29Q23 284 23 287ZM178 102Q200 26 252 26Q282 26 310 49T356 107Q374 141 392 215T411 325V331Q411 405 350 405Q339 405 328 402T306 393T286 380T269 365T254 350T243 336T235 326L232 322Q232 321 229 308T218 264T204 212Q178 106 178 102Z"></path></g><g data-mml-node="mi" transform="translate(536,-150) scale(0.707)"><path data-c="1D465" d="M52 289Q59 331 106 386T222 442Q257 442 286 424T329 379Q371 442 430 442Q467 442 494 420T522 361Q522 332 508 314T481 292T458 288Q439 288 427 299T415 328Q415 374 465 391Q454 404 425 404Q412 404 406 402Q368 386 350 336Q290 115 290 78Q290 50 306 38T341 26Q378 26 414 59T463 140Q466 150 469 151T485 153H489Q504 153 504 145Q504 144 502 134Q486 77 440 33T333 -11Q263 -11 227 52Q186 -10 133 -10H127Q78 -10 57 16T35 71Q35 103 54 123T99 143Q142 143 142 101Q142 81 130 66T107 46T94 41L91 40Q91 39 97 36T113 29T132 26Q168 26 194 71Q203 87 217 139T245 247T261 313Q266 340 266 352Q266 380 251 392T217 404Q177 404 142 372T93 290Q91 281 88 280T72 278H58Q52 284 52 289Z"></path></g></g></g></g></svg></mjx-container> 是程序员输入的宽度值，<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.667ex;" xmlns="http://www.w3.org/2000/svg" width="2.11ex" height="1.667ex" role="img" focusable="false" viewBox="0 -442 932.5 737"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msub"><g data-mml-node="mi"><path data-c="1D45D" d="M23 287Q24 290 25 295T30 317T40 348T55 381T75 411T101 433T134 442Q209 442 230 378L240 387Q302 442 358 442Q423 442 460 395T497 281Q497 173 421 82T249 -10Q227 -10 210 -4Q199 1 187 11T168 28L161 36Q160 35 139 -51T118 -138Q118 -144 126 -145T163 -148H188Q194 -155 194 -157T191 -175Q188 -187 185 -190T172 -194Q170 -194 161 -194T127 -193T65 -192Q-5 -192 -24 -194H-32Q-39 -187 -39 -183Q-37 -156 -26 -148H-6Q28 -147 33 -136Q36 -130 94 103T155 350Q156 355 156 364Q156 405 131 405Q109 405 94 377T71 316T59 280Q57 278 43 278H29Q23 284 23 287ZM178 102Q200 26 252 26Q282 26 310 49T356 107Q374 141 392 215T411 325V331Q411 405 350 405Q339 405 328 402T306 393T286 380T269 365T254 350T243 336T235 326L232 322Q232 321 229 308T218 264T204 212Q178 106 178 102Z"></path></g><g data-mml-node="mi" transform="translate(536,-150) scale(0.707)"><path data-c="1D466" d="M21 287Q21 301 36 335T84 406T158 442Q199 442 224 419T250 355Q248 336 247 334Q247 331 231 288T198 191T182 105Q182 62 196 45T238 27Q261 27 281 38T312 61T339 94Q339 95 344 114T358 173T377 247Q415 397 419 404Q432 431 462 431Q475 431 483 424T494 412T496 403Q496 390 447 193T391 -23Q363 -106 294 -155T156 -205Q111 -205 77 -183T43 -117Q43 -95 50 -80T69 -58T89 -48T106 -45Q150 -45 150 -87Q150 -107 138 -122T115 -142T102 -147L99 -148Q101 -153 118 -160T152 -167H160Q177 -167 186 -165Q219 -156 247 -127T290 -65T313 -9T321 21L315 17Q309 13 296 6T270 -6Q250 -11 231 -11Q185 -11 150 11T104 82Q103 89 103 113Q103 170 138 262T173 379Q173 380 173 381Q173 390 173 393T169 400T158 404H154Q131 404 112 385T82 344T65 302T57 280Q55 278 41 278H27Q21 284 21 287Z"></path></g></g></g></g></svg></mjx-container> 是程序员输入的高度值。s 和 b 是裁剪控制深度模式的系数。</p>
-<h3 id="Geometry-Shader"><a href="#Geometry-Shader" class="headerlink" title="Geometry Shader"></a>Geometry Shader</h3><p>图元装配之后，裁剪、透视除法、视口变换等操作之前，也可以由几何着色器对图元进行操作，即在图元装配之后插入几何着色器。</p>
+  \right)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:3.6em;vertical-align:-1.55em;"></span><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.05em;"><span class="pstrut" style="height:5.6em;"></span><span style="width:0.875em;height:3.600em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.875em" height="3.600em" viewBox="0 0 875 3600"><path d="M863,9c0,-2,-2,-5,-6,-9c0,0,-17,0,-17,0c-12.7,0,-19.3,0.3,-20,1
+c-5.3,5.3,-10.3,11,-15,17c-242.7,294.7,-395.3,682,-458,1162c-21.3,163.3,-33.3,349,
+-36,557 l0,84c0.2,6,0,26,0,60c2,159.3,10,310.7,24,454c53.3,528,210,
+949.7,470,1265c4.7,6,9.7,11.7,15,17c0.7,0.7,7,1,19,1c0,0,18,0,18,0c4,-4,6,-7,6,-9
+c0,-2.7,-3.3,-8.7,-10,-18c-135.3,-192.7,-235.5,-414.3,-300.5,-665c-65,-250.7,-102.5,
+-544.7,-112.5,-882c-2,-104,-3,-167,-3,-189
+l0,-92c0,-162.7,5.7,-314,17,-454c20.7,-272,63.7,-513,129,-723c65.3,
+-210,155.3,-396.3,270,-559c6.7,-9.3,10,-15.3,10,-18z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span></span></span><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span></span></span><span style="top:-1.81em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.05em;"><span class="pstrut" style="height:5.6em;"></span><span style="width:0.875em;height:3.600em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.875em" height="3.600em" viewBox="0 0 875 3600"><path d="M76,0c-16.7,0,-25,3,-25,9c0,2,2,6.3,6,13c21.3,28.7,42.3,60.3,
+63,95c96.7,156.7,172.8,332.5,228.5,527.5c55.7,195,92.8,416.5,111.5,664.5
+c11.3,139.3,17,290.7,17,454c0,28,1.7,43,3.3,45l0,9
+c-3,4,-3.3,16.7,-3.3,38c0,162,-5.7,313.7,-17,455c-18.7,248,-55.8,469.3,-111.5,664
+c-55.7,194.7,-131.8,370.3,-228.5,527c-20.7,34.7,-41.7,66.3,-63,95c-2,3.3,-4,7,-6,11
+c0,7.3,5.7,11,17,11c0,0,11,0,11,0c9.3,0,14.3,-0.3,15,-1c5.3,-5.3,10.3,-11,15,-17
+c242.7,-294.7,395.3,-681.7,458,-1161c21.3,-164.7,33.3,-350.7,36,-558
+l0,-144c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
+-470,-1265c-4.7,-6,-9.7,-11.7,-15,-17c-0.7,-0.7,-6.7,-1,-18,-1z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:3.6em;vertical-align:-1.55em;"></span><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.05em;"><span class="pstrut" style="height:5.6em;"></span><span style="width:0.875em;height:3.600em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.875em" height="3.600em" viewBox="0 0 875 3600"><path d="M863,9c0,-2,-2,-5,-6,-9c0,0,-17,0,-17,0c-12.7,0,-19.3,0.3,-20,1
+c-5.3,5.3,-10.3,11,-15,17c-242.7,294.7,-395.3,682,-458,1162c-21.3,163.3,-33.3,349,
+-36,557 l0,84c0.2,6,0,26,0,60c2,159.3,10,310.7,24,454c53.3,528,210,
+949.7,470,1265c4.7,6,9.7,11.7,15,17c0.7,0.7,7,1,19,1c0,0,18,0,18,0c4,-4,6,-7,6,-9
+c0,-2.7,-3.3,-8.7,-10,-18c-135.3,-192.7,-235.5,-414.3,-300.5,-665c-65,-250.7,-102.5,
+-544.7,-112.5,-882c-2,-104,-3,-167,-3,-189
+l0,-92c0,-162.7,5.7,-314,17,-454c20.7,-272,63.7,-513,129,-723c65.3,
+-210,155.3,-396.3,270,-559c6.7,-9.3,10,-15.3,10,-18z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8284em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.527em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="mord mtight" style="margin-right:0.02778em;">_</span><span class="mord mathnormal mtight">x</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord mathnormal">x</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">d</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">o</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">x</span></span></span><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8284em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.527em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="mord mtight" style="margin-right:0.02778em;">_</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">d</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">o</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span><span style="top:-1.81em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">d</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">b</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.05em;"><span class="pstrut" style="height:5.6em;"></span><span style="width:0.875em;height:3.600em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.875em" height="3.600em" viewBox="0 0 875 3600"><path d="M76,0c-16.7,0,-25,3,-25,9c0,2,2,6.3,6,13c21.3,28.7,42.3,60.3,
+63,95c96.7,156.7,172.8,332.5,228.5,527.5c55.7,195,92.8,416.5,111.5,664.5
+c11.3,139.3,17,290.7,17,454c0,28,1.7,43,3.3,45l0,9
+c-3,4,-3.3,16.7,-3.3,38c0,162,-5.7,313.7,-17,455c-18.7,248,-55.8,469.3,-111.5,664
+c-55.7,194.7,-131.8,370.3,-228.5,527c-20.7,34.7,-41.7,66.3,-63,95c-2,3.3,-4,7,-6,11
+c0,7.3,5.7,11,17,11c0,0,11,0,11,0c9.3,0,14.3,-0.3,15,-1c5.3,-5.3,10.3,-11,15,-17
+c242.7,-294.7,395.3,-681.7,458,-1161c21.3,-164.7,33.3,-350.7,36,-558
+l0,-144c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
+-470,-1265c-4.7,-6,-9.7,-11.7,-15,-17c-0.7,-0.7,-6.7,-1,-18,-1z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span></span></span></span></span></span></eqn></section><p>其中，<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi mathvariant="normal">_</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">p\_x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7406em;vertical-align:-0.31em;"></span><span class="mord mathnormal">p</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">x</span></span></span></span></eq> 是程序员输入的宽度值，<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi mathvariant="normal">_</mi><mi>y</mi></mrow><annotation encoding="application/x-tex">p\_y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7406em;vertical-align:-0.31em;"></span><span class="mord mathnormal">p</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></eq> 是程序员输入的高度值。s 和 b 是裁剪控制深度模式的系数。</p>
+<h3 id="Geometry-Shader">Geometry Shader</h3>
+<p>图元装配之后，裁剪、透视除法、视口变换等操作之前，也可以由几何着色器对图元进行操作，即在图元装配之后插入几何着色器。</p>
 <p>几何着色器是一个额外的流水线阶段，定义了进一步处理这些基元的操作。 几何着色器一次对单个图元进行操作，并发出一个或多个输出图元，它们都是相同的类型，然后像应用程序指定的等效 OpenGL 图元一样进行处理。几何着色器通过产生新顶点构造出新的（或是其它的）图元来生成其他形状，在图 7 的图形管线中，它生成了另一个三角形。</p>
-<h3 id="Rasterization"><a href="#Rasterization" class="headerlink" title="Rasterization"></a>Rasterization</h3><p><img src="https://niyaoyao.github.io/images/opengl/rasterization.png" alt=""><br>图 14 Vertex Processing and Primitive Assembly</p>
+<h3 id="Rasterization">Rasterization</h3>
+<p><img src="https://niyaoyao.github.io/images/opengl/rasterization.png" alt="" />
+图 14 Vertex Processing and Primitive Assembly</p>
 <p>图元装配后输出的图元将交由光栅化处理。光栅化是将图元转换为二维图像的过程，此图像的每个点都包含颜色和深度等信息。</p>
 <p>光栅化有两个任务：</p>
 <ul>
@@ -532,29 +552,36 @@ mjx-container[display="true"] + br {
 <li>确定这些小方块的 Depth 值和 Color 值（从图片顶点的 Depth 和 Color 插值得到），这些颜色后来可能被其他如纹理操作修改。</li>
 </ul>
 <p>可以这样简单地理解光栅化过程，由于数学世界中线的函数是连续的，然而现实世界的物理设备屏幕是离散的。所以，光栅化的任务其实就是数学中连续的点转化成显示屏幕上不连续的小方块。</p>
-<h3 id="Fragment-Shader"><a href="#Fragment-Shader" class="headerlink" title="Fragment Shader"></a>Fragment Shader</h3><p><img src="https://niyaoyao.github.io/images/opengl/fragment_shader.png" alt=""><br>图 15 Fragment Shader</p>
+<h3 id="Fragment-Shader">Fragment Shader</h3>
+<p><img src="https://niyaoyao.github.io/images/opengl/fragment_shader.png" alt="" />
+图 15 Fragment Shader</p>
 <p>光栅化的输出是一些列片断（Fragments，这些片断可能经过片断着色器处理），片断被称为“准像素”，要能想象出屏幕坐标系的一个整数坐标上只有一个像素，但可以前后“堆叠”多个片断。这些片断进入逐片断处理（Per-Fragment Operations），首先进行各种测试。每步测试，不通过的片断将被丢弃从而不能进入后续操作，然后进行一些操作（如混合），最终通过所有处理的片断将被写入 FrameBuffer 用于最终屏幕显示。</p>
 <p>上文中我们已经了解到， Fragment Shader 这个阶段中，我们也要编写一个 Shader 程序来实现着色器的具体操作，本文的 Fragment Shader 示例代码如下。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line">out vec4 FragColor;</span><br><span class="line"><span class="type">void</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">{</span><br><span class="line">    FragColor = vec4(<span class="number">1.0f</span>, <span class="number">0.5f</span>, <span class="number">0.2f</span>, <span class="number">1.0f</span>);</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line">out vec4 FragColor;</span><br><span class="line"><span class="type">void</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    FragColor = vec4(<span class="number">1.0f</span>, <span class="number">0.5f</span>, <span class="number">0.2f</span>, <span class="number">1.0f</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>代码第一行也是指定 GLSL 的版本为 3.3。</li>
 <li>代码第二行声明输出四维向量 FragColor。</li>
 <li>进入 Fragment Shader 主函数之后，设置 Fragment 的色值 RGB 为 (1, 0.5, 0.2)，并且 alpha 值为 1，即不透明。</li>
 </ul>
 <p>这是一段比较简单的 Fragment Shader 示例代码。至此，OpenGL Graphics Pipeline 中比较重要的几个阶段就介绍完了，关于 OpenGL 的理论学习部分就暂时告一段落，接下来开始本文最后一部分编程实践。</p>
-<h2 id="OpenGL-Programming-Practice"><a href="#OpenGL-Programming-Practice" class="headerlink" title="OpenGL Programming Practice"></a>OpenGL Programming Practice</h2><p>在本文前两部分中，我们已经学习了 OpenGL 的 Client-Server 模型架构及其影响。此外，还较为详细地学习了 OpenGL Graphics Pipeline 及几个重要的 Pipeline Shader。其中，Vertex Shader 和 Fragment Shader 需要我们编程实现，编写 Shader 程序的语言是 GLSL。</p>
+<h2 id="OpenGL-Programming-Practice">OpenGL Programming Practice</h2>
+<p>在本文前两部分中，我们已经学习了 OpenGL 的 Client-Server 模型架构及其影响。此外，还较为详细地学习了 OpenGL Graphics Pipeline 及几个重要的 Pipeline Shader。其中，Vertex Shader 和 Fragment Shader 需要我们编程实现，编写 Shader 程序的语言是 GLSL。</p>
 <p>接下来，开始学习最简单的 OpenGL 绘图编程——如何利用 OpenGL API 绘制三角形和正方形（矩形）。</p>
 <p>为了避免占用文章篇幅，我将项目放置在 GitHub 的<a target="_blank" rel="noopener" href="https://github.com/niyaoyao/Learning-OpenGL-OpenGLES">仓库</a>中。另外，完整源码可直接在 <a href="./2018/05/26/openglcode/">OpenGL Programming: Draw Rectangle</a> 中阅读学习。这里我将按照完整代码中的实现文件（*.m 文件）进行逐代码块详解。</p>
-<h3 id="OpenGL-Profile"><a href="#OpenGL-Profile" class="headerlink" title="OpenGL Profile"></a>OpenGL Profile</h3><p>创建 MyOpenGLView 类并继承自 NSOpenGLView，覆写（override） MyOpenGLView 的初始化方法，实现 <strong>initGL</strong> 方法，方法函数体具体如下。并在 MyOpenGLView 初始化方法中调用（Call） <strong>initGL</strong> 方法。</p>
-<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">- (<span class="type">void</span>)initGL {</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"...was here"</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 1. Create a context with opengl pixel format</span></span><br><span class="line">    <span class="built_in">NSOpenGLPixelFormatAttribute</span> pixelFormatAttributes[] =</span><br><span class="line">    {</span><br><span class="line">        <span class="built_in">NSOpenGLPFAOpenGLProfile</span>, <span class="built_in">NSOpenGLProfileVersion4_1Core</span>,</span><br><span class="line">        <span class="built_in">NSOpenGLPFAColorSize</span>    , <span class="number">24</span>                           ,</span><br><span class="line">        <span class="built_in">NSOpenGLPFAAlphaSize</span>    , <span class="number">8</span>                            ,</span><br><span class="line">        <span class="built_in">NSOpenGLPFADoubleBuffer</span> ,</span><br><span class="line">        <span class="built_in">NSOpenGLPFAAccelerated</span>  ,</span><br><span class="line">        <span class="built_in">NSOpenGLPFANoRecovery</span>   ,</span><br><span class="line">        <span class="number">0</span></span><br><span class="line">    };</span><br><span class="line">    <span class="built_in">NSOpenGLPixelFormat</span> *pixelFormat = [[<span class="built_in">NSOpenGLPixelFormat</span> alloc] initWithAttributes:pixelFormatAttributes];</span><br><span class="line">    <span class="variable language_">super</span>.pixelFormat = pixelFormat;</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<h3 id="OpenGL-Profile">OpenGL Profile</h3>
+<p>创建 MyOpenGLView 类并继承自 NSOpenGLView，覆写（override） MyOpenGLView 的初始化方法，实现 <strong>initGL</strong> 方法，方法函数体具体如下。并在 MyOpenGLView 初始化方法中调用（Call） <strong>initGL</strong> 方法。</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">- (<span class="type">void</span>)initGL &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;...was here&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 1. Create a context with opengl pixel format</span></span><br><span class="line">    <span class="built_in">NSOpenGLPixelFormatAttribute</span> pixelFormatAttributes[] =</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">NSOpenGLPFAOpenGLProfile</span>, <span class="built_in">NSOpenGLProfileVersion4_1Core</span>,</span><br><span class="line">        <span class="built_in">NSOpenGLPFAColorSize</span>    , <span class="number">24</span>                           ,</span><br><span class="line">        <span class="built_in">NSOpenGLPFAAlphaSize</span>    , <span class="number">8</span>                            ,</span><br><span class="line">        <span class="built_in">NSOpenGLPFADoubleBuffer</span> ,</span><br><span class="line">        <span class="built_in">NSOpenGLPFAAccelerated</span>  ,</span><br><span class="line">        <span class="built_in">NSOpenGLPFANoRecovery</span>   ,</span><br><span class="line">        <span class="number">0</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="built_in">NSOpenGLPixelFormat</span> *pixelFormat = [[<span class="built_in">NSOpenGLPixelFormat</span> alloc] initWithAttributes:pixelFormatAttributes];</span><br><span class="line">    <span class="variable language_">super</span>.pixelFormat = pixelFormat;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在使用 Cocoa 框架时，进行 OpenGL 的编程前必须先指定 OpenGL Profile，否则，就会出现如下报错。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ERROR::SHADER::VERTEX::COMPILATION_FAILED</span><br><span class="line">ERROR: 0:1: '' :  version '330' is not supported</span><br><span class="line">ERROR: 0:1: '' : syntax error: #version</span><br><span class="line">ERROR: 0:2: 'layout' : syntax error: syntax error</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ERROR::SHADER::VERTEX::COMPILATION_FAILED</span><br><span class="line">ERROR: 0:1: &#x27;&#x27; :  version &#x27;330&#x27; is not supported</span><br><span class="line">ERROR: 0:1: &#x27;&#x27; : syntax error: #version</span><br><span class="line">ERROR: 0:2: &#x27;layout&#x27; : syntax error: syntax error</span><br></pre></td></tr></table></figure>
 <p>由于网上很多 OpenGL 开发资料是在 macOS 上使用跨平台的 GLFW 框架实现的，但我按照 <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/20931528/shader-cant-be-compiled">stackoverflow</a>, <a target="_blank" rel="noopener" href="https://www.zhihu.com/question/29745396">知乎</a> 提供的方法修改了很久都没有解决这个问题。这是因为 Cocoa 框架的窗体系统（Window System）是 Apple 自己封装的系统，而非 GLFW 框架内部实现的窗体系统，所以，要解决报错需要先给 NSOpenGLView 的 pixelFormat 赋值，类型为 NSOpenGLPixelFormatAttribute。<strong>而在赋值过程中，Cocoa 框架就为我们创建了新的渲染上下文（Context）</strong>，这也是调用任何 OpenGL API 的前提。</p>
-<h3 id="Shader-Rendering-with-VBO-EBO-VAO"><a href="#Shader-Rendering-with-VBO-EBO-VAO" class="headerlink" title="Shader Rendering with VBO, EBO, VAO"></a>Shader Rendering with VBO, EBO, VAO</h3><p>初始化 MyOpenGLView 之后，覆写 <strong>- (void)drawRect:(NSRect)dirtyRect</strong> 方法，实现 OpenGL 的调用。</p>
-<h4 id="Current-Context"><a href="#Current-Context" class="headerlink" title="Current Context"></a>Current Context</h4><p>首先要切换 OpenGL 当前上下文到 MyOpenGLView 的上下文。</p>
+<h3 id="Shader-Rendering-with-VBO-EBO-VAO">Shader Rendering with VBO, EBO, VAO</h3>
+<p>初始化 MyOpenGLView 之后，覆写 <strong>- (void)drawRect:(NSRect)dirtyRect</strong> 方法，实现 OpenGL 的调用。</p>
+<h4 id="Current-Context">Current Context</h4>
+<p>首先要切换 OpenGL 当前上下文到 MyOpenGLView 的上下文。</p>
 <figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">[[<span class="keyword">self</span> openGLContext] makeCurrentContext];</span><br></pre></td></tr></table></figure>
-<h4 id="Vertex-Shader-Fragment-Shader-Shader-Program"><a href="#Vertex-Shader-Fragment-Shader-Shader-Program" class="headerlink" title="Vertex Shader, Fragment Shader, Shader Program"></a>Vertex Shader, Fragment Shader, Shader Program</h4><p>在 Graphics Pipeline 部分中，我们已经学习了如何利用 GLSL 语言编写 Vertex Shader 和 Fragment Shader 程序。这里，我们只把 Shader 用常量字符串来编写，而非创建单独文件（Shader 程序文件本质也是向应用程序提供常量字符串）。</p>
-<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">GLuint  vs;</span><br><span class="line">GLuint  fs;</span><br><span class="line"><span class="keyword">const</span> <span class="type">char</span> *vss = <span class="string">"#version 330 core\n"</span></span><br><span class="line"><span class="string">"layout (location = 0) in vec3 aPos;\n"</span></span><br><span class="line"><span class="string">"void main()\n"</span></span><br><span class="line"><span class="string">"{\n"</span></span><br><span class="line"><span class="string">"    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"</span></span><br><span class="line"><span class="string">"}\0"</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="type">char</span> *fss = <span class="string">"#version 330 core\n"</span></span><br><span class="line"><span class="string">"out vec4 FragColor;\n"</span></span><br><span class="line"><span class="string">"void main()\n"</span></span><br><span class="line"><span class="string">"{\n"</span></span><br><span class="line"><span class="string">"    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"</span></span><br><span class="line"><span class="string">"}\n\0"</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="Vertex-Shader-Fragment-Shader-Shader-Program">Vertex Shader, Fragment Shader, Shader Program</h4>
+<p>在 Graphics Pipeline 部分中，我们已经学习了如何利用 GLSL 语言编写 Vertex Shader 和 Fragment Shader 程序。这里，我们只把 Shader 用常量字符串来编写，而非创建单独文件（Shader 程序文件本质也是向应用程序提供常量字符串）。</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">GLuint  vs;</span><br><span class="line">GLuint  fs;</span><br><span class="line"><span class="keyword">const</span> <span class="type">char</span> *vss = <span class="string">&quot;#version 330 core\n&quot;</span></span><br><span class="line"><span class="string">&quot;layout (location = 0) in vec3 aPos;\n&quot;</span></span><br><span class="line"><span class="string">&quot;void main()\n&quot;</span></span><br><span class="line"><span class="string">&quot;&#123;\n&quot;</span></span><br><span class="line"><span class="string">&quot;    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n&quot;</span></span><br><span class="line"><span class="string">&quot;&#125;\0&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="type">char</span> *fss = <span class="string">&quot;#version 330 core\n&quot;</span></span><br><span class="line"><span class="string">&quot;out vec4 FragColor;\n&quot;</span></span><br><span class="line"><span class="string">&quot;void main()\n&quot;</span></span><br><span class="line"><span class="string">&quot;&#123;\n&quot;</span></span><br><span class="line"><span class="string">&quot;    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n&quot;</span></span><br><span class="line"><span class="string">&quot;&#125;\n\0&quot;</span>;</span><br></pre></td></tr></table></figure>
 <p>有了 Shader 的源码字符串之后，我们就要先创建 Shader，加载 Shader 源码，编译 GLSL 程序。</p>
 <figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">vs = glCreateShader(GL_VERTEX_SHADER);</span><br><span class="line">glShaderSource(vs, <span class="number">1</span>, &amp;vss, <span class="literal">NULL</span>);</span><br><span class="line">glCompileShader(vs);</span><br><span class="line">fs = glCreateShader(GL_FRAGMENT_SHADER);</span><br><span class="line">glShaderSource(fs, <span class="number">1</span>, &amp;fss, <span class="literal">NULL</span>);</span><br><span class="line">glCompileShader(fs);</span><br></pre></td></tr></table></figure>
 <p>当编译完 Shader 后，可以检查编译是否有报错，这里不做赘述。当 Shader 的源码（Source）编译成功后，就要创建 Shader Program，并把 Shader 附加（Attach）在 Shader Program 上，最后链接 Shader Program。</p>
@@ -572,30 +599,38 @@ mjx-container[display="true"] + br {
 <li>删除 Shader，<strong>glDeleteShader</strong>。</li>
 </ul>
 <p>完成 Shader 相关的编码之后，就要开始进行 Vertex Data 相关处理的编程了。</p>
-<h4 id="VBO-EBO-VAO"><a href="#VBO-EBO-VAO" class="headerlink" title="VBO, EBO, VAO"></a>VBO, EBO, VAO</h4><h5 id="VBO"><a href="#VBO" class="headerlink" title="VBO"></a>VBO</h5><p>在第二部分 Graphics Pipeline 中我们已经学习过，Pipeline 的 Vertex Shader 根据顶点数据的数组，设置顶点属性，然后后续的 Shader 继续对顶点属性进行处理最终输出 FrameBuffer。而对于 OpenGL 而言，承载顶点属性的载体是 Vertex Buffer Object（VBO），VBO 是顶点属性的内存缓冲区，用来存储顶点属性的相关数据。</p>
-<p><img src="https://niyaoyao.github.io/images/opengl/vertex_attribute_pointer.png" alt=""></p>
+<h4 id="VBO-EBO-VAO">VBO, EBO, VAO</h4>
+<h5 id="VBO">VBO</h5>
+<p>在第二部分 Graphics Pipeline 中我们已经学习过，Pipeline 的 Vertex Shader 根据顶点数据的数组，设置顶点属性，然后后续的 Shader 继续对顶点属性进行处理最终输出 FrameBuffer。而对于 OpenGL 而言，承载顶点属性的载体是 Vertex Buffer Object（VBO），VBO 是顶点属性的内存缓冲区，用来存储顶点属性的相关数据。</p>
+<p><img src="https://niyaoyao.github.io/images/opengl/vertex_attribute_pointer.png" alt="" /></p>
 <p>在前文的图 11 Vertex Attribute 中，我们可以看到顶点属性在缓冲区中的内存布局。上文已经提到，顶点属性的数据为 4Byte 的 float 型，在本文的示例代码中，只存在顶点坐标属性，x、y、z 的字节数总共 12Byte，即 32bit。这里，12Byte 又称之为顶点属性的步长（Stride）。顶点之间没有空隙，在数组中紧密排列。</p>
 <p>由于本文示例中，只存在顶点坐标属性，所以 offset 为 0。如图 12 当存在 Color 属性时，Color 属性的 offset 就为 12Byte。</p>
 <p>对于图 11 的顶点属性缓冲图，我们可以这样形象的理解，灰色长条（VERTEX 1、VERTEX 2，VERTEX 3）存储的是顶点属性（Vertex Attribute），顶点属性包含了顶点坐标数据，而<strong>这整个存储顶点属性的区域就是顶点缓冲对象（Vertex Buffer Object, VBO）</strong>。</p>
-<p>当声明完顶点数组 vertices 之后，就可以创建顶点缓冲区 VBO，然后进行绑定，和设置缓冲区数据操作。其中 <strong>GL_ARRAY_BUFFER</strong> 是 VBO 的缓冲区类型。<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// VBO</span><br><span class="line">    glGenBuffers(1, &amp;VBO);</span><br><span class="line">    glBindBuffer(GL_ARRAY_BUFFER, VBO);</span><br><span class="line">    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);</span><br></pre></td></tr></table></figure></p>
-<h5 id="VAO"><a href="#VAO" class="headerlink" title="VAO"></a>VAO</h5><p>了解了 VBO 之后，我们再来了解什么是 VAO。</p>
-<p><img src="https://niyaoyao.github.io/images/opengl/vertex_array_objects.png" alt=""><br>图 16 Vertex Array Objects</p>
+<p>当声明完顶点数组 vertices 之后，就可以创建顶点缓冲区 VBO，然后进行绑定，和设置缓冲区数据操作。其中 <strong>GL_ARRAY_BUFFER</strong> 是 VBO 的缓冲区类型。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// VBO</span><br><span class="line">    glGenBuffers(1, &amp;VBO);</span><br><span class="line">    glBindBuffer(GL_ARRAY_BUFFER, VBO);</span><br><span class="line">    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);</span><br></pre></td></tr></table></figure>
+<h5 id="VAO">VAO</h5>
+<p>了解了 VBO 之后，我们再来了解什么是 VAO。</p>
+<p><img src="https://niyaoyao.github.io/images/opengl/vertex_array_objects.png" alt="" />
+图 16 Vertex Array Objects</p>
 <p>图 16 为我们展示了顶点数组对象（Vertex Array Object, VAO） 绑定存储顶点属性的顶点缓冲对象（VBO）的操作。在图中我们可以观察到，VAO 中存储着 Attribute Pointer，即顶点属性的指针。这样的好处就是，当配置顶点属性指针时，你只需要将那些调用执行一次，之后再绘制物体的时候只需要绑定相应的 VAO 就行了。这使在不同顶点数据和属性配置之间切换变得非常简单，只需要绑定不同的 VAO 就行了。刚刚设置的所有状态都将存储在 VAO 中。所以，<strong>VAO 实际上是存储顶点属性指针的数组</strong>。</p>
 <p><strong>图 16中，我们可以明确，红色的一整块矩形区域代表的就是顶点数组对象（VAO）在内存中的存储形式，绿色的一整块矩形代表的就是顶点缓冲对象（VBO）。</strong></p>
 <p><strong>如图 16 所示， VAO2 中的 attribute pointer 0 指向 VBO2 中代表顶点坐标的 pos[0]，加上属性的步长就能找到下一个 pos[1]，直到 pos[n]。而 VAO2 中的 attribute pointer 1 指向 VBO2 中代表顶点颜色的 col[0]，加上属性的步长就能找到下一个 col[1]，直到 col[n]。</strong></p>
 <blockquote>
 <p>OpenGL 的核心模式要求我们使用 VAO，所以它知道该如何处理我们的顶点输入。如果我们绑定 VAO 失败，OpenGL 会拒绝绘制任何东西。</p>
 </blockquote>
-<h5 id="EBO"><a href="#EBO" class="headerlink" title="EBO"></a>EBO</h5><p>在本文使用的示例代码中，绘制了一个正方形，并且使用了元素缓冲对象（Element Buffer Object, EBO）。之所以使用 EBO，是因为在顶点数组中，有重复的顶点坐标。在 OpenGL 的图形绘制中，实际上都是在绘制三角形。如果不使用 EBO 对象，让 OpenGL 绘制一个正方形，那么就需要输入 6 个顶点，这样就增加了顶点缓冲对象（VBO）占用内存空间，造成了内存浪费，所以并不推荐。根据这样的需求，我们大致修改下示例代码。</p>
-<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> GLfloat g_vertex_buffer_data[] = { </span><br><span class="line">    <span class="number">-0.5</span>f, <span class="number">-0.5</span>f, <span class="number">0.0</span>f,</span><br><span class="line">     <span class="number">0.5</span>f, <span class="number">-0.5</span>f, <span class="number">0.0</span>f,</span><br><span class="line">     <span class="number">0.5</span>f,  <span class="number">0.5</span>f, <span class="number">0.0</span>f,</span><br><span class="line">    </span><br><span class="line">    <span class="number">0.5</span>f, <span class="number">0.5</span>f, <span class="number">0.0</span>f,</span><br><span class="line">    <span class="number">-0.5</span>f, <span class="number">-0.5</span>f, <span class="number">0.0</span>f,</span><br><span class="line">    <span class="number">-0.5</span>f, <span class="number">0.5</span>f, <span class="number">0.0</span>f,</span><br><span class="line">};</span><br><span class="line"><span class="comment">// some bind buffer code ...</span></span><br><span class="line"><span class="comment">// draw code</span></span><br><span class="line">glDrawArrays(GL_TRIANGLES, <span class="number">0</span>, <span class="number">6</span>);</span><br></pre></td></tr></table></figure>
+<h5 id="EBO">EBO</h5>
+<p>在本文使用的示例代码中，绘制了一个正方形，并且使用了元素缓冲对象（Element Buffer Object, EBO）。之所以使用 EBO，是因为在顶点数组中，有重复的顶点坐标。在 OpenGL 的图形绘制中，实际上都是在绘制三角形。如果不使用 EBO 对象，让 OpenGL 绘制一个正方形，那么就需要输入 6 个顶点，这样就增加了顶点缓冲对象（VBO）占用内存空间，造成了内存浪费，所以并不推荐。根据这样的需求，我们大致修改下示例代码。</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> GLfloat g_vertex_buffer_data[] = &#123; </span><br><span class="line">    <span class="number">-0.5</span>f, <span class="number">-0.5</span>f, <span class="number">0.0</span>f,</span><br><span class="line">     <span class="number">0.5</span>f, <span class="number">-0.5</span>f, <span class="number">0.0</span>f,</span><br><span class="line">     <span class="number">0.5</span>f,  <span class="number">0.5</span>f, <span class="number">0.0</span>f,</span><br><span class="line">    </span><br><span class="line">    <span class="number">0.5</span>f, <span class="number">0.5</span>f, <span class="number">0.0</span>f,</span><br><span class="line">    <span class="number">-0.5</span>f, <span class="number">-0.5</span>f, <span class="number">0.0</span>f,</span><br><span class="line">    <span class="number">-0.5</span>f, <span class="number">0.5</span>f, <span class="number">0.0</span>f,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// some bind buffer code ...</span></span><br><span class="line"><span class="comment">// draw code</span></span><br><span class="line">glDrawArrays(GL_TRIANGLES, <span class="number">0</span>, <span class="number">6</span>);</span><br></pre></td></tr></table></figure>
 <p>由此可见，使用 EBO 对减少从代码量和内存使用都有帮助，推荐使用 EBO 来优化 OpenGL 应用程序。</p>
 <p>在本文示例代码中，vertices 是正方形的四个顶点，indices 是三角形的顶点索引。前文已经提到为了节省内存空间使用 EBO 来存储重复顶点的索引。例如下段代码中，正方形的第一个三角形的顶点为 (0.5, 0.5, 0.0)、 (0.5, -0.5, 0.0) 以及 (-0.5, -0.5, 0.0)，这个三角形顶点元素在 vertices 数组中的的索引（下标）为 0、 1、 3。同理，正方形的第二个三角形的顶点为 (0.5, -0.5, 0.0)、 (-0.5, -0.5, 0.0) 以及 (-0.5, 0.5, 0.0)，这个三角形顶点元素在 vertices 数组中的的索引（下标）为 1、 2、 3。</p>
-<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="type">float</span> vertices[] = {</span><br><span class="line">    <span class="number">0.5</span>f,  <span class="number">0.5</span>f, <span class="number">0.0</span>f,  <span class="comment">// top right</span></span><br><span class="line">    <span class="number">0.5</span>f, <span class="number">-0.5</span>f, <span class="number">0.0</span>f,  <span class="comment">// bottom right</span></span><br><span class="line">    <span class="number">-0.5</span>f, <span class="number">-0.5</span>f, <span class="number">0.0</span>f,  <span class="comment">// bottom left</span></span><br><span class="line">    <span class="number">-0.5</span>f,  <span class="number">0.5</span>f, <span class="number">0.0</span>f   <span class="comment">// top left</span></span><br><span class="line">};</span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> indices[] = {  <span class="comment">// note that we start from 0!</span></span><br><span class="line">    <span class="number">0</span>, <span class="number">1</span>, <span class="number">3</span>,  <span class="comment">// first Triangle</span></span><br><span class="line">    <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>   <span class="comment">// second Triangle</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="type">float</span> vertices[] = &#123;</span><br><span class="line">    <span class="number">0.5</span>f,  <span class="number">0.5</span>f, <span class="number">0.0</span>f,  <span class="comment">// top right</span></span><br><span class="line">    <span class="number">0.5</span>f, <span class="number">-0.5</span>f, <span class="number">0.0</span>f,  <span class="comment">// bottom right</span></span><br><span class="line">    <span class="number">-0.5</span>f, <span class="number">-0.5</span>f, <span class="number">0.0</span>f,  <span class="comment">// bottom left</span></span><br><span class="line">    <span class="number">-0.5</span>f,  <span class="number">0.5</span>f, <span class="number">0.0</span>f   <span class="comment">// top left</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> indices[] = &#123;  <span class="comment">// note that we start from 0!</span></span><br><span class="line">    <span class="number">0</span>, <span class="number">1</span>, <span class="number">3</span>,  <span class="comment">// first Triangle</span></span><br><span class="line">    <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>   <span class="comment">// second Triangle</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>与 VBO 相类似，当声明完 EBO 的变量之后，先生成 EBO 的缓冲区，然后绑定，最后设置缓冲区数据，缓冲区类型为 <strong>GL_ELEMENT_ARRAY_BUFFER</strong>。</p>
 <figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">glGenBuffers(<span class="number">1</span>, &amp;EBO);</span><br><span class="line">glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);</span><br><span class="line">glBufferData(GL_ELEMENT_ARRAY_BUFFER, <span class="keyword">sizeof</span>(indices), indices, GL_STATIC_DRAW);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p><img src="https://niyaoyao.github.io/images/opengl/vertex_array_objects_ebo.png" alt=""><br>图 17 Vertex Array Objects EBO</p>
+<p><img src="https://niyaoyao.github.io/images/opengl/vertex_array_objects_ebo.png" alt="" />
+图 17 Vertex Array Objects EBO</p>
 <p>在内存中，EBO 位于 VAO 最后的 element buffer object，当调用 <strong>glBindBuffer</strong> 时，利用 GL_ELEMENT_ARRAY_BUFFER 进行绑定。</p>
-<h5 id="Bind-Buffer-and-Draw"><a href="#Bind-Buffer-and-Draw" class="headerlink" title="Bind Buffer and Draw"></a>Bind Buffer and Draw</h5><p>完整的缓冲区绑定代码。在绑定缓冲区之前，必须要先生成 VAO，之后进行 VBO 和 VAO 的生成、绑定和设置。然后设置顶点属性的指针。其中 <strong>glVertexAttribPointer</strong> 函数用于向 OpenGL 解释如何解析顶点数据。</p>
+<h5 id="Bind-Buffer-and-Draw">Bind Buffer and Draw</h5>
+<p>完整的缓冲区绑定代码。在绑定缓冲区之前，必须要先生成 VAO，之后进行 VBO 和 VAO 的生成、绑定和设置。然后设置顶点属性的指针。其中 <strong>glVertexAttribPointer</strong> 函数用于向 OpenGL 解释如何解析顶点数据。</p>
 <p>在 <strong>glVertexAttribPointer</strong> 函数中：</p>
 <ul>
 <li>第一个参数明确了 Position 的 location。在之前编写的 Vertex Shader 中，我们已经设置了固定的 location <strong>layout(location = 0)</strong>，即顶点属性的位置值为 0。</li>
@@ -622,21 +657,33 @@ mjx-container[display="true"] + br {
 <figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">glViewport(<span class="number">10</span>, <span class="number">10</span>, <span class="number">100</span>, <span class="number">100</span>);</span><br><span class="line">glClearColor(<span class="number">0.2</span>f, <span class="number">0.3</span>f, <span class="number">0.3</span>f, <span class="number">1.0</span>f);</span><br><span class="line">glClear(GL_COLOR_BUFFER_BIT);</span><br><span class="line"><span class="comment">// draw our first triangle</span></span><br><span class="line">glUseProgram(shaderProgram);</span><br><span class="line">glBindVertexArray(VAO);</span><br><span class="line">glDrawElements(GL_TRIANGLES, <span class="number">6</span>, GL_UNSIGNED_INT, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
 <p>视口变换在 Graphics Pipeline 中已经有介绍，这里，利用 <strong>glViewport</strong> 函数，对视口在窗体中的 x 坐标、y 坐标、宽度、高度进行设置，最终得到在窗体中的坐标（具体公示可以回顾 Primitive Assembly）。</p>
 <p><strong>glClearColor</strong> 设置背景颜色，<strong>glClear</strong> 清空屏幕。调用 <strong>glUseProgram</strong> 使用之前创建好并附加上我们编写过 Shader 的 Shader Program，最后调用 <strong>glDrawElements</strong>（使用了 EBO）绘制图形。</p>
-<h4 id="Additional"><a href="#Additional" class="headerlink" title="Additional"></a>Additional</h4><blockquote>
+<h4 id="Additional">Additional</h4>
+<blockquote>
 <p>使用 location 这一元数据指定输入变量，这样我们才可以在 CPU 上配置顶点属性。也可以忽略 layout (location = 0) 标识符，通过在 OpenGL 代码中使用 <strong>glGetAttribLocation</strong> 查询属性位置值(Location)，但是我更喜欢在着色器中设置它们，这样会更容易理解而且节省程序员 和 OpenGL 的工作量。</p>
 </blockquote>
-<p>例如下面这段 GLSL 代码示例。<br><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">//VERTEX SHADER</span></span><br><span class="line"> <span class="meta">#version 110</span></span><br><span class="line"> uniform mat4 ProjectionModelviewMatrix;</span><br><span class="line"> uniform mat4 ModelviewMatrix;</span><br><span class="line"> attribute vec4 InVertex;  <span class="comment">//w will be set to 1.0 automatically</span></span><br><span class="line"> attribute vec2 InTexCoord0;</span><br><span class="line"> attribute vec3 InNormal;</span><br><span class="line"> varying vec2 OutTexCoord0;</span><br><span class="line"> <span class="comment">//-------------------</span></span><br><span class="line"> <span class="type">void</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line"> {</span><br><span class="line">   gl_Position = ProjectionModelviewMatrix * InVertex;</span><br><span class="line">   OutTexCoord0 = InTexCoord0;</span><br><span class="line">   vec3 normal = vec3(ModelviewMatrix * vec4(InNormal, <span class="number">0.0</span>));</span><br><span class="line">   <span class="comment">//Do lighting computation</span></span><br><span class="line">   XXXXX</span><br><span class="line"> }</span><br></pre></td></tr></table></figure></p>
+<p>例如下面这段 GLSL 代码示例。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">//VERTEX SHADER</span></span><br><span class="line"> <span class="meta">#version 110</span></span><br><span class="line"> uniform mat4 ProjectionModelviewMatrix;</span><br><span class="line"> uniform mat4 ModelviewMatrix;</span><br><span class="line"> attribute vec4 InVertex;  <span class="comment">//w will be set to 1.0 automatically</span></span><br><span class="line"> attribute vec2 InTexCoord0;</span><br><span class="line"> attribute vec3 InNormal;</span><br><span class="line"> varying vec2 OutTexCoord0;</span><br><span class="line"> <span class="comment">//-------------------</span></span><br><span class="line"> <span class="type">void</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line"> &#123;</span><br><span class="line">   gl_Position = ProjectionModelviewMatrix * InVertex;</span><br><span class="line">   OutTexCoord0 = InTexCoord0;</span><br><span class="line">   vec3 normal = vec3(ModelviewMatrix * vec4(InNormal, <span class="number">0.0</span>));</span><br><span class="line">   <span class="comment">//Do lighting computation</span></span><br><span class="line">   XXXXX</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
 <p>定义了两个 4×4 矩阵 ProjectionModelviewMatrix 和 ModelviewMatrix，定义了 InVertex、 InTexCoord0 和 InNormal 三个属性。varying 变量 OutTexCoord0 是 Vertex 和 Fragment Shader 之间做数据传递用的。这段代码中没有使用 <strong>layout(location = 0)</strong> 来设置 Position 的 location。要获得属性的 location 可以使用 <strong>glGetAttribLocation</strong> API。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">vertexLoc = glGetAttribLocation(MyShader, <span class="string">"InVertex"</span>);</span><br><span class="line">texCoord0Loc = glGetAttribLocation(MyShader, <span class="string">"InTexCoord0"</span>);</span><br><span class="line">normalLoc = glGetAttribLocation(MyShader, <span class="string">"InNormal"</span>);</span><br></pre></td></tr></table></figure>
-<p>当设置顶点属性指针的时候，就可以类似下面这段代码一样。<br><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">//Vertices, XYZ, FLOAT. We give GL_FALSE since we don't want normalization</span></span><br><span class="line"> glVertexAttribPointer(vertexLoc, <span class="number">3</span>, GL_FLOAT, GL_FALSE, <span class="keyword">sizeof</span>(MyVertex), BUFFER_OFFSET(<span class="number">0</span>));</span><br><span class="line"> <span class="comment">//Normals, XYZ, FLOAT.</span></span><br><span class="line"> glVertexAttribPointer(normalLoc, <span class="number">3</span>, GL_FLOAT, GL_FALSE, <span class="keyword">sizeof</span>(MyVertex), BUFFER_OFFSET(<span class="keyword">sizeof</span>(<span class="type">float</span>)*<span class="number">3</span>));</span><br><span class="line"> <span class="comment">//TexCoord0, XY (Also called ST. Also called UV), FLOAT. </span></span><br><span class="line"> glVertexAttribPointer(texCoord0Loc, <span class="number">2</span>, GL_FLOAT, GL_FALSE, <span class="keyword">sizeof</span>(MyVertex), BUFFER_OFFSET(<span class="keyword">sizeof</span>(<span class="type">float</span>)*<span class="number">6</span>));</span><br><span class="line"> <span class="comment">//BUFFER_OFFSET is defined as #define BUFFER_OFFSET(i) ((char *)NULL + (i))</span></span><br><span class="line"> <span class="comment">//Put that in one of your header files.</span></span><br></pre></td></tr></table></figure></p>
-<p>其中，本例中的 MyVertex 是一个成员变量都是只类型的结构体，那么 MyVertex 在内存中的物理存储位置就是连续的，定义的源码如下。<br><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">MyVertex</span></span></span><br><span class="line"><span class="class">{</span></span><br><span class="line">  <span class="type">float</span> x, y, z;</span><br><span class="line">  <span class="type">float</span> nx, ny, nz;</span><br><span class="line">  <span class="type">float</span> s0, t0;</span><br><span class="line">};</span><br></pre></td></tr></table></figure></p>
-<p>由于结构体的物理存储是连续的，所以当设置顶点属性的指针的时候只需要得到属性位置，顶点属性大小，属性步长，offset 的指针，就能将顶点属性在 CPU 中配置完成。<br>在 MyVertex 这个结构体中：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">vertexLoc = glGetAttribLocation(MyShader, <span class="string">&quot;InVertex&quot;</span>);</span><br><span class="line">texCoord0Loc = glGetAttribLocation(MyShader, <span class="string">&quot;InTexCoord0&quot;</span>);</span><br><span class="line">normalLoc = glGetAttribLocation(MyShader, <span class="string">&quot;InNormal&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>当设置顶点属性指针的时候，就可以类似下面这段代码一样。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">//Vertices, XYZ, FLOAT. We give GL_FALSE since we don&#x27;t want normalization</span></span><br><span class="line"> glVertexAttribPointer(vertexLoc, <span class="number">3</span>, GL_FLOAT, GL_FALSE, <span class="keyword">sizeof</span>(MyVertex), BUFFER_OFFSET(<span class="number">0</span>));</span><br><span class="line"> <span class="comment">//Normals, XYZ, FLOAT.</span></span><br><span class="line"> glVertexAttribPointer(normalLoc, <span class="number">3</span>, GL_FLOAT, GL_FALSE, <span class="keyword">sizeof</span>(MyVertex), BUFFER_OFFSET(<span class="keyword">sizeof</span>(<span class="type">float</span>)*<span class="number">3</span>));</span><br><span class="line"> <span class="comment">//TexCoord0, XY (Also called ST. Also called UV), FLOAT. </span></span><br><span class="line"> glVertexAttribPointer(texCoord0Loc, <span class="number">2</span>, GL_FLOAT, GL_FALSE, <span class="keyword">sizeof</span>(MyVertex), BUFFER_OFFSET(<span class="keyword">sizeof</span>(<span class="type">float</span>)*<span class="number">6</span>));</span><br><span class="line"> <span class="comment">//BUFFER_OFFSET is defined as #define BUFFER_OFFSET(i) ((char *)NULL + (i))</span></span><br><span class="line"> <span class="comment">//Put that in one of your header files.</span></span><br></pre></td></tr></table></figure>
+<p>其中，本例中的 MyVertex 是一个成员变量都是只类型的结构体，那么 MyVertex 在内存中的物理存储位置就是连续的，定义的源码如下。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">MyVertex</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="type">float</span> x, y, z;</span><br><span class="line">  <span class="type">float</span> nx, ny, nz;</span><br><span class="line">  <span class="type">float</span> s0, t0;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>由于结构体的物理存储是连续的，所以当设置顶点属性的指针的时候只需要得到属性位置，顶点属性大小，属性步长，offset 的指针，就能将顶点属性在 CPU 中配置完成。
+在 MyVertex 这个结构体中：</p>
 <ul>
 <li>顶点坐标为 (x, y, z)。</li>
-<li>法向量 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.025ex;" xmlns="http://www.w3.org/2000/svg" width="1.357ex" height="1.937ex" role="img" focusable="false" viewBox="0 -845 600 856"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="TeXAtom" data-mjx-texclass="ORD"><g data-mml-node="mover"><g data-mml-node="mi"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mo" transform="translate(300,31) translate(-250 0)"><path data-c="20D7" d="M377 694Q377 702 382 708T397 714Q404 714 409 709Q414 705 419 690Q429 653 460 633Q471 626 471 615Q471 606 468 603T454 594Q411 572 379 531Q377 529 374 525T369 519T364 517T357 516Q350 516 344 521T337 536Q337 555 384 595H213L42 596Q29 605 29 615Q29 622 42 635H401Q377 673 377 694Z"></path></g></g></g></g></g></svg></mjx-container> 为 (nx, ny, nz)。</li>
+<li>法向量 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>n</mi><mo>⃗</mo></mover></mrow><annotation encoding="application/x-tex">\vec{n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.714em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.714em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">n</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2355em;"><span class="overlay" style="height:0.714em;width:0.471em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.471em" height="0.714em" style="width:0.471em" viewBox="0 0 471 714" preserveAspectRatio="xMinYMin"><path d="M377 20c0-5.333 1.833-10 5.5-14S391 0 397 0c4.667 0 8.667 1.667 12 5
+3.333 2.667 6.667 9 10 19 6.667 24.667 20.333 43.667 41 57 7.333 4.667 11
+10.667 11 18 0 6-1 10-3 12s-6.667 5-14 9c-28.667 14.667-53.667 35.667-75 63
+-1.333 1.333-3.167 3.5-5.5 6.5s-4 4.833-5 5.5c-1 .667-2.5 1.333-4.5 2s-4.333 1
+-7 1c-4.667 0-9.167-1.833-13.5-5.5S337 184 337 178c0-12.667 15.667-32.333 47-59
+H213l-171-1c-8.667-6-13-12.333-13-19 0-4.667 4.333-11.333 13-20h359
+c-16-25.333-24-45-24-59z"/></svg></span></span></span></span></span></span></span></span></span></span></eq> 为 (nx, ny, nz)。</li>
 <li>纹理坐标为 (s0, t0)。</li>
 </ul>
-<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>到这里，我们完成了 OpenGL 的一些基本概念的学习，并进行了简单的 OpenGL 编程练习。最后回顾总结一下本文的重要概念，并对应文章开头的提问来检验自己是否学有所获。</p>
+<h2 id="Summary">Summary</h2>
+<p>到这里，我们完成了 OpenGL 的一些基本概念的学习，并进行了简单的 OpenGL 编程练习。最后回顾总结一下本文的重要概念，并对应文章开头的提问来检验自己是否学有所获。</p>
 <ul>
 <li>OpenGL 客户端在 CPU 上执行，而 OpenGL 服务端在 GPU 上执行。</li>
 <li>OpenGL 本质上是一个状态机（OpenGL State Machine）。</li>
@@ -653,38 +700,57 @@ mjx-container[display="true"] + br {
 <li>顶点数组对象（Vertex Array Object, VAO）实际上是存储顶点属性指针的数组。</li>
 <li>元素缓冲对象（Element Buffer Object, EBO）是存储重复使用的顶点的缓冲对象，用来减少 VBO 的内存损耗。</li>
 </ul>
-<h2 id="Easter-Eggs"><a href="#Easter-Eggs" class="headerlink" title="Easter Eggs"></a>Easter Eggs</h2><p>前一段时间整理微信开发账号，用到网易邮箱，在翻看邮箱的时候，突然发现了自己十年前做的 Flash 小动画《<a target="_blank" rel="noopener" href="http://niyao.coding.me/FE/NYDream/player.html">超越，为了最初的梦想</a>》的源文件，开心到爆！这是我高三前的暑假做的小动画，当时疯了一样没日没夜的画，也不管复习，因此被老爸狠骂过。但是当时就是疯了一样做，偏执地做，最终获得了一个<a target="_blank" rel="noopener" href="http://dm.sohu.com/20081208/n261086896.shtml">二等奖</a>，但依然很开心，算是对自己两个月辛苦付出的认可。</p>
+<h2 id="Easter-Eggs">Easter Eggs</h2>
+<p>前一段时间整理微信开发账号，用到网易邮箱，在翻看邮箱的时候，突然发现了自己十年前做的 Flash 小动画《<a target="_blank" rel="noopener" href="http://niyao.coding.me/FE/NYDream/player.html">超越，为了最初的梦想</a>》的源文件，开心到爆！这是我高三前的暑假做的小动画，当时疯了一样没日没夜的画，也不管复习，因此被老爸狠骂过。但是当时就是疯了一样做，偏执地做，最终获得了一个<a target="_blank" rel="noopener" href="http://dm.sohu.com/20081208/n261086896.shtml">二等奖</a>，但依然很开心，算是对自己两个月辛苦付出的认可。</p>
 <p>现在再看之前画的小动画，觉得剧情超狗血，画风超级村，但依旧很欣慰很温暖。十年，转瞬即逝，人生又能有几个十年？这十年，我从未放弃过，一直一直坚持自己最热爱的技术，虽然还是离着大牛的层次差好远，但也算有了小小的进步。所以，想以此激励自己和正在读这篇文章的你，加油！感谢十年前的我们，努力造就了现在的自己，也希望现在的自己不论遇到怎样的困难，也要继续坚持，成就十年后的我们。加油，与君共勉！</p>
 <p><strong>本文如有任何错误或问题欢迎到<a target="_blank" rel="noopener" href="https://github.com/niyaoyao/niyaoyao.github.io/issues/new">这里</a>提 issue，一起交流学习，共同进步成长 😊 。</strong></p>
-<h2 id="Donate"><a href="#Donate" class="headerlink" title="Donate"></a>Donate</h2><blockquote>
-<p>2018/05/28<br>发文这两天陆续收到小伙伴扫码的赞赏款项，非常感谢捐赠小伙伴的认可，如果本文对阅读学习者有帮助是对我最大的支持。不管赞赏多少金额都是对我的的认可，这是我继续坚持学习技术最大的动力，就好像高山流水遇知音！<br>今天收到一个 20 元的赞赏，实在太多了，感谢这位雯鑫同学的慷慨馈赠，但总觉得心有戚戚焉，寝食不能安。所以，如果您认可我，觉得这篇文章很有用，帮忙转发转发就非常感谢了，好文章分享给其他人，嘻嘻。我喜欢学技术，热爱开发工作，所以能通过写技术文章整理所学，还能增加个赚零食钱的方式挺开心。但金额有点大，我不好意思，所以我把赞赏入口设置小了，也不影响阅读体验。<br>再次感谢所有抽时间阅读本文、帮忙转发以及赞赏我的您！非常感谢 🙏 ！</p>
+<h2 id="Donate">Donate</h2>
+<blockquote>
+<p>2018/05/28
+发文这两天陆续收到小伙伴扫码的赞赏款项，非常感谢捐赠小伙伴的认可，如果本文对阅读学习者有帮助是对我最大的支持。不管赞赏多少金额都是对我的的认可，这是我继续坚持学习技术最大的动力，就好像高山流水遇知音！
+今天收到一个 20 元的赞赏，实在太多了，感谢这位雯鑫同学的慷慨馈赠，但总觉得心有戚戚焉，寝食不能安。所以，如果您认可我，觉得这篇文章很有用，帮忙转发转发就非常感谢了，好文章分享给其他人，嘻嘻。我喜欢学技术，热爱开发工作，所以能通过写技术文章整理所学，还能增加个赚零食钱的方式挺开心。但金额有点大，我不好意思，所以我把赞赏入口设置小了，也不影响阅读体验。
+再次感谢所有抽时间阅读本文、帮忙转发以及赞赏我的您！非常感谢 🙏 ！</p>
 </blockquote>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li><p>OpenGL Programming Guide for Mac <a target="_blank" rel="noopener" href="https://developer.apple.com/library/content/documentation/GraphicsImaging/Conceptual/OpenGL-MacProgGuide/">https://developer.apple.com/library/content/documentation/GraphicsImaging/Conceptual/OpenGL-MacProgGuide/</a></p>
+<h2 id="Reference">Reference</h2>
+<ul>
+<li>
+<p>OpenGL Programming Guide for Mac <a target="_blank" rel="noopener" href="https://developer.apple.com/library/content/documentation/GraphicsImaging/Conceptual/OpenGL-MacProgGuide/">https://developer.apple.com/library/content/documentation/GraphicsImaging/Conceptual/OpenGL-MacProgGuide/</a></p>
 </li>
-<li><p>Learn OpenGL <a target="_blank" rel="noopener" href="https://learnopengl.com/Getting-started/Hello-Triangle">https://learnopengl.com/Getting-started/Hello-Triangle</a></p>
+<li>
+<p>Learn OpenGL <a target="_blank" rel="noopener" href="https://learnopengl.com/Getting-started/Hello-Triangle">https://learnopengl.com/Getting-started/Hello-Triangle</a></p>
 </li>
-<li><p>OpenGL Registry <a target="_blank" rel="noopener" href="https://www.khronos.org/registry/OpenGL/index_gl.php">https://www.khronos.org/registry/OpenGL/index_gl.php</a></p>
+<li>
+<p>OpenGL Registry <a target="_blank" rel="noopener" href="https://www.khronos.org/registry/OpenGL/index_gl.php">https://www.khronos.org/registry/OpenGL/index_gl.php</a></p>
 </li>
-<li><p>OpenGL 4.6 API Reference Card <a target="_blank" rel="noopener" href="https://www.khronos.org/files/opengl46-quick-reference-card.pdf">https://www.khronos.org/files/opengl46-quick-reference-card.pdf</a></p>
+<li>
+<p>OpenGL 4.6 API Reference Card <a target="_blank" rel="noopener" href="https://www.khronos.org/files/opengl46-quick-reference-card.pdf">https://www.khronos.org/files/opengl46-quick-reference-card.pdf</a></p>
 </li>
-<li><p>OpenGL 4.6 Core Profile <a target="_blank" rel="noopener" href="https://www.khronos.org/registry/OpenGL/specs/gl/glspec46.core.pdf">https://www.khronos.org/registry/OpenGL/specs/gl/glspec46.core.pdf</a></p>
+<li>
+<p>OpenGL 4.6 Core Profile <a target="_blank" rel="noopener" href="https://www.khronos.org/registry/OpenGL/specs/gl/glspec46.core.pdf">https://www.khronos.org/registry/OpenGL/specs/gl/glspec46.core.pdf</a></p>
 </li>
-<li><p>iOS 保持界面流畅的技巧 <a target="_blank" rel="noopener" href="https://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/">https://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/</a></p>
+<li>
+<p>iOS 保持界面流畅的技巧 <a target="_blank" rel="noopener" href="https://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/">https://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/</a></p>
 </li>
-<li><p>OpenGL管线（用经典管线代说着色器内部）<a target="_blank" rel="noopener" href="http://www.cnblogs.com/liangliangh/p/4116164.html">http://www.cnblogs.com/liangliangh/p/4116164.html</a></p>
+<li>
+<p>OpenGL管线（用经典管线代说着色器内部）<a target="_blank" rel="noopener" href="http://www.cnblogs.com/liangliangh/p/4116164.html">http://www.cnblogs.com/liangliangh/p/4116164.html</a></p>
 </li>
-<li><p>Getting Pixels onto the Screen <a target="_blank" rel="noopener" href="https://www.objc.io/issues/3-views/moving-pixels-onto-the-screen/">https://www.objc.io/issues/3-views/moving-pixels-onto-the-screen/</a></p>
+<li>
+<p>Getting Pixels onto the Screen <a target="_blank" rel="noopener" href="https://www.objc.io/issues/3-views/moving-pixels-onto-the-screen/">https://www.objc.io/issues/3-views/moving-pixels-onto-the-screen/</a></p>
 </li>
-<li><p>OpenGL Tutorial <a target="_blank" rel="noopener" href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-1-opening-a-window/">http://www.opengl-tutorial.org/beginners-tutorials/tutorial-1-opening-a-window/</a></p>
+<li>
+<p>OpenGL Tutorial <a target="_blank" rel="noopener" href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-1-opening-a-window/">http://www.opengl-tutorial.org/beginners-tutorials/tutorial-1-opening-a-window/</a></p>
 </li>
-<li><p>Tutorial 4: Shaders <a target="_blank" rel="noopener" href="http://ogldev.atspace.co.uk/www/tutorial04/tutorial04.html">http://ogldev.atspace.co.uk/www/tutorial04/tutorial04.html</a></p>
+<li>
+<p>Tutorial 4: Shaders <a target="_blank" rel="noopener" href="http://ogldev.atspace.co.uk/www/tutorial04/tutorial04.html">http://ogldev.atspace.co.uk/www/tutorial04/tutorial04.html</a></p>
 </li>
-<li><p>OpenGL ES Programming Guide <a target="_blank" rel="noopener" href="https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/">https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/</a></p>
+<li>
+<p>OpenGL ES Programming Guide <a target="_blank" rel="noopener" href="https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/">https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/</a></p>
 </li>
-<li><p>glVertexAttribPointer <a target="_blank" rel="noopener" href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml">https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml</a></p>
+<li>
+<p>glVertexAttribPointer <a target="_blank" rel="noopener" href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml">https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml</a></p>
 </li>
-<li><p>超越，为了最初的梦想 <a target="_blank" rel="noopener" href="http://niyao.coding.me/FE/NYDream/player.html">http://niyao.coding.me/FE/NYDream/player.html</a></p>
+<li>
+<p>超越，为了最初的梦想 <a target="_blank" rel="noopener" href="http://niyao.coding.me/FE/NYDream/player.html">http://niyao.coding.me/FE/NYDream/player.html</a></p>
 </li>
 </ul>
 
@@ -916,20 +982,5 @@ gitalk.render('gitalk-container')
   }
 </script>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>

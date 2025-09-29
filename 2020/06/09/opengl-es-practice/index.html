@@ -15,15 +15,15 @@
     <meta name="keywords" content="OpenGL," />
   
 
-  <meta name="description" content="最佳数据传递方式 Generate—Ask OpenGL ES to generate a unique identifier for a buffer that the graphicsprocessor controls. Bind—Tell OpenGL ES to use a buffer for subsequent operations. Buffer Data—Tell OpenGL">
+  <meta name="description" content="最佳数据传递方式  Generate—Ask OpenGL ES to generate a unique identifier for a buffer that the graphics processor controls. Bind—Tell OpenGL ES to use a buffer for subsequent operations. Buffer Data—Tell Open">
 <meta property="og:type" content="article">
 <meta property="og:title" content="OpenGL ES Practice">
 <meta property="og:url" content="http://niyaoyao.me/2020/06/09/opengl-es-practice/index.html">
 <meta property="og:site_name" content="N.Y.">
-<meta property="og:description" content="最佳数据传递方式 Generate—Ask OpenGL ES to generate a unique identifier for a buffer that the graphicsprocessor controls. Bind—Tell OpenGL ES to use a buffer for subsequent operations. Buffer Data—Tell OpenGL">
+<meta property="og:description" content="最佳数据传递方式  Generate—Ask OpenGL ES to generate a unique identifier for a buffer that the graphics processor controls. Bind—Tell OpenGL ES to use a buffer for subsequent operations. Buffer Data—Tell Open">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-06-08T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-04-15T15:21:28.585Z">
+<meta property="article:modified_time" content="2024-09-26T12:15:55.262Z">
 <meta property="article:author" content="Niyao">
 <meta property="article:tag" content="OpenGL">
 <meta name="twitter:card" content="summary">
@@ -239,14 +239,22 @@ ga('send', 'pageview');
 
   <div class="article-content">
     
-      <h2 id="最佳数据传递方式"><a href="#最佳数据传递方式" class="headerlink" title="最佳数据传递方式"></a>最佳数据传递方式</h2><ol>
-<li>Generate—Ask OpenGL ES to generate a unique identifier for a buffer that the graphics<br>processor controls.</li>
+      <h2 id="最佳数据传递方式">最佳数据传递方式</h2>
+<ol>
+<li>Generate—Ask OpenGL ES to generate a unique identifier for a buffer that the graphics
+processor controls.</li>
 <li>Bind—Tell OpenGL ES to use a buffer for subsequent operations.</li>
-<li>Buffer Data—Tell OpenGL ES to allocate and initialize sufficient contiguous memory for<br>a currently bound buffer—often by copying data from CPU-controlled memory into the<br>allocated memory.</li>
-<li>Enable or Disable—Tell OpenGL ES whether to use data in buffers during subsequent<br>rendering.</li>
-<li>Set Pointers—Tell OpenGL ES about the types of data in buffers and any memory offsets<br>needed to access the data.</li>
-<li>Draw—Tell OpenGL ES to render all or part of a scene using data in currently bound and<br>enabled buffers.</li>
-<li>Delete—Tell OpenGL ES to delete previously generated buffers and free associated<br>resources.</li>
+<li>Buffer Data—Tell OpenGL ES to allocate and initialize sufficient contiguous memory for
+a currently bound buffer—often by copying data from CPU-controlled memory into the
+allocated memory.</li>
+<li>Enable or Disable—Tell OpenGL ES whether to use data in buffers during subsequent
+rendering.</li>
+<li>Set Pointers—Tell OpenGL ES about the types of data in buffers and any memory offsets
+needed to access the data.</li>
+<li>Draw—Tell OpenGL ES to render all or part of a scene using data in currently bound and
+enabled buffers.</li>
+<li>Delete—Tell OpenGL ES to delete previously generated buffers and free associated
+resources.</li>
 </ol>
 <ul>
 <li>glGenBuffers()—Asks OpenGL ES to generate a unique identifier for a buffer that the graphics processor controls.</li>
@@ -486,20 +494,5 @@ gitalk.render('gitalk-container')
   }
 </script>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>

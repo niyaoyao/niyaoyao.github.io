@@ -15,15 +15,15 @@
     <meta name="keywords" content="ny,iOS,Objective-C,Swift,CI/CD,Ruby,frontend,design,nodejs,JavaScript" />
   
 
-  <meta name="description" content="What is OpenGLBasics OpenGL(ES)OpenGL is a software interface to graphics hardware. It is designed as a hardware-independent interface to be used for many different hardware platforms. OpenGL programs">
+  <meta name="description" content="What is OpenGL Basics OpenGL(ES) OpenGL is a software interface to graphics hardware. It is designed as a hardware-independent interface to be used for many different hardware platforms. OpenGL progra">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Shaders and GLSL">
 <meta property="og:url" content="http://niyaoyao.me/2024/01/04/shaders-and-glsl/index.html">
 <meta property="og:site_name" content="N.Y.">
-<meta property="og:description" content="What is OpenGLBasics OpenGL(ES)OpenGL is a software interface to graphics hardware. It is designed as a hardware-independent interface to be used for many different hardware platforms. OpenGL programs">
+<meta property="og:description" content="What is OpenGL Basics OpenGL(ES) OpenGL is a software interface to graphics hardware. It is designed as a hardware-independent interface to be used for many different hardware platforms. OpenGL progra">
 <meta property="og:locale">
 <meta property="article:published_time" content="2024-01-03T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-04-15T15:21:28.588Z">
+<meta property="article:modified_time" content="2024-09-26T12:15:55.262Z">
 <meta property="article:author" content="Niyao">
 <meta name="twitter:card" content="summary">
 
@@ -92,119 +92,7 @@ ga('send', 'pageview');
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
   
 
-<meta name="generator" content="Hexo 5.4.2"><style>mjx-container[jax="SVG"] {
-  direction: ltr;
-}
-
-mjx-container[jax="SVG"] > svg {
-  overflow: visible;
-}
-
-mjx-container[jax="SVG"][display="true"] {
-  display: block;
-  text-align: center;
-  margin: 1em 0;
-}
-
-mjx-container[jax="SVG"][justify="left"] {
-  text-align: left;
-}
-
-mjx-container[jax="SVG"][justify="right"] {
-  text-align: right;
-}
-
-g[data-mml-node="merror"] > g {
-  fill: red;
-  stroke: red;
-}
-
-g[data-mml-node="merror"] > rect[data-background] {
-  fill: yellow;
-  stroke: none;
-}
-
-g[data-mml-node="mtable"] > line[data-line] {
-  stroke-width: 70px;
-  fill: none;
-}
-
-g[data-mml-node="mtable"] > rect[data-frame] {
-  stroke-width: 70px;
-  fill: none;
-}
-
-g[data-mml-node="mtable"] > .mjx-dashed {
-  stroke-dasharray: 140;
-}
-
-g[data-mml-node="mtable"] > .mjx-dotted {
-  stroke-linecap: round;
-  stroke-dasharray: 0,140;
-}
-
-g[data-mml-node="mtable"] > svg {
-  overflow: visible;
-}
-
-[jax="SVG"] mjx-tool {
-  display: inline-block;
-  position: relative;
-  width: 0;
-  height: 0;
-}
-
-[jax="SVG"] mjx-tool > mjx-tip {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-mjx-tool > mjx-tip {
-  display: inline-block;
-  padding: .2em;
-  border: 1px solid #888;
-  font-size: 70%;
-  background-color: #F8F8F8;
-  color: black;
-  box-shadow: 2px 2px 5px #AAAAAA;
-}
-
-g[data-mml-node="maction"][data-toggle] {
-  cursor: pointer;
-}
-
-mjx-status {
-  display: block;
-  position: fixed;
-  left: 1em;
-  bottom: 1em;
-  min-width: 25%;
-  padding: .2em .4em;
-  border: 1px solid #888;
-  font-size: 90%;
-  background-color: #F8F8F8;
-  color: black;
-}
-
-foreignObject[data-mjx-xml] {
-  font-family: initial;
-  line-height: normal;
-  overflow: visible;
-}
-
-.MathJax path {
-  stroke-width: 3;
-}
-
-mjx-container[display="true"] {
-  overflow: auto hidden;
-}
-
-mjx-container[display="true"] + br {
-  display: none;
-}
-</style></head>
+<meta name="generator" content="Hexo 5.4.2"></head>
 
 <body>
 
@@ -309,7 +197,7 @@ mjx-container[display="true"] + br {
 
   <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#What-is-OpenGL"><span class="toc-text">What is OpenGL</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Basics-OpenGL-ES"><span class="toc-text">Basics OpenGL(ES)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Versions"><span class="toc-text">Versions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Architecture"><span class="toc-text">Architecture</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Coordinates-and-Viewport"><span class="toc-text">Coordinates and Viewport</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Programmable-Pipeline-Shaders"><span class="toc-text">Programmable Pipeline (Shaders)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Rasterization"><span class="toc-text">Rasterization</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Draw-a-Triangle"><span class="toc-text">Draw a Triangle</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Frame-Buffer-CPU-Client"><span class="toc-text">Frame Buffer (CPU Client)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Vertex-Array"><span class="toc-text">Vertex Array</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#VBO"><span class="toc-text">VBO</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#VEO"><span class="toc-text">VEO</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OpenGL-Shader-and-GLSL-GPU-Server"><span class="toc-text">OpenGL Shader and GLSL (GPU Server)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text"> </span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Question"><span class="toc-text">Question</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Reference"><span class="toc-text">Reference:</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text">What is OpenGL</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Basics-OpenGL-ES"><span class="toc-text">Basics OpenGL(ES)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Versions"><span class="toc-text">Versions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Architecture"><span class="toc-text">Architecture</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Coordinates-and-Viewport"><span class="toc-text">Coordinates and Viewport</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Programmable-Pipeline-Shaders"><span class="toc-text">Programmable Pipeline (Shaders)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Rasterization"><span class="toc-text">Rasterization</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Draw-a-Triangle"><span class="toc-text">Draw a Triangle</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Frame-Buffer-CPU-Client"><span class="toc-text">Frame Buffer (CPU Client)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Vertex-Array"><span class="toc-text">Vertex Array</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#VBO"><span class="toc-text">VBO</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#VEO"><span class="toc-text">VEO</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OpenGL-Shader-and-GLSL-GPU-Server"><span class="toc-text">OpenGL Shader and GLSL (GPU Server)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text"></span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text">Question</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text">Reference:</span></a></li></ol>
   </div>
 
 
@@ -350,11 +238,27 @@ mjx-container[display="true"] + br {
 
   <div class="article-content">
     
-      <h1 id="What-is-OpenGL"><a href="#What-is-OpenGL" class="headerlink" title="What is OpenGL"></a>What is OpenGL</h1><h2 id="Basics-OpenGL-ES"><a href="#Basics-OpenGL-ES" class="headerlink" title="Basics OpenGL(ES)"></a>Basics OpenGL(ES)</h2><p>OpenGL is a software interface to graphics hardware. It is designed as a hardware-independent interface to be used for many different hardware platforms. OpenGL programs can also work across a network (client-server paradigm) even if the client and server are different kinds of computers. The client in OpenGL is a computer on which an OpenGL program actually executes, and the server is a computer that performs the drawings.</p>
-<h3 id="Versions"><a href="#Versions" class="headerlink" title="Versions"></a>Versions</h3><h3 id="Architecture"><a href="#Architecture" class="headerlink" title="Architecture"></a>Architecture</h3><h2 id="Coordinates-and-Viewport"><a href="#Coordinates-and-Viewport" class="headerlink" title="Coordinates and Viewport"></a>Coordinates and Viewport</h2><p>OpenGL expects all the vertices, that we want to become visible, to be in normalized device coordinates after each vertex shader run. That is, the x, y and z coordinates of each vertex should be between -1.0 and 1.0; coordinates outside this range will not be visible. </p>
-<h2 id="Programmable-Pipeline-Shaders"><a href="#Programmable-Pipeline-Shaders" class="headerlink" title="Programmable Pipeline (Shaders)"></a>Programmable Pipeline (Shaders)</h2><h3 id="Rasterization"><a href="#Rasterization" class="headerlink" title="Rasterization"></a>Rasterization</h3><p>()[<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Rasterisation#/media/File:Top-left_triangle_rasterization_rule.gif">https://en.wikipedia.org/wiki/Rasterisation#/media/File:Top-left_triangle_rasterization_rule.gif</a>]</p>
-<h2 id="Draw-a-Triangle"><a href="#Draw-a-Triangle" class="headerlink" title="Draw a Triangle"></a>Draw a Triangle</h2><h3 id="Frame-Buffer-CPU-Client"><a href="#Frame-Buffer-CPU-Client" class="headerlink" title="Frame Buffer (CPU Client)"></a>Frame Buffer (CPU Client)</h3><h4 id="Vertex-Array"><a href="#Vertex-Array" class="headerlink" title="Vertex Array"></a>Vertex Array</h4><p>OpenGL Vertex ArrayUsing vertex arrays reduces the number of function calls and redundant usage of shared vertices. Therefore, you may increase the performance of rendering.</p>
-<h4 id="VBO"><a href="#VBO" class="headerlink" title="VBO"></a>VBO</h4><h4 id="VEO"><a href="#VEO" class="headerlink" title="VEO"></a>VEO</h4><h3 id="OpenGL-Shader-and-GLSL-GPU-Server"><a href="#OpenGL-Shader-and-GLSL-GPU-Server" class="headerlink" title="OpenGL Shader and GLSL (GPU Server)"></a>OpenGL Shader and GLSL (GPU Server)</h3><h4 id=""><a href="#" class="headerlink" title=" "></a> </h4><h1 id="Question"><a href="#Question" class="headerlink" title="Question"></a>Question</h1><h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference:"></a>Reference:</h1><ul>
+      <h1>What is OpenGL</h1>
+<h2 id="Basics-OpenGL-ES">Basics OpenGL(ES)</h2>
+<p>OpenGL is a software interface to graphics hardware. It is designed as a hardware-independent interface to be used for many different hardware platforms. OpenGL programs can also work across a network (client-server paradigm) even if the client and server are different kinds of computers. The client in OpenGL is a computer on which an OpenGL program actually executes, and the server is a computer that performs the drawings.</p>
+<h3 id="Versions">Versions</h3>
+<h3 id="Architecture">Architecture</h3>
+<h2 id="Coordinates-and-Viewport">Coordinates and Viewport</h2>
+<p>OpenGL expects all the vertices, that we want to become visible, to be in normalized device coordinates after each vertex shader run. That is, the x, y and z coordinates of each vertex should be between -1.0 and 1.0; coordinates outside this range will not be visible.</p>
+<h2 id="Programmable-Pipeline-Shaders">Programmable Pipeline (Shaders)</h2>
+<h3 id="Rasterization">Rasterization</h3>
+<p>()[<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Rasterisation#/media/File:Top-left_triangle_rasterization_rule.gif">https://en.wikipedia.org/wiki/Rasterisation#/media/File:Top-left_triangle_rasterization_rule.gif</a>]</p>
+<h2 id="Draw-a-Triangle">Draw a Triangle</h2>
+<h3 id="Frame-Buffer-CPU-Client">Frame Buffer (CPU Client)</h3>
+<h4 id="Vertex-Array">Vertex Array</h4>
+<p>OpenGL Vertex ArrayUsing vertex arrays reduces the number of function calls and redundant usage of shared vertices. Therefore, you may increase the performance of rendering.</p>
+<h4 id="VBO">VBO</h4>
+<h4 id="VEO">VEO</h4>
+<h3 id="OpenGL-Shader-and-GLSL-GPU-Server">OpenGL Shader and GLSL (GPU Server)</h3>
+<h4 id=""></h4>
+<h1>Question</h1>
+<h1>Reference:</h1>
+<ul>
 <li>OpenGL ES 入门 <a target="_blank" rel="noopener" href="http://vanney9.com/2016/10/29/opengl-es-start-up/">http://vanney9.com/2016/10/29/opengl-es-start-up/</a></li>
 <li>OpenGL Vertex Buffer Object (VBO) <a target="_blank" rel="noopener" href="https://www.songho.ca/opengl/gl_vbo.html">https://www.songho.ca/opengl/gl_vbo.html</a></li>
 <li>Lecture HelloTriangle <a target="_blank" rel="noopener" href="https://vis.uni-jena.de/Lecture/ComputerGraphics/Lec2_HelloTriangle.pdf">https://vis.uni-jena.de/Lecture/ComputerGraphics/Lec2_HelloTriangle.pdf</a></li>
@@ -372,7 +276,7 @@ mjx-container[display="true"] + br {
 <li>Shady Flutter: Using GLSL Shaders in Flutter <a target="_blank" rel="noopener" href="https://blog.codemagic.io/shady-flutter/">https://blog.codemagic.io/shady-flutter/</a></li>
 <li>flutter-gpu-examples <a target="_blank" rel="noopener" href="https://github.com/bdero/flutter-gpu-examples/blob/master/lib/triangle.dart">https://github.com/bdero/flutter-gpu-examples/blob/master/lib/triangle.dart</a></li>
 <li>OpenGL_Shading_Language Wiki <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/OpenGL_Shading_Language">https://en.wikipedia.org/wiki/OpenGL_Shading_Language</a></li>
-<li>Core<em>Language</em>(GLSL) <a target="_blank" rel="noopener" href="https://www.khronos.org/opengl/wiki/Core_Language_(GLSL">https://www.khronos.org/opengl/wiki/Core_Language_(GLSL</a>)</li>
+<li>Core_Language_(GLSL) <a target="_blank" rel="noopener" href="https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)">https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)</a></li>
 <li>GLSL Basics <a target="_blank" rel="noopener" href="https://www.cnblogs.com/mazhenyu/p/3804518.html">https://www.cnblogs.com/mazhenyu/p/3804518.html</a></li>
 <li>GLSL-Card <a target="_blank" rel="noopener" href="https://github.com/wshxbqq/GLSL-Card">https://github.com/wshxbqq/GLSL-Card</a></li>
 <li>OpenGL ES Programming Guide <a target="_blank" rel="noopener" href="https://developer.apple.com/library/archive/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/DrawingWithOpenGLES/DrawingWithOpenGLES.html">https://developer.apple.com/library/archive/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/DrawingWithOpenGLES/DrawingWithOpenGLES.html</a></li>
@@ -612,20 +516,5 @@ gitalk.render('gitalk-container')
   }
 </script>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>
